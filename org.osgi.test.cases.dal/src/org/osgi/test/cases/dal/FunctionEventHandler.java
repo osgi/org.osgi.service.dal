@@ -23,16 +23,16 @@ import java.util.Hashtable;
 import java.util.List;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.dal.DeviceFunctionEvent;
+import org.osgi.service.dal.FunctionEvent;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 
 /**
- * Test event handler for {@link DeviceFunctionEvent#TOPIC_PROPERTY_CHANGED}
+ * Test event handler for {@link FunctionEvent#TOPIC_PROPERTY_CHANGED}
  * events.
  */
-public final class DeviceFunctionEventHandler implements EventHandler {
+public final class FunctionEventHandler implements EventHandler {
 
 	private static final long	WAIT_EVENT_TIMEOUT	= Long.getLong(
 															"org.osgi.test.cases.dal.timeout", 10000).longValue();
@@ -47,7 +47,7 @@ public final class DeviceFunctionEventHandler implements EventHandler {
 	 * 
 	 * @param bc The bundle context used for the handler registration.
 	 */
-	public DeviceFunctionEventHandler(BundleContext bc) {
+	public FunctionEventHandler(BundleContext bc) {
 		this.bc = bc;
 		this.events = new ArrayList();
 	}
@@ -62,11 +62,11 @@ public final class DeviceFunctionEventHandler implements EventHandler {
 			return;
 		}
 		Dictionary handlerRegProps = new Hashtable(2, 1F);
-		handlerRegProps.put(EventConstants.EVENT_TOPIC, DeviceFunctionEvent.TOPIC_PROPERTY_CHANGED);
+		handlerRegProps.put(EventConstants.EVENT_TOPIC, FunctionEvent.TOPIC_PROPERTY_CHANGED);
 		if (null != funtionUID) {
 			handlerRegProps.put(
 					EventConstants.EVENT_FILTER,
-					'(' + DeviceFunctionEvent.PROPERTY_FUNCTION_UID + '=' + funtionUID + ')');
+					'(' + FunctionEvent.PROPERTY_FUNCTION_UID + '=' + funtionUID + ')');
 		}
 		this.handlerSReg = this.bc.registerService(EventHandler.class.getName(), this, handlerRegProps);
 	}
@@ -94,7 +94,7 @@ public final class DeviceFunctionEventHandler implements EventHandler {
 	 * @throws IllegalStateException If the events are not received in a given
 	 *         timeout.
 	 */
-	public DeviceFunctionEvent[] getEvents(int eventsCount) throws IllegalStateException {
+	public FunctionEvent[] getEvents(int eventsCount) throws IllegalStateException {
 		synchronized (this.events) {
 			long startTime = System.currentTimeMillis();
 			long elapsedTime = 0;
@@ -111,9 +111,9 @@ public final class DeviceFunctionEventHandler implements EventHandler {
 				throw new IllegalStateException(
 						"The desired events are not received for: " + WAIT_EVENT_TIMEOUT + "ms.");
 			}
-			DeviceFunctionEvent[] result = new DeviceFunctionEvent[eventsCount];
+			FunctionEvent[] result = new FunctionEvent[eventsCount];
 			for (int i = 0; i < result.length; i++) {
-				result[i] = (DeviceFunctionEvent) this.events.get(i);
+				result[i] = (FunctionEvent) this.events.get(i);
 			}
 			return result;
 		}

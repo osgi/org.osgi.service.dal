@@ -1,5 +1,5 @@
 /*
- * Copyright (c) OSGi Alliance (2013). All Rights Reserved.
+ * Copyright (c) OSGi Alliance (2014). All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package org.osgi.service.dal.functions;
 
-import org.osgi.service.dal.DeviceFunction;
-import org.osgi.service.dal.functions.data.AlarmData;
+package org.osgi.test.cases.dal;
 
-/**
- * <code>Alarm</code> Device Function provides alarm sensor support. There is
- * only one eventable property and no operations.
- * 
- * @see AlarmData
- */
-public interface Alarm extends DeviceFunction {
+import java.util.Map;
+import org.osgi.service.dal.FunctionData;
 
-	/**
-	 * Specifies the alarm property name. The property is eventable.
-	 * 
-	 * @see AlarmData
-	 */
-	public static final String	PROPERTY_ALARM	= "alarm";
+final class TestFunctionData extends FunctionData {
+
+	public TestFunctionData(long timestamp, Map metadata) {
+		super(timestamp, metadata);
+	}
+
+	public int compareTo(Object var0) {
+		return 0;
+	}
 
 }

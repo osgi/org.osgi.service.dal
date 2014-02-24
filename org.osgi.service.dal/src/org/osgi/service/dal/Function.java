@@ -17,73 +17,71 @@
 package org.osgi.service.dal;
 
 /**
- * Device Function service provides specific device operations and properties.
- * Each Device Function service must implement this interface. In additional to
- * this interface, the implementation can provide own:
+ * Function service provides specific device operations and properties. Each
+ * function service must implement this interface. In additional to this
+ * interface, the implementation can provide own:
  * <ul>
  * <li>properties;</li>
  * <li>operations.</li>
  * </ul>
- * The Device Function service can be registered in the service registry with
- * those service properties:
+ * The function service can be registered in the service registry with those
+ * service properties:
  * <ul>
  * <li>{@link #SERVICE_UID} - mandatory service property. The property value
- * contains the device function unique identifier.</li>
+ * contains the function unique identifier.</li>
  * <li>{@link #SERVICE_DEVICE_UID} - optional service property. The property
- * value is the Functional Device identifiers. The Device Function belongs to
- * those devices.</li>
+ * value is the Functional Device identifiers. The function belongs to those
+ * devices.</li>
  * <li>{@link #SERVICE_REFERENCE_UIDS} - optional service property. The property
- * value contains the reference device function unique identifiers.</li>
+ * value contains the reference function unique identifiers.</li>
  * <li>{@link #SERVICE_TYPE} - mandatory service property. The property value is
  * the function type.</li>
  * <li>{@link #SERVICE_VERSION} - optional service property. The property value
  * contains the function version.</li>
  * <li>{@link #SERVICE_DESCRIPTION} - optional service property. The property
- * value is the device function description.</li>
+ * value is the function description.</li>
  * <li>{@link #SERVICE_OPERATION_NAMES} - optional service property. The
- * property value is the Device Function operation names.</li>
+ * property value is the function operation names.</li>
  * <li>{@link #SERVICE_PROPERTY_NAMES} - optional service property. The property
- * value is the Device Function property names.</li>
+ * value is the function property names.</li>
  * </ul>
- * The <code>DeviceFunction</code> services are registered before the
+ * The <code>Function</code> services are registered before the
  * <code>Device</code> services. It's possible that {@link #SERVICE_DEVICE_UID}
  * point to missing services at the moment of the registration. The reverse
- * order is used when the services are unregistered. <code>DeviceFunction</code>
+ * order is used when the services are unregistered. <code>Function</code>
  * services are unregistered last after <code>Device</code> services.
  * <p>
- * Device Function service must be registered only under concrete Device
- * Function class. It's not allowed to register Device Function service under
- * more than one class. For example, those registrations are not allowed:
+ * Function service must be registered only under concrete function class. It's
+ * not allowed to register function service under more than one class. For
+ * example, those registrations are not allowed:
  * <ul>
  * <li>
  * <code>context.registerService(ManagedService.class.getName(), this, regProps);</code>
- * - <code>ManagedService</code> interface is not a Device Function interface.</li>
+ * - <code>ManagedService</code> interface is not a function interface.</li>
  * <li>
- * <code>context.registerService(DeviceFunction.class.getName(), this, regProps);</code>
- * - <code>DeviceFunction</code> interface is not concrete Device Function
- * interface.</li>
+ * <code>context.registerService(Function.class.getName(), this, regProps);</code>
+ * - <code>Function</code> interface is not concrete function interface.</li>
  * <code>context.registerService(new String[] {BooleanControl.class.getName(),
  * BooleanControl.class.getName()}, this, regProps);</code> - more than one
- * device function is used.</li>
+ * function is used.</li>
  * </ul>
  * That one is a valid registration: <code>context.registerService(
  * Meter.class.getName(), this, regProps);</code>. <code>Meter</code> is
- * concrete Device Function interface.
+ * concrete function interface.
  * <p>
- * That rule helps to the applications to find the supported Device Function
- * class and to identify the metadata. Otherwise the Device Function services
- * can be accesses, but it's not clear which are the Device Function classes and
- * metadata.
+ * That rule helps to the applications to find the supported function class and
+ * to identify the metadata. Otherwise the function services can be accesses,
+ * but it's not clear which are the function classes and metadata.
  * <p>
- * The Device Function properties must be integrated according to these rules:
+ * The function properties must be integrated according to these rules:
  * <ul>
  * <li>Getter methods must be available for all properties with
  * {@link PropertyMetadata#PROPERTY_ACCESS_READABLE} access.</li>
- * <li>Getter method must return a subclass of {@link DeviceFunctionData}.</li>
+ * <li>Getter method must return a subclass of {@link FunctionData}.</li>
  * <li>Setter methods must be available for all properties with
  * {@link PropertyMetadata#PROPERTY_ACCESS_WRITABLE} access.</li>
- * <li>Setter method must use {@link DeviceFunctionData} wrapped type. For
- * example, there is <code>MyFunctionData</code> with timestamp, unit and
+ * <li>Setter method must use {@link FunctionData} wrapped type. For example,
+ * there is <code>MyFunctionData</code> with timestamp, unit and
  * <code>BigDecimal</code> value. The setter must accept as an argument the
  * value of type <code>BigDecimal</code>.</li>
  * <li>It's possible to have a second setter method, which accepts the value as
@@ -93,13 +91,13 @@ package org.osgi.service.dal;
  * </ul>
  * The accessor method names must be defined according JavaBeans specification.
  * <p>
- * The Device Function operations are java methods, which cannot override the
- * property accessor methods. They can have zero or more parameters and zero or
- * one return value.
+ * The function operations are java methods, which cannot override the property
+ * accessor methods. They can have zero or more parameters and zero or one
+ * return value.
  * 
  * <p>
- * Operation arguments and Device Function properties are restricted by the same
- * set of rules. The data type can be one of the following types:
+ * Operation arguments and function properties are restricted by the same set of
+ * rules. The data type can be one of the following types:
  * <ul>
  * <li>Java primitive type or corresponding reference type.</li>
  * <li><code>java.lang.String</code>.</li>
@@ -115,8 +113,8 @@ package org.osgi.service.dal;
  * {@link #getPropertyMetadata(String)}. The operations metadata is accessible
  * with {@link #getOperationMetadata(String)}.
  * 
- * In order to provide common behavior, all Device Functions must follow a set
- * of common rules related to the implementation of their setters, getters,
+ * In order to provide common behavior, all functions must follow a set of
+ * common rules related to the implementation of their setters, getters,
  * operations and events:
  * <ul>
  * <li>
@@ -131,56 +129,58 @@ package org.osgi.service.dal;
  * <li>
  * The getter must return the last know cached property value. The device
  * implementation is responsible to keep that value up to date. It'll speed up
- * the applications when the Device Function property values are collected. The
- * same cached value can be shared between a few requests instead of a few calls
- * to the real device.</li>
+ * the applications when the function property values are collected. The same
+ * cached value can be shared between a few requests instead of a few calls to
+ * the real device.</li>
  * <li>
- * If a given Device Function operation, getter or setter is not supported,
+ * If a given function operation, getter or setter is not supported,
  * java.lang.UnsupportedOperationException must be thrown. It indicates that
- * Device Function is partially supported.</li>
- * <li>The Device Function operations, getters and setters must not override
+ * function is partially supported.</li>
+ * <li>The function operations, getters and setters must not override
  * <code>java.lang.Object</code> and this interface methods.</li>
  * </ul>
  */
-public interface DeviceFunction {
+public interface Function {
 
 	/**
-	 * The service property value contains the device function unique
-	 * identifier. It's a mandatory property. The value type is
-	 * <code>java.lang.String</code>. To simplify the unique identifier
-	 * generation, the property value must follow the rule:
+	 * The service property value contains the function unique identifier. It's
+	 * a mandatory property. The value type is <code>java.lang.String</code>. To
+	 * simplify the unique identifier generation, the property value must follow
+	 * the rule:
 	 * <p>
 	 * function UID ::= device-id ':' function-id
 	 * <p>
-	 * function UID - device function unique identifier
+	 * function UID - function unique identifier
 	 * <p>
-	 * device-id - the value of the {@link Device#SERVICE_UID} Functional Device
-	 * service property
+	 * device-id - the value of the {@link Device#SERVICE_UID} Device service
+	 * property
 	 * <p>
-	 * function-id - device function identifier in the scope of the device
+	 * function-id - function identifier in the scope of the device
+	 * <p>
+	 * If the function is not bound to a device, the function unique identifier
+	 * can be device independent.
 	 */
 	public static final String	SERVICE_UID				= "dal.function.UID";
 
 	/**
-	 * The service property value contains the device function type. It's an
-	 * optional property. For example, the sensor function can have different
-	 * types like temperature or pressure etc. The value type is
+	 * The service property value contains the function type. It's an optional
+	 * property. For example, the sensor function can have different types like
+	 * temperature or pressure etc. The value type is
 	 * <code>java.lang.String</code>.
 	 * <p>
-	 * Organizations that want to use device function types that do not clash
-	 * with OSGi Alliance defined types should prefix their types in own
-	 * namespace.
+	 * Organizations that want to use function types that do not clash with OSGi
+	 * Alliance defined types should prefix their types in own namespace.
 	 * <p>
-	 * The type does'nt mandate specific device function interface. It can be
-	 * used with different functions.
+	 * The type does'nt mandate specific function interface. It can be used with
+	 * different functions.
 	 */
 	public static final String	SERVICE_TYPE			= "dal.function.type";
 
 	/**
-	 * The service property value contains the device function version. That
-	 * version can point to specific implementation version and vary in the
-	 * different vendor implementations. It's an optional property. The value
-	 * type is <code>java.lang.String</code>.
+	 * The service property value contains the function version. That version
+	 * can point to specific implementation version and vary in the different
+	 * vendor implementations. It's an optional property. The value type is
+	 * <code>java.lang.String</code>.
 	 */
 	public static final String	SERVICE_VERSION			= "dal.function.version";
 
@@ -192,42 +192,41 @@ public interface DeviceFunction {
 	public static final String	SERVICE_DEVICE_UID		= "dal.function.device.UID";
 
 	/**
-	 * The service property value contains the reference device function unique
+	 * The service property value contains the reference function unique
 	 * identifiers. It's an optional property. The value type is
 	 * <code>java.lang.String[]</code>. It can be used to represent different
-	 * relationships between the device functions.
+	 * relationships between the functions.
 	 */
 	public static final String	SERVICE_REFERENCE_UIDS	= "dal.function.reference.UIDs";
 
 	/**
-	 * The service property value contains the device function description. It's
-	 * an optional property. The value type is <code>java.lang.String</code>.
+	 * The service property value contains the function description. It's an
+	 * optional property. The value type is <code>java.lang.String</code>.
 	 */
 	public static final String	SERVICE_DESCRIPTION		= "dal.function.description";
 
 	/**
-	 * The service property value contains the device function operation names.
-	 * It's an optional property. The value type is
-	 * <code>java.lang.String[]</code>. It's not possible to exist two or more
-	 * Device Function operations with the same name i.e. the operation
-	 * overloading is not allowed.
+	 * The service property value contains the function operation names. It's an
+	 * optional property. The value type is <code>java.lang.String[]</code>.
+	 * It's not possible to exist two or more function operations with the same
+	 * name i.e. the operation overloading is not allowed.
 	 */
 	public static final String	SERVICE_OPERATION_NAMES	= "dal.function.operation.names";
 
 	/**
-	 * The service property value contains the device function property names.
-	 * It's an optional property. The value type is
-	 * <code>java.lang.String[]</code>. It's not possible to exist two or more
-	 * Device Function properties with the same name.
+	 * The service property value contains the function property names. It's an
+	 * optional property. The value type is <code>java.lang.String[]</code>.
+	 * It's not possible to exist two or more function properties with the same
+	 * name.
 	 */
 	public static final String	SERVICE_PROPERTY_NAMES	= "dal.function.property.names";
 
 	/**
-	 * Provides metadata about the Device Function property specified with the
-	 * name argument.
+	 * Provides metadata about the function property specified with the name
+	 * argument.
 	 * <p>
 	 * This method must continue to return the property metadata after the
-	 * Device Function service has been unregistered.
+	 * function service has been unregistered.
 	 * 
 	 * @param propertyName The function property name, which metadata is
 	 *        requested.
@@ -242,10 +241,10 @@ public interface DeviceFunction {
 			throws IllegalArgumentException;
 
 	/**
-	 * Provides metadata about the Device Function operation.
+	 * Provides metadata about the function operation.
 	 * <p>
 	 * This method must continue to return the operation metadata after the
-	 * Device Function service has been unregistered.
+	 * function service has been unregistered.
 	 * 
 	 * @param operationName The function operation name, which metadata is
 	 *        requested.
@@ -263,7 +262,7 @@ public interface DeviceFunction {
 	 * Returns the current value of the specified property. The method will
 	 * return the same value as
 	 * {@link org.osgi.framework.ServiceReference#getProperty(String)} for the
-	 * service reference of this device function.
+	 * service reference of this function.
 	 * <p>
 	 * This method must continue to return property values after the device
 	 * function service has been unregistered.

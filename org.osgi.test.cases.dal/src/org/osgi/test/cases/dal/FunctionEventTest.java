@@ -17,37 +17,34 @@
 
 package org.osgi.test.cases.dal;
 
-import java.math.BigDecimal;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import org.osgi.service.dal.DeviceFunctionEvent;
-import org.osgi.service.dal.functions.data.LevelData;
+import org.osgi.service.dal.FunctionEvent;
 
 
 /**
- * Validates the {@link DeviceFunctionEvent}.
+ * Validates the {@link FunctionEvent}.
  */
-public final class DeviceFunctionEventTest extends AbstractDeviceTest {
+public final class FunctionEventTest extends AbstractDeviceTest {
 
 	private static final String	PROP_NAME	= "test-prop";
 	private static final String		FUNCTION_UID	= "test-function-uid";
-	private static final LevelData	PROP_VALUE		= new LevelData(
-															System.currentTimeMillis(), null, null, new BigDecimal(1));
+	private static final TestFunctionData	PROP_VALUE		= new TestFunctionData(System.currentTimeMillis(), null);
 
 	/**
-	 * Test the device function event properties.
+	 * Test the function event properties.
 	 */
 	public void testEventProperties() {
 		Hashtable eventProps = new Hashtable();
-		eventProps.put(DeviceFunctionEvent.PROPERTY_FUNCTION_PROPERTY_NAME, PROP_NAME);
-		eventProps.put(DeviceFunctionEvent.PROPERTY_FUNCTION_PROPERTY_VALUE, PROP_VALUE);
-		eventProps.put(DeviceFunctionEvent.PROPERTY_FUNCTION_UID, FUNCTION_UID);
-		checkEventProps(new DeviceFunctionEvent(
-				DeviceFunctionEvent.TOPIC_PROPERTY_CHANGED, (Dictionary) eventProps));
+		eventProps.put(FunctionEvent.PROPERTY_FUNCTION_PROPERTY_NAME, PROP_NAME);
+		eventProps.put(FunctionEvent.PROPERTY_FUNCTION_PROPERTY_VALUE, PROP_VALUE);
+		eventProps.put(FunctionEvent.PROPERTY_FUNCTION_UID, FUNCTION_UID);
+		checkEventProps(new FunctionEvent(
+				FunctionEvent.TOPIC_PROPERTY_CHANGED, (Dictionary) eventProps));
 
 	}
 
-	private void checkEventProps(DeviceFunctionEvent event) {
+	private void checkEventProps(FunctionEvent event) {
 		assertEquals("The event function UID is not correct!", FUNCTION_UID, event.getFunctionUID());
 		assertEquals("The event function property name is not correct!", PROP_NAME, event.getFunctionPropertyName());
 		assertEquals("The event function property value is not correct!", PROP_VALUE, event.getFunctionPropertyValue());

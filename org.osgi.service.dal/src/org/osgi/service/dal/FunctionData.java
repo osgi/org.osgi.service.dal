@@ -19,21 +19,21 @@ package org.osgi.service.dal;
 import java.util.Map;
 
 /**
- * Abstract <code>DeviceFunction</code> data wrapper. A subclass must be used
- * for an access to the property values by all Device Functions. It takes care
- * about the timestamp and additional metadata. The subclasses are responsible
- * to provide concrete value and unit if required.
+ * Abstract <code>Function</code> data wrapper. A subclass must be used for an
+ * access to the property values by all functions. It takes care about the
+ * timestamp and additional metadata. The subclasses are responsible to provide
+ * concrete value and unit if required.
  * <p>
  * The subclass is responsible to provide correct implementation of
  * {@link Comparable#compareTo(Object)} method.
  */
-public abstract class DeviceFunctionData implements Comparable {
+public abstract class FunctionData implements Comparable {
 
 	/**
 	 * Represents the timestamp field name. The field value is available with
 	 * {@link #timestamp} and {@link #getTimestamp()}. The field type is
 	 * <code>long</code>. The constant can be used as a key to
-	 * {@link #DeviceFunctionData(Map)}.
+	 * {@link #FunctionData(Map)}.
 	 */
 	public static final String	FIELD_TIMESTAMP			= "timestamp";
 
@@ -41,7 +41,7 @@ public abstract class DeviceFunctionData implements Comparable {
 	 * Represents the metadata field name. The field value is available with
 	 * {@link #metadata} and {@link #getMetadata()}. The field type is
 	 * <code>Map</code>. The constant can be used as a key to
-	 * {@link #DeviceFunctionData(Map)}.
+	 * {@link #FunctionData(Map)}.
 	 */
 	public static final String	FIELD_METADATA			= "metadata";
 
@@ -52,7 +52,7 @@ public abstract class DeviceFunctionData implements Comparable {
 	public static final String	META_INFO_DESCRIPTION	= "description";
 
 	/**
-	 * Contains <code>DeviceFunctionData</code> timestamp. The timestamp is the
+	 * Contains <code>FunctionData</code> timestamp. The timestamp is the
 	 * difference between the value collecting time and midnight, January 1,
 	 * 1970 UTC. It's measured in milliseconds. The device driver is responsible
 	 * to generate that value when the value is received from the device.
@@ -61,7 +61,7 @@ public abstract class DeviceFunctionData implements Comparable {
 	public final long			timestamp;
 
 	/**
-	 * Contains <code>DeviceFunctionData</code> metadata. It's dynamic metadata
+	 * Contains <code>FunctionData</code> metadata. It's dynamic metadata
 	 * related only to this specific value. Possible keys:
 	 * <ul>
 	 * <li>{@link #META_INFO_DESCRIPTION}</li>
@@ -70,73 +70,73 @@ public abstract class DeviceFunctionData implements Comparable {
 	public final Map			metadata;
 
 	/**
-	 * Constructs new <code>DeviceFunctionData</code> instance with the
-	 * specified field values. The map keys must match to the field names. The
-	 * map values will be assigned to the appropriate class fields. For example,
-	 * the maps can be: {"timestamp"=Long(1384440775495)}. That map will
-	 * initialize the {@link #FIELD_TIMESTAMP} field with 1384440775495. If
-	 * timestamp is missing, {@link Long#MIN_VALUE} is used.
+	 * Constructs new <code>FunctionData</code> instance with the specified
+	 * field values. The map keys must match to the field names. The map values
+	 * will be assigned to the appropriate class fields. For example, the maps
+	 * can be: {"timestamp"=Long(1384440775495)}. That map will initialize the
+	 * {@link #FIELD_TIMESTAMP} field with 1384440775495. If timestamp is
+	 * missing, {@link Long#MIN_VALUE} is used.
 	 * <p>
 	 * {@link #FIELD_TIMESTAMP} field value type must be <code>Long</code>.
 	 * {@link #FIELD_METADATA} field value type must be <code>Map</code>.
 	 * 
-	 * @param fields Contains the new <code>DeviceFunctionData</code> instance
-	 *        field values.
+	 * @param fields Contains the new <code>FunctionData</code> instance field
+	 *        values.
 	 * 
 	 * @throws ClassCastException If the field value types are not expected.
 	 * @throws NullPointerException If the fields map is <code>null</code>.
 	 */
-	public DeviceFunctionData(final Map fields) {
+	public FunctionData(final Map fields) {
 		final Long timestampLocal = (Long) fields.get("timestamp");
 		this.timestamp = (null != timestampLocal) ? timestampLocal.longValue() : Long.MIN_VALUE;
 		this.metadata = (Map) fields.get("metadata");
 	}
 
 	/**
-	 * Constructs new <code>DeviceFunctionData</code> instance with the
-	 * specified arguments.
+	 * Constructs new <code>FunctionData</code> instance with the specified
+	 * arguments.
 	 * 
 	 * @param timestamp The data timestamp.
 	 * @param metadata The data metadata.
 	 */
-	public DeviceFunctionData(final long timestamp, final Map metadata) {
+	public FunctionData(final long timestamp, final Map metadata) {
 		this.timestamp = timestamp;
 		this.metadata = metadata;
 	}
 
 	/**
-	 * Returns <code>DeviceFunctionData</code> timestamp. The timestamp is the
+	 * Returns <code>FunctionData</code> timestamp. The timestamp is the
 	 * difference between the value collecting time and midnight, January 1,
 	 * 1970 UTC. It's measured in milliseconds. The device driver is responsible
 	 * to generate that value when the value is received from the device.
 	 * {@link java.lang.Long#MIN_VALUE} value means no timestamp.
 	 * 
-	 * @return <code>DeviceFunctionData</code> timestamp.
+	 * @return <code>FunctionData</code> timestamp.
 	 */
 	public long getTimestamp() {
 		return this.timestamp;
 	}
 
 	/**
-	 * Returns <code>DeviceFunctionData</code> metadata. It's dynamic metadata
-	 * related only to this specific value. Possible keys:
+	 * Returns <code>FunctionData</code> metadata. It's dynamic metadata related
+	 * only to this specific value. Possible keys:
 	 * <ul>
 	 * <li>{@link #META_INFO_DESCRIPTION}</li>
 	 * <li>custom key</li>
 	 * 
-	 * @return <code>DeviceFunctionData</code> metadata or <code>null</code> is
-	 *         there is no metadata.
+	 * @return <code>FunctionData</code> metadata or <code>null</code> is there
+	 *         is no metadata.
 	 */
 	public Map getMetadata() {
 		return this.metadata;
 	}
 
 	/**
-	 * Two <code>DeviceFunctionData</code> instances are equal if their metadata
-	 * and timestamp are equivalent.
+	 * Two <code>FunctionData</code> instances are equal if their metadata and
+	 * timestamp are equivalent.
 	 * 
 	 * @param other The other instance to compare. It must be of
-	 *        <code>DeviceFunctionData</code> type.
+	 *        <code>FunctionData</code> type.
 	 * 
 	 * @return <code>true</code> if this instance and argument have equivalent
 	 *         metadata and timestamp, <code>false</code> otherwise.
@@ -144,10 +144,10 @@ public abstract class DeviceFunctionData implements Comparable {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object other) {
-		if (!(other instanceof DeviceFunctionData)) {
+		if (!(other instanceof FunctionData)) {
 			return false;
 		}
-		DeviceFunctionData otherData = (DeviceFunctionData) other;
+		FunctionData otherData = (FunctionData) other;
 		if (null != this.metadata) {
 			if ((null == otherData.metadata) || (!this.metadata.equals(otherData.metadata))) {
 				return false;
@@ -159,9 +159,9 @@ public abstract class DeviceFunctionData implements Comparable {
 	}
 
 	/**
-	 * Returns the hash code of this <code>DeviceFunctionData</code>.
+	 * Returns the hash code of this <code>FunctionData</code>.
 	 * 
-	 * @return <code>DeviceFunctionData</code> hash code.
+	 * @return <code>FunctionData</code> hash code.
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */

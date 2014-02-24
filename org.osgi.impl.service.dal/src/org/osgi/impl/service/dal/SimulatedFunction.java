@@ -18,18 +18,18 @@
 package org.osgi.impl.service.dal;
 
 import java.util.Map;
-import org.osgi.service.dal.DeviceFunction;
-import org.osgi.service.dal.DeviceFunctionData;
-import org.osgi.service.dal.DeviceFunctionEvent;
+import org.osgi.service.dal.Function;
+import org.osgi.service.dal.FunctionData;
+import org.osgi.service.dal.FunctionEvent;
 import org.osgi.service.dal.OperationMetadata;
 import org.osgi.service.dal.PropertyMetadata;
 import org.osgi.service.event.EventAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
- * Common implementation of the simulated device function.
+ * Common implementation of the simulated function.
  */
-public class SimulatedDeviceFunction extends SimulatedService implements DeviceFunction {
+public class SimulatedFunction extends SimulatedService implements Function {
 
 	/** The property metadata. */
 	protected final Map	propertyMetadata;
@@ -40,13 +40,13 @@ public class SimulatedDeviceFunction extends SimulatedService implements DeviceF
 	private final ServiceTracker	eventAdminTracker;
 
 	/**
-	 * Constructs a new simulated device function with the specified arguments.
+	 * Constructs a new simulated function with the specified arguments.
 	 * 
 	 * @param propertyMetadata The property metadata.
 	 * @param operationMetadata The operation metadata.
 	 * @param eventAdminTracker The event admin tracker.
 	 */
-	public SimulatedDeviceFunction(
+	public SimulatedFunction(
 			Map propertyMetadata,
 			Map operationMetadata,
 			ServiceTracker eventAdminTracker) {
@@ -72,26 +72,26 @@ public class SimulatedDeviceFunction extends SimulatedService implements DeviceF
 	}
 
 	/**
-	 * Unregisters the device function from the service registry.
+	 * Unregisters the function from the service registry.
 	 */
 	public void remove() {
 		super.serviceReg.unregister();
 	}
 
 	/**
-	 * Posts a new device function property event through Event Admin service.
+	 * Posts a new function property event through Event Admin service.
 	 * 
-	 * @param propName The device function property name.
-	 * @param propValue The device function property value
+	 * @param propName The function property name.
+	 * @param propValue The function property value
 	 */
-	public void postEvent(String propName, DeviceFunctionData propValue) {
+	public void postEvent(String propName, FunctionData propValue) {
 		final EventAdmin eventAdmin = (EventAdmin) this.eventAdminTracker.getService();
 		if (null == eventAdmin) {
 			throw new UnsupportedOperationException("The operation is not suported without Event Admin.");
 		}
-		DeviceFunctionEvent event = new DeviceFunctionEvent(
-				DeviceFunctionEvent.TOPIC_PROPERTY_CHANGED,
-				(String) this.getServiceProperty(DeviceFunction.SERVICE_UID),
+		FunctionEvent event = new FunctionEvent(
+				FunctionEvent.TOPIC_PROPERTY_CHANGED,
+				(String) this.getServiceProperty(Function.SERVICE_UID),
 				propName,
 				propValue);
 		eventAdmin.postEvent(event);
