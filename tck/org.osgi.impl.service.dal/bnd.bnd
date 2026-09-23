@@ -1,0 +1,11 @@
+# Set javac settings from JDT prefs
+
+Bundle-Vendor		= ProSyst
+Bundle-Activator	= ${p}.Activator
+
+-privatepackage		= ${p}.*
+
+Export-Package		= \
+    org.osgi.impl.service.dal.simulator; -split-package:=first; provide:=true
+
+p: org.osgi.impl.service.dal
