@@ -1,0 +1,9 @@
+# Set javac settings from JDT prefs
+
+Bundle-Vendor		= ProSyst
+Bundle-Activator	= ${p}.Activator
+
+-privatepackage		= \
+	${p}.*
+
+p: org.osgi.impl.service.dal.step
