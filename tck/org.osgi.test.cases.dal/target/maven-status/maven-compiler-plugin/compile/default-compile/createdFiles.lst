@@ -1,0 +1,15 @@
+org/osgi/test/cases/dal/FunctionDataTest.class
+org/osgi/test/cases/dal/TestUtil.class
+org/osgi/test/cases/dal/DeviceExceptionTest.class
+org/osgi/test/cases/dal/DevicePermissionTest.class
+org/osgi/test/cases/dal/AbstractDeviceTest.class
+org/osgi/test/cases/dal/SIUnitsTest.class
+org/osgi/test/cases/dal/DeviceSignatureTestCase.class
+org/osgi/test/cases/dal/FunctionTest.class
+org/osgi/test/cases/dal/TestDevice.class
+org/osgi/test/cases/dal/TestServiceListener.class
+org/osgi/test/cases/dal/DeviceTest.class
+org/osgi/test/cases/dal/TestFunctionData.class
+org/osgi/test/cases/dal/step/TestStepDeviceProxy.class
+org/osgi/test/cases/dal/FunctionEventTest.class
+org/osgi/test/cases/dal/step/DeviceTestSteps.class

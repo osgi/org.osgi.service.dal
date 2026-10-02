@@ -1,0 +1,3170 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xreflabel="org.osgi.service.dal"
+         version="5"
+         role="package"
+         xml:id="org.osgi.service.dal">
+   <title>org.osgi.service.dal</title>
+   <info>
+      <releaseinfo xml:id="org.osgi.service.dal-version">Version 1.0</releaseinfo>
+      <edition xml:id="org.osgi.service.dal-version.number">1.0</edition>
+   </info>
+   <para>
+Device Abstraction Layer Package Version 1.0.
+ 
+ </para>
+   <para>
+ Bundles wishing to use this package must list the package in the
+ Import-Package header of the bundle's manifest. This package has two types of
+ users: the consumers that use the API in this package and the providers that
+ implement the API in this package.
+ 
+ </para>
+   <para>
+ Example import for consumers using the API in this package:
+ </para>
+   <para>
+ {@code  Import-Package: org.osgi.service.dal; version="[1.0,2.0)"}
+ </para>
+   <para>
+ Example import for providers implementing the API in this package:
+ </para>
+   <para>
+ {@code  Import-Package: org.osgi.service.dal; version="[1.0,1.1)"}</para>
+   <section role="summary">
+      <title>Summary</title>
+      <itemizedlist>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.Device">
+                  <code>Device</code>
+               </link> - 
+Represents the device in the OSGi service registry.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.DeviceException">
+                  <code>DeviceException</code>
+               </link> - 
+{@code DeviceException} is a special {@code IOException}, which is thrown to
+ indicate that there is a device operation fail.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.DevicePermission">
+                  <code>DevicePermission</code>
+               </link> - 
+A bundle's authority to perform specific privileged administrative operations
+ on the devices.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.Function">
+                  <code>Function</code>
+               </link> - 
+Function service provides specific device operations and properties.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.FunctionData">
+                  <code>FunctionData</code>
+               </link> - 
+Abstract {@code Function} data wrapper.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.FunctionEvent">
+                  <code>FunctionEvent</code>
+               </link> - 
+Asynchronous event, which marks a function property value modification.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.OperationMetadata">
+                  <code>OperationMetadata</code>
+               </link> - 
+Contains metadata about function operation.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.PropertyMetadata">
+                  <code>PropertyMetadata</code>
+               </link> - 
+Contains metadata about a function property, a function operation parameter
+ or a function operation return value.
+   </para>
+         </listitem>
+         <listitem>
+            <para>
+               <link linkend="org.osgi.service.dal.SIUnits">
+                  <code>SIUnits</code>
+               </link> - 
+Contains most of the International System of Units unit symbols.
+   </para>
+         </listitem>
+      </itemizedlist>
+   </section>
+   <section xreflabel="Device"
+            role="class"
+            xml:id="org.osgi.service.dal.Device">
+      <title>public abstract Device</title>
+      <para>
+Represents the device in the OSGi service registry. Note that {@code Device}
+ services are registered last. Before their registration, there is
+ {@code Function} services registration. The reverse order is used when the
+ services are unregistered. {@code Device} services are unregistered first
+ before {@code Function} services.
+   </para>
+      <section xreflabel="DEVICE_CATEGORY"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.DEVICE_CATEGORY">
+         <title>public static final String DEVICE_CATEGORY = "DAL"</title>
+         <para>
+Constant for the value of the {@link Constants#DEVICE_CATEGORY} service
+ property. That category is used by all device services.
+   </para>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="UNRESOLVED">Constants.DEVICE_CATEGORY</link>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="SERVICE_DESCRIPTION"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_DESCRIPTION">
+         <title>public static final String SERVICE_DESCRIPTION = "dal.device.description"</title>
+         <para>
+The service property value contains the device description. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_DRIVER"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_DRIVER">
+         <title>public static final String SERVICE_DRIVER = "dal.device.driver"</title>
+         <para>
+The service property value contains the device driver name. For example,
+ EnOcean, Z-Wave, Bluetooth, etc. It's a mandatory property. The value
+ type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_FIRMWARE_VENDOR"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_FIRMWARE_VENDOR">
+         <title>public static final String SERVICE_FIRMWARE_VENDOR = "dal.device.firmware.vendor"</title>
+         <para>
+The service property value contains the device firmware vendor. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_FIRMWARE_VERSION"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_FIRMWARE_VERSION">
+         <title>public static final String SERVICE_FIRMWARE_VERSION = "dal.device.firmware.version"</title>
+         <para>
+The service property value contains the device firmware version. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_HARDWARE_VENDOR"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_HARDWARE_VENDOR">
+         <title>public static final String SERVICE_HARDWARE_VENDOR = "dal.device.hardware.vendor"</title>
+         <para>
+The service property value contains the device hardware vendor. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_HARDWARE_VERSION"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_HARDWARE_VERSION">
+         <title>public static final String SERVICE_HARDWARE_VERSION = "dal.device.hardware.version"</title>
+         <para>
+The service property value contains the device hardware version. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_MODEL"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_MODEL">
+         <title>public static final String SERVICE_MODEL = "dal.device.model"</title>
+         <para>
+The service property value contains the device model. It's an optional
+ property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_NAME"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_NAME">
+         <title>public static final String SERVICE_NAME = "dal.device.name"</title>
+         <para>
+The service property value contains the device name. It's an optional
+ property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_REFERENCE_UIDS"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_REFERENCE_UIDS">
+         <title>public static final String SERVICE_REFERENCE_UIDS = "dal.device.reference.UIDs"</title>
+         <para>
+The service property value contains the reference device unique
+ identifiers. It's an optional property. The value type is
+ {@code java.lang.String[]}. It can be used to represent different
+ relationships between the devices. For example, the EnOcean controller
+ can have a reference to the USB dongle.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_SERIAL_NUMBER"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_SERIAL_NUMBER">
+         <title>public static final String SERVICE_SERIAL_NUMBER = "dal.device.serial.number"</title>
+         <para>
+The service property value contains the device serial number. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_STATUS"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_STATUS">
+         <title>public static final String SERVICE_STATUS = "dal.device.status"</title>
+         <para>
+The service property value contains the device status. It's a mandatory
+ property. The value type is {@code java.lang.Integer}. The possible
+ values are:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para> {@link #STATUS_ONLINE}</para>
+            </listitem>
+            <listitem>
+               <para> {@link #STATUS_OFFLINE}</para>
+            </listitem>
+            <listitem>
+               <para> {@link #STATUS_REMOVED}</para>
+            </listitem>
+            <listitem>
+               <para> {@link #STATUS_PROCESSING}</para>
+            </listitem>
+            <listitem>
+               <para> {@link #STATUS_NOT_INITIALIZED}</para>
+            </listitem>
+            <listitem>
+               <para> {@link #STATUS_NOT_CONFIGURED}</para>
+            </listitem>
+         </itemizedlist>
+      </section>
+      <section xreflabel="SERVICE_STATUS_DETAIL"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_STATUS_DETAIL">
+         <title>public static final String SERVICE_STATUS_DETAIL = "dal.device.status.detail"</title>
+         <para>
+The service property value contains the device status detail. It holds
+ the reason for the current device status. It's an optional property. The
+ value type is {@code java.lang.Integer}. There are two value categories:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>positive values - those values contain details related to the current
+ status. Examples: {@link #STATUS_DETAIL_CONNECTING} and
+ {@link #STATUS_DETAIL_INITIALIZING}.</para>
+            </listitem>
+            <listitem>
+               <para>negative values - those values contain errors related to the current
+ status. Examples: {@link #STATUS_DETAIL_CONFIGURATION_UNAPPLIED},
+ {@link #STATUS_DETAIL_BROKEN} and
+ {@link #STATUS_DETAIL_COMMUNICATION_ERROR}.</para>
+            </listitem>
+         </itemizedlist>
+      </section>
+      <section xreflabel="SERVICE_TYPES"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_TYPES">
+         <title>public static final String SERVICE_TYPES = "dal.device.types"</title>
+         <para>
+The service property value contains the device types like DVD, TV, etc.
+ It's an optional property. The value type is {@code java.lang.String[]}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_UID"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.SERVICE_UID">
+         <title>public static final String SERVICE_UID = "dal.device.UID"</title>
+         <para>
+The service property value contains the device unique identifier. It's a
+ mandatory property. The value type is {@code java.lang.String}. To
+ simplify the unique identifier generation, the property value must follow
+ the rule:
+ </para>
+         <para>
+ UID ::= driver-name ':' device-id
+ </para>
+         <para>
+ UID - device unique identifier
+ </para>
+         <para>
+ driver-name - the value of the {@link #SERVICE_DRIVER} service property
+ </para>
+         <para>
+ device-id - device unique identifier in the scope of the driver</para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_BROKEN"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_BROKEN">
+         <title>public static final Integer STATUS_DETAIL_BROKEN</title>
+         <para>
+Device status detail indicates that the device is broken. It can be used
+ as a value of {@link #SERVICE_STATUS_DETAIL} service property. The device
+ status must be {@link #STATUS_OFFLINE}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_COMMUNICATION_ERROR"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_COMMUNICATION_ERROR">
+         <title>public static final Integer STATUS_DETAIL_COMMUNICATION_ERROR</title>
+         <para>
+Device status detail indicates that the device communication is
+ problematic. It can be used as a value of {@link #SERVICE_STATUS_DETAIL}
+ service property. The device status must be {@link #STATUS_ONLINE} or
+ {@link #STATUS_NOT_INITIALIZED}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_CONFIGURATION_ERROR"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_CONFIGURATION_ERROR">
+         <title>public static final Integer STATUS_DETAIL_CONFIGURATION_ERROR</title>
+         <para>
+Device status detail indicates that the device cannot be configured. It
+ can be used as a value of {@link #SERVICE_STATUS_DETAIL} service
+ property. The device status must be {@link #STATUS_NOT_CONFIGURED}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_CONFIGURATION_UNAPPLIED"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_CONFIGURATION_UNAPPLIED">
+         <title>public static final Integer STATUS_DETAIL_CONFIGURATION_UNAPPLIED</title>
+         <para>
+Device status detail indicates that the device configuration is not
+ applied. It can be used as a value of {@link #SERVICE_STATUS_DETAIL}
+ service property. The device status must be
+ {@link #STATUS_NOT_CONFIGURED}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_CONNECTING"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_CONNECTING">
+         <title>public static final Integer STATUS_DETAIL_CONNECTING</title>
+         <para>
+Device status detail indicates that the device is currently connecting to
+ the network. It can be used as a value of {@link #SERVICE_STATUS_DETAIL}
+ service property. The device status must be {@link #STATUS_PROCESSING}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_DATA_INSUFFICIENT"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_DATA_INSUFFICIENT">
+         <title>public static final Integer STATUS_DETAIL_DATA_INSUFFICIENT</title>
+         <para>
+Device status detail indicates that the device doesn't provide enough
+ information and cannot be determined. It can be used as a value of
+ {@link #SERVICE_STATUS_DETAIL} service property. The device status must
+ be {@link #STATUS_NOT_INITIALIZED}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_DUTY_CYCLE"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_DUTY_CYCLE">
+         <title>public static final Integer STATUS_DETAIL_DUTY_CYCLE</title>
+         <para>
+Device status detail indicates that the device is in duty cycle. It can
+ be used as a value of {@link #SERVICE_STATUS_DETAIL} service property.
+ The device status must be {@link #STATUS_OFFLINE}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_FIRMWARE_UPDATING"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_FIRMWARE_UPDATING">
+         <title>public static final Integer STATUS_DETAIL_FIRMWARE_UPDATING</title>
+         <para>
+Device status detail indicates that the device firmware is updating. It
+ can be used as a value of {@link #SERVICE_STATUS_DETAIL} service
+ property. The device status must be {@link #STATUS_PROCESSING}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_INACCESSIBLE"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_INACCESSIBLE">
+         <title>public static final Integer STATUS_DETAIL_INACCESSIBLE</title>
+         <para>
+Device status detail indicates that the device is not accessible and
+ further communication is not possible. It can be used as a value of
+ {@link #SERVICE_STATUS_DETAIL} service property. The device status must
+ be {@link #STATUS_OFFLINE}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_INITIALIZING"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_INITIALIZING">
+         <title>public static final Integer STATUS_DETAIL_INITIALIZING</title>
+         <para>
+Device status detail indicates that the device is currently in process of
+ initialization. It can be used as a value of
+ {@link #SERVICE_STATUS_DETAIL} service property. The device status must
+ be {@link #STATUS_PROCESSING}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_DETAIL_REMOVING"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_DETAIL_REMOVING">
+         <title>public static final Integer STATUS_DETAIL_REMOVING</title>
+         <para>
+Device status detail indicates that the device is leaving the network. It
+ can be used as a value of {@link #SERVICE_STATUS_DETAIL} service
+ property. The device status must be {@link #STATUS_PROCESSING}.
+   </para>
+      </section>
+      <section xreflabel="STATUS_NOT_CONFIGURED"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_NOT_CONFIGURED">
+         <title>public static final Integer STATUS_NOT_CONFIGURED</title>
+         <para>
+Device status indicates that the device is currently not configured. The
+ device can require additional actions to become completely connected to
+ the network. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </para>
+      </section>
+      <section xreflabel="STATUS_NOT_INITIALIZED"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_NOT_INITIALIZED">
+         <title>public static final Integer STATUS_NOT_INITIALIZED</title>
+         <para>
+Device status indicates that the device is currently not initialized.
+ Some protocols don't provide device information right after the device is
+ connected. The device can be initialized later when it's awakened. It can
+ be used as a value of {@link #SERVICE_STATUS} service property.
+   </para>
+      </section>
+      <section xreflabel="STATUS_OFFLINE"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_OFFLINE">
+         <title>public static final Integer STATUS_OFFLINE</title>
+         <para>
+Device status indicates that the device is currently not available for
+ operations. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </para>
+      </section>
+      <section xreflabel="STATUS_ONLINE"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_ONLINE">
+         <title>public static final Integer STATUS_ONLINE</title>
+         <para>
+Device status indicates that the device is currently available for
+ operations. The recent communication with the device has been passed
+ through. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </para>
+      </section>
+      <section xreflabel="STATUS_PROCESSING"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_PROCESSING">
+         <title>public static final Integer STATUS_PROCESSING</title>
+         <para>
+Device status indicates that the device is currently busy with an
+ operation. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </para>
+      </section>
+      <section xreflabel="STATUS_REMOVED"
+               role="field"
+               xml:id="org.osgi.service.dal.Device.STATUS_REMOVED">
+         <title>public static final Integer STATUS_REMOVED</title>
+         <para>
+Device status indicates that the device has been removed from the
+ network. That status must be set as the last device status. After that
+ the device service can be unregistered from the service registry. It can
+ be used as a value of {@link #SERVICE_STATUS} service property.
+   </para>
+      </section>
+      <section xreflabel="getServiceProperty(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.Device.getServiceProperty-String-">
+         <title>public abstract Object getServiceProperty(String propKey)</title>
+         <formalpara role="parameter">
+            <title>propKey</title>
+            <para>The property key.</para>
+         </formalpara>
+         <para role="description">
+Returns the current value of the specified property. The method will
+ return the same value as {@code ServiceReference.getProperty(String)} for
+ the service reference of this device.
+ </para>
+         <para>
+ This method must continue to return property values after the device
+ service has been unregistered.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property value or {@code null} if the property key cannot be
+         mapped to a value.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getServicePropertyKeys()"
+               role="method"
+               xml:id="org.osgi.service.dal.Device.getServicePropertyKeys--">
+         <title>public abstract String[][] getServicePropertyKeys()</title>
+         <para role="description">
+Returns an array with all device service property keys. The method will
+ return the same value as {@code ServiceReference.getPropertyKeys()} for
+ the service reference of this device. The result cannot be {@code null}.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>An array with all device service property keys, cannot be
+         {@code null}.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="remove()"
+               role="method"
+               xml:id="org.osgi.service.dal.Device.remove--">
+         <title>public abstract void remove() throws DeviceException</title>
+         <para role="description">
+Removes this device.
+ </para>
+         <para>
+ The method must synchronously:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>Remove the device from the device network.</para>
+            </listitem>
+            <listitem>
+               <para>Set the device status to {@link #STATUS_REMOVED}.</para>
+            </listitem>
+            <listitem>
+               <para>Unregister the device service from the OSGi service registry.</para>
+            </listitem>
+         </itemizedlist>
+         <para>
+ The caller should release the device service after successful execution,
+ because the device will not be operational.
+   </para>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>DeviceException</code>– If an operation error is available.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>UnsupportedOperationException</code>– If the operation is not supported
+         over this device.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>SecurityException</code>– If the caller does not have the appropriate
+         {@code DevicePermission(this device, }
+         {@link DevicePermission#REMOVE}{@code )} and the Java Runtime
+         Environment supports permissions.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalStateException</code>– If this device service object has already
+         been unregistered.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="DeviceException"
+            role="class"
+            xml:id="org.osgi.service.dal.DeviceException">
+      <title>public class DeviceException<?line-break?> extends IOException</title>
+      <para>
+{@code DeviceException} is a special {@code IOException}, which is thrown to
+ indicate that there is a device operation fail. The error reason can be
+ located with {@link #getCode()} method. The cause is available with
+ {@link #getCause()}.
+   </para>
+      <section xreflabel="COMMUNICATION_ERROR"
+               role="field"
+               xml:id="org.osgi.service.dal.DeviceException.COMMUNICATION_ERROR">
+         <title>public static final int COMMUNICATION_ERROR = 1</title>
+         <para>
+An exception code indicates that there is an error in the communication.
+   </para>
+      </section>
+      <section xreflabel="NO_DATA"
+               role="field"
+               xml:id="org.osgi.service.dal.DeviceException.NO_DATA">
+         <title>public static final int NO_DATA = 4</title>
+         <para>
+An exception code indicates that the requested value is currently not
+ available.
+   </para>
+      </section>
+      <section xreflabel="NOT_INITIALIZED"
+               role="field"
+               xml:id="org.osgi.service.dal.DeviceException.NOT_INITIALIZED">
+         <title>public static final int NOT_INITIALIZED = 3</title>
+         <para>
+An exception code indicates that the device is not initialized. The
+ device status is {@link Device#STATUS_NOT_INITIALIZED} or
+ {@link Device#STATUS_PROCESSING}.
+   </para>
+      </section>
+      <section xreflabel="TIMEOUT"
+               role="field"
+               xml:id="org.osgi.service.dal.DeviceException.TIMEOUT">
+         <title>public static final int TIMEOUT = 2</title>
+         <para>
+An exception code indicates that there is expired timeout without any
+ processing.
+   </para>
+      </section>
+      <section xreflabel="UNKNOWN"
+               role="field"
+               xml:id="org.osgi.service.dal.DeviceException.UNKNOWN">
+         <title>public static final int UNKNOWN = 0</title>
+         <para>
+An exception code indicates that the error is unknown.
+   </para>
+      </section>
+      <section xreflabel="DeviceException()"
+               role="method"
+               xml:id="org.osgi.service.dal.DeviceException.DeviceException--">
+         <title>public  DeviceException()</title>
+         <para role="description">
+Construct a new device exception with {@code null} message. The cause is
+ not initialized and the exception code is set to {@link #UNKNOWN}.
+   </para>
+      </section>
+      <section xreflabel="DeviceException(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.DeviceException.DeviceException-String-">
+         <title>public  DeviceException(String message)</title>
+         <formalpara role="parameter">
+            <title>message</title>
+            <para>The exception message.</para>
+         </formalpara>
+         <para role="description">
+Constructs a new device exception with the given message. The cause is
+ not initialized and the exception code is set to {@link #UNKNOWN}.
+   </para>
+      </section>
+      <section xreflabel="DeviceException(String,Throwable)"
+               role="method"
+               xml:id="org.osgi.service.dal.DeviceException.DeviceException-String-Throwable-">
+         <title>public  DeviceException(String message, Throwable cause)</title>
+         <formalpara role="parameter">
+            <title>message</title>
+            <para>The exception message.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>cause</title>
+            <para>The exception cause.</para>
+         </formalpara>
+         <para role="description">
+Constructs a new device exception with the given message and cause. The
+ exception code is set to {@link #UNKNOWN}.
+   </para>
+      </section>
+      <section xreflabel="DeviceException(String,Throwable,int)"
+               role="method"
+               xml:id="org.osgi.service.dal.DeviceException.DeviceException-String-Throwable-int-">
+         <title>public  DeviceException(String message, Throwable cause, int code)</title>
+         <formalpara role="parameter">
+            <title>message</title>
+            <para>The exception message.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>cause</title>
+            <para>The exception cause.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>code</title>
+            <para>The exception code.</para>
+         </formalpara>
+         <para role="description">
+Constructs a new device exception with the given message, cause and code.
+   </para>
+      </section>
+      <section xreflabel="getCode()"
+               role="method"
+               xml:id="org.osgi.service.dal.DeviceException.getCode--">
+         <title>public int getCode()</title>
+         <para role="description">
+Returns the exception code. It indicates the reason for this exception.
+ The code can be:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@link #UNKNOWN}</para>
+            </listitem>
+            <listitem>
+               <para>{@link #COMMUNICATION_ERROR}</para>
+            </listitem>
+            <listitem>
+               <para>{@link #TIMEOUT}</para>
+            </listitem>
+            <listitem>
+               <para>{@link #NOT_INITIALIZED}</para>
+            </listitem>
+            <listitem>
+               <para>{@link #NO_DATA}</para>
+            </listitem>
+            <listitem>
+               <para>custom code</para>
+            </listitem>
+         </itemizedlist>
+         <para>
+ Zero and positive values are reserved for this definition and further
+ extensions of the device exception codes. Custom codes can be used only
+ as negative values to prevent potential collisions.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>An exception code.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="DevicePermission"
+            role="class"
+            xml:id="org.osgi.service.dal.DevicePermission">
+      <title>public class DevicePermission<?line-break?> extends BasicPermission</title>
+      <para>
+A bundle's authority to perform specific privileged administrative operations
+ on the devices. The method {@link Device#remove()} is protected with
+ {@link #REMOVE} permission action.
+ </para>
+      <para>
+ The name of the permission is a filter based. See OSGi Core Specification,
+ Filter Based Permissions. The filter gives an access to all device service
+ properties. Filter attribute names are processed in a case sensitive manner.</para>
+      <section xreflabel="REMOVE"
+               role="field"
+               xml:id="org.osgi.service.dal.DevicePermission.REMOVE">
+         <title>public static final String REMOVE = "remove"</title>
+         <para>
+A permission action to remove the device.
+   </para>
+      </section>
+      <section xreflabel="DevicePermission(String,String)"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.DevicePermission-String-String-">
+         <title>public  DevicePermission(String filter, String action)</title>
+         <formalpara role="parameter">
+            <title>filter</title>
+            <para>A filter expression that can use any device service
+        property. The filter attribute names are processed in a case
+        insensitive manner. A special value of "*" can be used to match
+        all devices.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>action</title>
+            <para>{@link #REMOVE} action.</para>
+         </formalpara>
+         <para role="description">
+Creates a new {@code DevicePermission} with the given filter and actions.
+ The constructor must only be used to create a permission that is going to
+ be checked.
+ </para>
+         <para>
+ A filter example: (dal.device.hardware.vendor=acme)
+ </para>
+         <para>
+ An action: remove</para>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the filter syntax is not correct or
+         invalid action is specified.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>NullPointerException</code>– If the filter or action is null.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="DevicePermission(Device,String)"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.DevicePermission-Device-String-">
+         <title>public  DevicePermission(Device device, String action)</title>
+         <formalpara role="parameter">
+            <title>device</title>
+            <para>The device that needs to be checked for a permission.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>action</title>
+            <para>{@link #REMOVE} action.</para>
+         </formalpara>
+         <para role="description">
+Creates a new {@code DevicePermission} with the given device and actions.
+ The permission must be used for the security checks like:
+ </para>
+         <para>
+ {@code securityManager.checkPermission(new DevicePermission(this, "remove"))}
+ . The permissions constructed by this constructor must not be added to
+ the {@code DevicePermission} permission collections.</para>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If an invalid action is specified.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>NullPointerException</code>– If the device or action is null.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="equals(Object)"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.equals-Object-">
+         <title>public boolean equals(Object obj)</title>
+         <formalpara role="parameter">
+            <title>obj</title>
+            <para>The object being compared for equality with this object.</para>
+         </formalpara>
+         <para role="description">
+Two {@code DevicePermission} instances are equal if:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>Represents the same filter and action.</para>
+            </listitem>
+            <listitem>
+               <para>Represents the same device (in respect to device unique identifier)
+ and action.</para>
+            </listitem>
+         </itemizedlist>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code true} if two permissions are equal, {@code false}
+         otherwise.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getActions()"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.getActions--">
+         <title>public String getActions()</title>
+         <para role="description">
+Returns the canonical string representation of {@link #REMOVE} action.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The canonical string representation of the actions.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="hashCode()"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.hashCode--">
+         <title>public int hashCode()</title>
+         <para role="description">
+Returns the hash code value for this object.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>Hash code value for this object.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="implies(Permission)"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.implies-Permission-">
+         <title>public boolean implies(Permission p)</title>
+         <formalpara role="parameter">
+            <title>p</title>
+            <para>The permission to be implied. It must be constructed by
+        {@link #DevicePermission(Device, String)}.</para>
+         </formalpara>
+         <para role="description">
+Determines if the specified permission is implied by this object. The
+ method will return {@code false} if the specified permission was not
+ constructed by {@link #DevicePermission(Device, String)}.
+ 
+ Returns {@code true} if the specified permission is a
+ {@code DevicePermission} and this permission filter matches the specified
+ permission device properties.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code true} if the specified permission is implied by this
+         permission, {@code false} otherwise.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the specified permission is not
+         constructed by {@link #DevicePermission(Device, String)}.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="newPermissionCollection()"
+               role="method"
+               xml:id="org.osgi.service.dal.DevicePermission.newPermissionCollection--">
+         <title>public PermissionCollection newPermissionCollection()</title>
+         <para role="description">
+Returns a new {@code PermissionCollection} suitable for storing
+ {@code DevicePermission} instances.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>A new {@code PermissionCollection} instance.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="Function"
+            role="class"
+            xml:id="org.osgi.service.dal.Function">
+      <title>public abstract Function</title>
+      <para>
+Function service provides specific device operations and properties. Each
+ function service must implement this interface. In additional to this
+ interface, the implementation can provide own:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>properties;</para>
+         </listitem>
+         <listitem>
+            <para>operations.</para>
+         </listitem>
+      </itemizedlist>
+      <para>
+ The function service is registered in the service registry with these service
+ properties:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>{@link #SERVICE_UID} - mandatory service property. The property value
+ contains the function unique identifier.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_DEVICE_UID} - optional service property. The property
+ value is the Functional Device identifiers. The function belongs to those
+ devices.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_REFERENCE_UIDS} - optional service property. The property
+ value contains the reference function unique identifiers.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_TYPE} - mandatory service property. The property value is
+ the function type.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_VERSION} - optional service property. The property value
+ contains the function version.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_DESCRIPTION} - optional service property. The property
+ value is the function description.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_OPERATION_NAMES} - optional service property. The
+ property is missing when there are no function operations and property must
+ be set when there are function operations. The property value is the function
+ operation names.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #SERVICE_PROPERTY_NAMES} - optional service property. The property
+ is missing when there are no function properties and property must be set
+ when there are function properties. The property value is the function
+ property names.</para>
+         </listitem>
+      </itemizedlist>
+      <para>
+ On start up, the {@code Function} services are registered before the
+ {@code Device} services. It's possible that {@link #SERVICE_DEVICE_UID} point
+ to missing services at the moment of the registration. The reverse order is
+ used when the services are unregistered. {@code Function} services are
+ unregistered last after {@code Device} services.
+ </para>
+      <para>
+ The {@code Function} service should be registered only under the function
+ class hierarchy. Other classes can be used if there are no ambiguous
+ representations. For example, an ambiguous representation can be a function
+ registered under two independent function classes like {@code BinarySwitch}
+ and {@code Meter}. In this example, both functions support the same property
+ {@code state} with different meaning.
+ {@code getPropertyMetadata(String propertyName)} method cannot determinate
+ which property is requested. It can be <code>BinarySwitch state</code> or
+ <code>Meter state</code>.
+ </para>
+      <para>
+ To simplify the generic function discovery, the {@code Function} interface
+ must be used for the service registration. In this way, the generic
+ applications can easily find all services, which are functions in the service
+ registry. Because of this rule, this registration is not allowed:
+ </para>
+      <para>
+         <code>context.registerService(MeterV1.class.getName(), this, regProps);</code>
+      </para>
+      <para>
+ If the implementation would like to mark that there is a function, but no
+ specific function interface exists, the registration can be:
+ </para>
+      <para>
+         <code>context.registerService(Function.class.getName(), this, regProps);</code>
+      </para>
+      <para>
+ Note that such functions usually don't have operations and properties.
+ </para>
+      <para>
+ The function properties must be integrated according to these rules:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>Getter methods must be available for all properties with
+ {@link PropertyMetadata#ACCESS_READABLE} access.</para>
+         </listitem>
+         <listitem>
+            <para>Getter method must return a subclass of {@link FunctionData}.</para>
+         </listitem>
+         <listitem>
+            <para>Setter methods must be available for all properties with
+ {@link PropertyMetadata#ACCESS_WRITABLE} access.</para>
+         </listitem>
+         <listitem>
+            <para>
+ Setter methods can be any combination of:
+ </para>
+            <itemizedlist>
+               <listitem>
+                  <para>Setter method which accepts a subclass of {@link FunctionData}.</para>
+               </listitem>
+               <listitem>
+                  <para>
+ Setter method which accepts the values used by the {@link FunctionData}
+ subclass, if there are no equal types.</para>
+               </listitem>
+            </itemizedlist>
+            <para>
+ It's possible to have only one or both of them. Examples:
+ </para>
+            <itemizedlist>
+               <listitem>
+                  <para>
+ There is {@code MyFunctionData} bean with {@code BigDecimal} value for a
+ {@code data} property. Valid setters are {@code setData(MyFunctionData data)}
+ and {@code setData(BigDecimal data)}.</para>
+               </listitem>
+               <listitem>
+                  <para>
+ There is {@code MySecondFunctionData} bean with {@code BigDecimal} prefix and
+ {@code BigDecimal} suffix for a {@code data} property. The prefix and suffix
+ are using equal types and we cannot have a setter with the values used by
+ {@code MySecondFunctionData}. The only one possible setter is
+ {@code setData(MySecondFunctionData data)}.</para>
+               </listitem>
+            </itemizedlist>
+         </listitem>
+         <listitem>
+            <para>No methods are required for properties with
+ {@link PropertyMetadata#ACCESS_EVENTABLE} access.</para>
+         </listitem>
+      </itemizedlist>
+      <para>
+ The accessor method names must be defined according JavaBeans specification.
+ </para>
+      <para>
+ The function operations are java methods, which cannot override the property
+ accessor methods. They can have zero or more parameters and zero or one
+ return value.
+ </para>
+      <para>
+ Operation arguments and function properties are restricted by the same set of
+ rules. The data type can be one of the following types:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>Java primitive type or corresponding reference type.</para>
+         </listitem>
+         <listitem>
+            <para>{@code java.lang.String}.</para>
+         </listitem>
+         <listitem>
+            <para>Numerical type i.e. the type which extends <code>java.lang.Number</code>.
+ The numerical type must follow these conventions:
+ </para>
+            <itemizedlist>
+               <listitem>
+                  <para>The type must provide a public static method called {@code valueOf} that
+ returns an instance of the given type and takes a single {@code String}
+ argument or a public constructor which takes a single {@code String}
+ argument.</para>
+               </listitem>
+               <listitem>
+                  <para>
+ The {@code String} argument from the previous bullet can be provided by
+ {@code toString()} method of the instance.</para>
+               </listitem>
+            </itemizedlist>
+         </listitem>
+         <listitem>
+            <para>{@code Beans}, but the beans properties must use those rules. Java Beans
+ are defined in JavaBeans specification.</para>
+         </listitem>
+         <listitem>
+            <para>
+ {@code java.util.Map}s. The keys can be {@code java.lang.String}. The values
+ of a single type follow these rules.</para>
+         </listitem>
+         <listitem>
+            <para>Arrays of defined types.</para>
+         </listitem>
+      </itemizedlist>
+      <para>
+ The properties metadata is accessible with
+ {@link #getPropertyMetadata(String)}. The operations metadata is accessible
+ with {@link #getOperationMetadata(String)}.
+ </para>
+      <para>
+ In order to provide common behavior, all functions must follow a set of
+ common rules related to the implementation of their setters, getters,
+ operations and events:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>
+ The setter method must be executed synchronously. If the underlying protocol
+ can return response to the setter call, it must be awaited. It simplifies the
+ property value modifications and doesn't require asynchronous callback.</para>
+         </listitem>
+         <listitem>
+            <para>
+ The operation method must be executed synchronously. If the underlying
+ protocol can return an operation confirmation or response, they must be
+ awaited. It simplifies the operation execution and doesn't require
+ asynchronous callback.</para>
+         </listitem>
+         <listitem>
+            <para>
+ The getter must return the last know cached property value. The device
+ implementation is responsible to keep that value up to date. It'll speed up
+ the applications when the function property values are collected. The same
+ cached value can be shared between a few requests instead of a few calls to
+ the real device.</para>
+         </listitem>
+         <listitem>
+            <para>The function operations, getters and setters must not override
+ {@code java.lang.Object} and this interface methods.</para>
+         </listitem>
+      </itemizedlist>
+      <section xreflabel="SERVICE_DESCRIPTION"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_DESCRIPTION">
+         <title>public static final String SERVICE_DESCRIPTION = "dal.function.description"</title>
+         <para>
+The service property value contains the function description. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_DEVICE_UID"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_DEVICE_UID">
+         <title>public static final String SERVICE_DEVICE_UID = "dal.function.device.UID"</title>
+         <para>
+The service property value contains the device unique identifier. The
+ function belongs to this device. It's an optional property. The value
+ type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_OPERATION_NAMES"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_OPERATION_NAMES">
+         <title>public static final String SERVICE_OPERATION_NAMES = "dal.function.operation.names"</title>
+         <para>
+The service property value contains the function operation names. It's an
+ optional property. The property is missing when there are no function
+ operations and property must be set when there are function operations.
+ The value type is {@code java.lang.String[]}. It's not possible to exist
+ two or more function operations with the same name i.e. the operation
+ overloading is not allowed.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_PROPERTY_NAMES"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_PROPERTY_NAMES">
+         <title>public static final String SERVICE_PROPERTY_NAMES = "dal.function.property.names"</title>
+         <para>
+The service property value contains the function property names. It's an
+ optional property. The property is missing when there are no function
+ properties and property must be set when there are function properties.
+ The value type is {@code java.lang.String[]}. It's not possible to exist
+ two or more function properties with the same name.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_REFERENCE_UIDS"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_REFERENCE_UIDS">
+         <title>public static final String SERVICE_REFERENCE_UIDS = "dal.function.reference.UIDs"</title>
+         <para>
+The service property value contains the reference function unique
+ identifiers. It's an optional property. The value type is
+ {@code java.lang.String[]}. It can be used to represent different
+ relationships between the functions.
+   </para>
+      </section>
+      <section xreflabel="SERVICE_TYPE"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_TYPE">
+         <title>public static final String SERVICE_TYPE = "dal.function.type"</title>
+         <para>
+The service property value contains the function type. It's an optional
+ property. For example, the sensor function can have different types like
+ temperature, pressure, etc. The value type is {@code java.lang.String}.
+ </para>
+         <para>
+ Organizations that want to use function types that do not clash with OSGi
+ Working Group defined types should prefix their types in own namespace.
+ </para>
+         <para>
+ The type doesn't mandate specific function interface. It can be used with
+ different functions.</para>
+      </section>
+      <section xreflabel="SERVICE_UID"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_UID">
+         <title>public static final String SERVICE_UID = "dal.function.UID"</title>
+         <para>
+The service property value contains the function unique identifier. It's
+ a mandatory property. The value type is {@code java.lang.String}. To
+ simplify the unique identifier generation, the property value must follow
+ the rule:
+ </para>
+         <para>
+ function UID ::= device-id ':' function-id
+ </para>
+         <para>
+ function UID - function unique identifier
+ </para>
+         <para>
+ device-id - the value of the {@link Device#SERVICE_UID} Device service
+ property
+ </para>
+         <para>
+ function-id - function identifier in the scope of the device
+ </para>
+         <para>
+ If the function is not bound to a device, the function unique identifier
+ can be device independent.</para>
+      </section>
+      <section xreflabel="SERVICE_VERSION"
+               role="field"
+               xml:id="org.osgi.service.dal.Function.SERVICE_VERSION">
+         <title>public static final String SERVICE_VERSION = "dal.function.version"</title>
+         <para>
+The service property value contains the function version. That version
+ can point to specific implementation version and vary in the different
+ vendor implementations. It's an optional property. The value type is
+ {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="getOperationMetadata(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.Function.getOperationMetadata-String-">
+         <title>public abstract OperationMetadata getOperationMetadata(String operationName)</title>
+         <formalpara role="parameter">
+            <title>operationName</title>
+            <para>The function operation name, for which metadata is
+        requested.</para>
+         </formalpara>
+         <para role="description">
+Provides metadata about the function operation.
+ </para>
+         <para>
+ This method must continue to return the operation metadata after the
+ function service has been unregistered.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The operation metadata for the given operation name. {@code null}
+         if the operation metadata is not available.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the function operation with the
+         specified name is not available.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getPropertyMetadata(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.Function.getPropertyMetadata-String-">
+         <title>public abstract PropertyMetadata getPropertyMetadata(String propertyName)</title>
+         <formalpara role="parameter">
+            <title>propertyName</title>
+            <para>The function property name, for which metadata is
+        requested.</para>
+         </formalpara>
+         <para role="description">
+Provides metadata about the function property.
+ </para>
+         <para>
+ This method must continue to return the property metadata after the
+ function service has been unregistered.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property metadata for the given property name. {@code null}
+         if the property metadata is not available.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the function property with the
+         specified name is not available.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getServiceProperty(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.Function.getServiceProperty-String-">
+         <title>public abstract Object getServiceProperty(String propKey)</title>
+         <formalpara role="parameter">
+            <title>propKey</title>
+            <para>The property key.</para>
+         </formalpara>
+         <para role="description">
+Returns the current value of the specified property. The method will
+ return the same value as {@code ServiceReference.getProperty(String)} for
+ the service reference of this function.
+ </para>
+         <para>
+ This method must continue to return property values after the device
+ function service has been unregistered.</para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property value or {@code null} if the property key cannot be
+         mapped to a value.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getServicePropertyKeys()"
+               role="method"
+               xml:id="org.osgi.service.dal.Function.getServicePropertyKeys--">
+         <title>public abstract String[][] getServicePropertyKeys()</title>
+         <para role="description">
+Returns an array with all function service property keys. The method will
+ return the same value as {@code ServiceReference.getPropertyKeys()} for
+ the service reference of this function. The result cannot be {@code null}
+ .
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>An array with all function service property keys, cannot be
+         {@code null}.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="FunctionData"
+            role="class"
+            xml:id="org.osgi.service.dal.FunctionData">
+      <title>public abstract class FunctionData<?line-break?> implements Comparable&lt;Object&gt;</title>
+      <para>
+Abstract {@code Function} data wrapper. A subclass must be used for an access
+ to the property values by all functions. It takes care about the timestamp
+ and additional metadata. The subclasses are responsible to provide concrete
+ value and unit if required.
+   </para>
+      <section xreflabel="DESCRIPTION"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionData.DESCRIPTION">
+         <title>public static final String DESCRIPTION = "description"</title>
+         <para>
+Metadata key, which value represents the data description. The property
+ value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="FIELD_METADATA"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionData.FIELD_METADATA">
+         <title>public static final String FIELD_METADATA = "metadata"</title>
+         <para>
+Represents the metadata field name. The field value is available with
+ {@link #getMetadata()}. The field type is {@code Map}. The constant can
+ be used as a key to {@link #FunctionData(Map)}.
+   </para>
+      </section>
+      <section xreflabel="FIELD_TIMESTAMP"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionData.FIELD_TIMESTAMP">
+         <title>public static final String FIELD_TIMESTAMP = "timestamp"</title>
+         <para>
+Represents the timestamp field name. The field value is available with
+ {@link #getTimestamp()}. The field type is {@code long}. The constant can
+ be used as a key to {@link #FunctionData(Map)}.
+   </para>
+      </section>
+      <section xreflabel="FunctionData(Map)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.FunctionData-Map-">
+         <title>public  FunctionData(Map&lt;String, ?&gt; fields)</title>
+         <formalpara role="parameter">
+            <title>fields</title>
+            <para>Contains the new {@code FunctionData} instance field
+        values.</para>
+         </formalpara>
+         <para role="description">
+Constructs new {@code FunctionData} instance with the specified field
+ values. The map keys must match to the field names. The map values will
+ be assigned to the appropriate class fields. For example, the maps can
+ be: {"timestamp"=Long(1384440775495)}. That map will initialize the
+ {@link #FIELD_TIMESTAMP} field with 1384440775495. If timestamp is
+ missing, {@link Long#MIN_VALUE} is used.
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@link #FIELD_TIMESTAMP} - optional field. The value type must be
+ {@code Long}.</para>
+            </listitem>
+            <listitem>
+               <para>{@link #FIELD_METADATA} - optional field. The value type must be
+ {@code Map}.</para>
+            </listitem>
+         </itemizedlist>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>ClassCastException</code>– If the field value types are not expected.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>NullPointerException</code>– If the fields map is {@code null}.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="FunctionData(long,Map)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.FunctionData-long-Map-">
+         <title>public  FunctionData(long timestamp, Map&lt;String, ?&gt; metadata)</title>
+         <formalpara role="parameter">
+            <title>timestamp</title>
+            <para>The data timestamp optional field.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>metadata</title>
+            <para>The data metadata optional field.</para>
+         </formalpara>
+         <para role="description">
+Constructs new {@code FunctionData} instance with the specified
+ arguments.
+   </para>
+      </section>
+      <section xreflabel="compareTo(Object)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.compareTo-Object-">
+         <title>public int compareTo(Object o)</title>
+         <formalpara role="parameter">
+            <title>o</title>
+            <para>{@code FunctionData} to be compared.</para>
+         </formalpara>
+         <para role="description">
+Compares this {@code FunctionData} instance with the given argument. If
+ the argument is not {@code FunctionData}, it throws
+ {@code ClassCastException}. Otherwise, this method returns:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@code -1} if this instance timestamp is less than the argument
+ timestamp. If they are equivalent, it can be the result of the metadata
+ map deep comparison.</para>
+            </listitem>
+            <listitem>
+               <para>{@code 0} if all fields are equivalent.</para>
+            </listitem>
+            <listitem>
+               <para>{@code 1} if this instance timestamp is greater than the argument
+ timestamp. If they are equivalent, it can be the result of the metadata
+ map deep comparison.</para>
+            </listitem>
+         </itemizedlist>
+         <para>
+ Metadata map deep comparison compares the elements of all nested
+ {@code java.util.Map} and array instances. {@code null} is less than any
+ other non-null instance.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code -1}, {@code 0} or {@code 1} depending on the comparison
+         rules.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>ClassCastException</code>– If the method argument is not of type
+         {@code FunctionData} or metadata maps contain values of different
+         types for the same key.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>NullPointerException</code>– If the method argument is {@code null}.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="UNRESOLVED">java.lang.Comparable.compareTo(java.lang.Object)</link>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="equals(Object)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.equals-Object-">
+         <title>public boolean equals(Object other)</title>
+         <formalpara role="parameter">
+            <title>other</title>
+            <para>The other instance to compare. It must be of
+        {@code FunctionData} type.</para>
+         </formalpara>
+         <para role="description">
+Two {@code FunctionData} instances are equal if their metadata and
+ timestamp are equivalent.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code true} if this instance and argument have equivalent
+         metadata and timestamp, {@code false} otherwise.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="UNRESOLVED">java.lang.Object.equals(java.lang.Object)</link>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="getMetadata()"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.getMetadata--">
+         <title>public Map&lt;String, ?&gt; getMetadata()</title>
+         <para role="description">
+Returns {@code FunctionData} metadata. It's dynamic metadata related only
+ to this specific value. Possible keys:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@link #DESCRIPTION}</para>
+            </listitem>
+            <listitem>
+               <para>custom key</para>
+            </listitem>
+         </itemizedlist>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code FunctionData} metadata or {@code null} is there is no
+         metadata.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getTimestamp()"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.getTimestamp--">
+         <title>public long getTimestamp()</title>
+         <para role="description">
+Returns {@code FunctionData} timestamp. The timestamp is the difference
+ between the value collecting time and midnight, January 1, 1970 UTC. It's
+ measured in milliseconds. The device driver is responsible to generate
+ that value when the value is received from the device.
+ {@link java.lang.Long#MIN_VALUE} value means no timestamp.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code FunctionData} timestamp.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="hashCode()"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionData.hashCode--">
+         <title>public int hashCode()</title>
+         <para role="description">
+Returns the hash code of this {@code FunctionData}.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>{@code FunctionData} hash code.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="UNRESOLVED">java.lang.Object.hashCode()</link>
+            </para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="FunctionEvent"
+            role="class"
+            xml:id="org.osgi.service.dal.FunctionEvent">
+      <title>public class FunctionEvent<?line-break?> extends Event</title>
+      <para>
+Asynchronous event, which marks a function property value modification. The
+ event can be triggered when there is a new property value, but it's possible
+ to have events in series with no value change. The event properties must
+ contain:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>{@link #FUNCTION_UID} - the event source function unique identifier.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #PROPERTY_NAME} - the property name.</para>
+         </listitem>
+         <listitem>
+            <para>{@link #PROPERTY_VALUE} - the property value. The property value type
+ must be a subclass of FunctionData.</para>
+         </listitem>
+      </itemizedlist>
+      <section xreflabel="EVENT_CLASS"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionEvent.EVENT_CLASS">
+         <title>public static final String EVENT_CLASS = "org/osgi/service/dal/FunctionEvent/"</title>
+         <para>
+Represents the event class. That constant can be useful for the event
+ handlers depending on the event filters.
+   </para>
+      </section>
+      <section xreflabel="EVENT_PACKAGE"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionEvent.EVENT_PACKAGE">
+         <title>public static final String EVENT_PACKAGE = "org/osgi/service/dal/"</title>
+         <para>
+Represents the event package. That constant can be useful for the event
+ handlers depending on the event filters.
+   </para>
+      </section>
+      <section xreflabel="FUNCTION_UID"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionEvent.FUNCTION_UID">
+         <title>public static final String FUNCTION_UID = "dal.function.UID"</title>
+         <para>
+Represents an event property key for function UID. The property value
+ type is {@code java.lang.String}. The value represents the property value
+ change source function identifier.
+   </para>
+      </section>
+      <section xreflabel="PROPERTY_NAME"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionEvent.PROPERTY_NAME">
+         <title>public static final String PROPERTY_NAME = "dal.function.property.name"</title>
+         <para>
+Represents an event property key for the function property name. The
+ property value type is {@code java.lang.String}. The value represents the
+ property name.
+   </para>
+      </section>
+      <section xreflabel="PROPERTY_VALUE"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionEvent.PROPERTY_VALUE">
+         <title>public static final String PROPERTY_VALUE = "dal.function.property.value"</title>
+         <para>
+Represents an event property key for the function property value. The
+ property value type is a subclass of {@code FunctionData}. The value
+ represents the property value.
+   </para>
+      </section>
+      <section xreflabel="TOPIC_PROPERTY_CHANGED"
+               role="field"
+               xml:id="org.osgi.service.dal.FunctionEvent.TOPIC_PROPERTY_CHANGED">
+         <title>public static final String TOPIC_PROPERTY_CHANGED = "org/osgi/service/dal/FunctionEvent/PROPERTY_CHANGED"</title>
+         <para>
+Represents the event topic for the function property changed.
+   </para>
+      </section>
+      <section xreflabel="FunctionEvent(String,Dictionary)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionEvent.FunctionEvent-String-Dictionary-">
+         <title>public  FunctionEvent(String topic, Dictionary&lt;String, ?&gt; properties)</title>
+         <formalpara role="parameter">
+            <title>topic</title>
+            <para>The event topic.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>properties</title>
+            <para>The event properties.</para>
+         </formalpara>
+         <para role="description">
+Constructs a new event with the specified topic and properties.
+   </para>
+      </section>
+      <section xreflabel="FunctionEvent(String,Map)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionEvent.FunctionEvent-String-Map-">
+         <title>public  FunctionEvent(String topic, Map&lt;String, ?&gt; properties)</title>
+         <formalpara role="parameter">
+            <title>topic</title>
+            <para>The event topic.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>properties</title>
+            <para>The event properties.</para>
+         </formalpara>
+         <para role="description">
+Constructs a new event with the specified topic and properties.
+   </para>
+      </section>
+      <section xreflabel="FunctionEvent(String,String,String,FunctionData)"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionEvent.FunctionEvent-String-String-String-FunctionData-">
+         <title>public  FunctionEvent(String topic, String functionUID, String propName, FunctionData propValue)</title>
+         <formalpara role="parameter">
+            <title>topic</title>
+            <para>The event topic.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>functionUID</title>
+            <para>The event source function UID.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>propName</title>
+            <para>The event source property name.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>propValue</title>
+            <para>The event source property value.</para>
+         </formalpara>
+         <para role="description">
+Constructs a new event with the specified topic, function UID, property
+ name and property value.
+   </para>
+      </section>
+      <section xreflabel="getFunctionPropertyName()"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionEvent.getFunctionPropertyName--">
+         <title>public String getFunctionPropertyName()</title>
+         <para role="description">
+Returns the property name. The value is same as the value of
+ {@link #PROPERTY_NAME}.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property name.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getFunctionPropertyValue()"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionEvent.getFunctionPropertyValue--">
+         <title>public FunctionData getFunctionPropertyValue()</title>
+         <para role="description">
+Returns the property value. The value is same as the value of
+ {@link #PROPERTY_VALUE}.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property value.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getFunctionUID()"
+               role="method"
+               xml:id="org.osgi.service.dal.FunctionEvent.getFunctionUID--">
+         <title>public String getFunctionUID()</title>
+         <para role="description">
+Returns the property value change source function identifier. The value
+ is same as the value of {@link #FUNCTION_UID} property.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property value change source function.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="OperationMetadata"
+            role="class"
+            xml:id="org.osgi.service.dal.OperationMetadata">
+      <title>public abstract OperationMetadata</title>
+      <para>
+Contains metadata about function operation.
+   </para>
+      <formalpara role="parameter">
+         <title>See Also</title>
+         <para>
+            <link linkend="org.osgi.service.dal.Function">Function</link>, <link linkend="org.osgi.service.dal.PropertyMetadata">PropertyMetadata</link>
+         </para>
+      </formalpara>
+      <section xreflabel="DESCRIPTION"
+               role="field"
+               xml:id="org.osgi.service.dal.OperationMetadata.DESCRIPTION">
+         <title>public static final String DESCRIPTION = "description"</title>
+         <para>
+Metadata key, which value represents the operation description. The
+ property value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="getMetadata()"
+               role="method"
+               xml:id="org.osgi.service.dal.OperationMetadata.getMetadata--">
+         <title>public abstract Map&lt;String, ?&gt; getMetadata()</title>
+         <para role="description">
+Returns metadata about the function operation. The keys of the
+ {@code java.util.Map} result must be of {@code java.lang.String} type.
+ Possible keys:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@link #DESCRIPTION}</para>
+            </listitem>
+            <listitem>
+               <para>custom key</para>
+            </listitem>
+         </itemizedlist>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The operation metadata or {@code null} if no such metadata is
+         available.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getParametersMetadata()"
+               role="method"
+               xml:id="org.osgi.service.dal.OperationMetadata.getParametersMetadata--">
+         <title>public abstract PropertyMetadata[][] getParametersMetadata()</title>
+         <para role="description">
+Returns metadata about the operation parameters or {@code null} if no
+ such metadata is available.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>Operation parameters metadata.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getReturnValueMetadata()"
+               role="method"
+               xml:id="org.osgi.service.dal.OperationMetadata.getReturnValueMetadata--">
+         <title>public abstract PropertyMetadata getReturnValueMetadata()</title>
+         <para role="description">
+Returns metadata about the operation return value or {@code null} if no
+ such metadata is available.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>Operation return value metadata.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="PropertyMetadata"
+            role="class"
+            xml:id="org.osgi.service.dal.PropertyMetadata">
+      <title>public abstract PropertyMetadata</title>
+      <para>
+Contains metadata about a function property, a function operation parameter
+ or a function operation return value.
+ 
+ The access to the function properties is a bitmap value of {@link #ACCESS}
+ metadata key. Function properties can be accessed in three ways. Any
+ combinations between them are possible:
+ </para>
+      <itemizedlist>
+         <listitem>
+            <para>
+ {@link #ACCESS_READABLE} - available for all properties, which can be read.
+ Function must provide a getter method for an access to the property value.</para>
+         </listitem>
+         <listitem>
+            <para>
+ {@link #ACCESS_WRITABLE} - available for all properties, which can be
+ modified. Function must provide a setter method for a modification of the
+ property value.</para>
+         </listitem>
+         <listitem>
+            <para>
+ {@link #ACCESS_EVENTABLE} - available for all properties, which can report
+ the property value. {@link FunctionEvent}s are sent on property change.</para>
+         </listitem>
+      </itemizedlist>
+      <formalpara role="parameter">
+         <title>See Also</title>
+         <para>
+            <link linkend="org.osgi.service.dal.Function">Function</link>, <link linkend="org.osgi.service.dal.PropertyMetadata">PropertyMetadata</link>
+         </para>
+      </formalpara>
+      <section xreflabel="ACCESS"
+               role="field"
+               xml:id="org.osgi.service.dal.PropertyMetadata.ACCESS">
+         <title>public static final String ACCESS = "access"</title>
+         <para>
+Metadata key, which value represents the access to the function property.
+ The property value is a bitmap of {@code Integer} type. The bitmap can be
+ any combination of:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@link #ACCESS_READABLE}</para>
+            </listitem>
+            <listitem>
+               <para>{@link #ACCESS_WRITABLE}</para>
+            </listitem>
+            <listitem>
+               <para>{@link #ACCESS_EVENTABLE}</para>
+            </listitem>
+         </itemizedlist>
+         <para>
+ For example, value {@code Integer(3)} means that the property is readable
+ and writable, but not eventable.
+ </para>
+         <para>
+ The property access is available only for function properties and it's
+ missing for the operation parameters.</para>
+      </section>
+      <section xreflabel="ACCESS_EVENTABLE"
+               role="field"
+               xml:id="org.osgi.service.dal.PropertyMetadata.ACCESS_EVENTABLE">
+         <title>public static final int ACCESS_EVENTABLE = 4</title>
+         <para>
+Marks the eventable function properties. The flag can be used as a part
+ of bitmap value of {@link #ACCESS}.
+   </para>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="org.osgi.service.dal.Function">Function</link>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="ACCESS_READABLE"
+               role="field"
+               xml:id="org.osgi.service.dal.PropertyMetadata.ACCESS_READABLE">
+         <title>public static final int ACCESS_READABLE = 1</title>
+         <para>
+Marks the readable function properties. The flag can be used as a part of
+ bitmap value of {@link #ACCESS}. The readable access mandates function to
+ provide a property getter method.
+   </para>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="org.osgi.service.dal.Function">Function</link>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="ACCESS_WRITABLE"
+               role="field"
+               xml:id="org.osgi.service.dal.PropertyMetadata.ACCESS_WRITABLE">
+         <title>public static final int ACCESS_WRITABLE = 2</title>
+         <para>
+Marks the writable function properties. The flag can be used as a part of
+ bitmap value of {@link #ACCESS}. The writable access mandates function to
+ provide a property setter methods.
+   </para>
+         <formalpara role="parameter">
+            <title>See Also</title>
+            <para>
+               <link linkend="org.osgi.service.dal.Function">Function</link>
+            </para>
+         </formalpara>
+      </section>
+      <section xreflabel="DESCRIPTION"
+               role="field"
+               xml:id="org.osgi.service.dal.PropertyMetadata.DESCRIPTION">
+         <title>public static final String DESCRIPTION = "description"</title>
+         <para>
+Metadata key, which value represents the property description. The
+ property value type is {@code java.lang.String}.
+   </para>
+      </section>
+      <section xreflabel="UNITS"
+               role="field"
+               xml:id="org.osgi.service.dal.PropertyMetadata.UNITS">
+         <title>public static final String UNITS = "units"</title>
+         <para>
+Metadata key, which value represents the property supported units. The
+ property value type is {@code java.lang.String[]}. The array first
+ element at index {@code 0} represents the default unit. Each unit must
+ follow those rules:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>The International System of Units must be used where it's applicable.
+ For example, kg for kilogram and km for kilometer.</para>
+            </listitem>
+            <listitem>
+               <para>If the unit name matches to an Unicode symbol name, the Unicode
+ symbol must be used. For example, the degree unit matches to the Unicode
+ degree sign ({@code °}).</para>
+            </listitem>
+            <listitem>
+               <para>If the unit name doesn't match to an Unicode symbol, the unit symbol
+ must be built by Unicode Basic Latin block of characters, superscript and
+ subscript characters. For example, watt per square meter steradian is
+ built by {@code W/(m² sr)}.</para>
+            </listitem>
+         </itemizedlist>
+         <para>
+ If those rules cannot be applied to the unit symbol, custom rules are
+ allowed. A set of predefined unit symbols are available in
+ {@link SIUnits} interface.
+   </para>
+      </section>
+      <section xreflabel="getEnumValues(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.PropertyMetadata.getEnumValues-String-">
+         <title>public abstract FunctionData[][] getEnumValues(String unit)</title>
+         <formalpara role="parameter">
+            <title>unit</title>
+            <para>The unit to align the supported values, can be {@code null}.</para>
+         </formalpara>
+         <para role="description">
+Returns the property possible values according to the specified unit. If
+ the unit is {@code null}, the values set is aligned to the default unit.
+ If there is no such set of supported values, {@code null} is returned.
+ The values must be sorted in increasing order.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The supported values according to the specified unit or
+         {@code null} if no such values are supported. The values must be
+         sorted in increasing order.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the unit is not supported.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getMaxValue(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.PropertyMetadata.getMaxValue-String-">
+         <title>public abstract FunctionData getMaxValue(String unit)</title>
+         <formalpara role="parameter">
+            <title>unit</title>
+            <para>The unit to align the maximum value, can be {@code null} .</para>
+         </formalpara>
+         <para role="description">
+Returns the property maximum value according to the specified unit. If
+ the unit is {@code null}, the maximum value is aligned to the default
+ unit. If there is no maximum value, {@code null} is returned.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The maximum value according to the specified unit or {@code null}
+         if no maximum value is supported.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the unit is not supported.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getMetadata(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.PropertyMetadata.getMetadata-String-">
+         <title>public abstract Map&lt;String, ?&gt; getMetadata(String unit)</title>
+         <formalpara role="parameter">
+            <title>unit</title>
+            <para>The unit to align the metadata if it's applicable. It can be
+        null, which means that the default unit will be used.</para>
+         </formalpara>
+         <para role="description">
+Returns metadata about the function property or operation parameter. The
+ keys of the {@code java.util.Map} result must be of
+ {@code java.lang.String} type. Possible keys:
+ </para>
+         <itemizedlist>
+            <listitem>
+               <para>{@link #DESCRIPTION} - doesn't depend on the given unit.</para>
+            </listitem>
+            <listitem>
+               <para>{@link #ACCESS} - available only for function property and missing
+ for function operation parameters. It doesn't depend on the given unit.</para>
+            </listitem>
+            <listitem>
+               <para>{@link #UNITS} - doesn't depend on the given unit.</para>
+            </listitem>
+            <listitem>
+               <para>custom key - can depend on the unit. Organizations that want to use
+ custom keys that do not clash with OSGi Working Group defined should prefix
+ their keys in own namespace.</para>
+            </listitem>
+         </itemizedlist>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The property metadata or {@code null} if no such metadata is
+         available.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getMinValue(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.PropertyMetadata.getMinValue-String-">
+         <title>public abstract FunctionData getMinValue(String unit)</title>
+         <formalpara role="parameter">
+            <title>unit</title>
+            <para>The unit to align the minimum value, can be {@code null} .</para>
+         </formalpara>
+         <para role="description">
+Returns the property minimum value according to the specified unit. If
+ the unit is {@code null}, the minimum value is aligned to the default
+ unit. If there is no minimum value, {@code null} is returned.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The minimum value according to the specified unit or {@code null}
+         if no minimum value is supported.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the unit is not supported.</para>
+         </formalpara>
+      </section>
+      <section xreflabel="getStep(String)"
+               role="method"
+               xml:id="org.osgi.service.dal.PropertyMetadata.getStep-String-">
+         <title>public abstract FunctionData getStep(String unit)</title>
+         <formalpara role="parameter">
+            <title>unit</title>
+            <para>The unit to align the step, can be {@code null}.</para>
+         </formalpara>
+         <para role="description">
+Returns the difference between two values in series. For example, if the
+ range is [0, 100], the step can be 10.
+   </para>
+         <formalpara role="parameter">
+            <title>Returns</title>
+            <para>The step according to the specified unit or {@code null} if no
+         step is supported.</para>
+         </formalpara>
+         <formalpara role="parameter">
+            <title>Throws</title>
+            <para>
+               <code>IllegalArgumentException</code>– If the unit is not supported.</para>
+         </formalpara>
+      </section>
+   </section>
+   <section xreflabel="SIUnits"
+            role="class"
+            xml:id="org.osgi.service.dal.SIUnits">
+      <title>public final class SIUnits</title>
+      <para>
+Contains most of the International System of Units unit symbols. The constant
+ name represents the unit name. The constant value represents the unit symbol
+ as it's defined in {@link PropertyMetadata#UNITS}.
+   </para>
+      <section xreflabel="AMPERE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.AMPERE">
+         <title>public static final String AMPERE = "A"</title>
+         <para>
+Unit of electric current defined by the International System of Units
+ (SI). It's one of be base units called ampere.
+   </para>
+      </section>
+      <section xreflabel="AMPERE_PER_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.AMPERE_PER_METER">
+         <title>public static final String AMPERE_PER_METER = "A/m"</title>
+         <para>
+Unit of magnetic field strength. It's one of coherent derived units in
+ the SI expressed in terms of base units. The unit is called ampere per
+ meter.
+   </para>
+      </section>
+      <section xreflabel="AMPERE_PER_SQUARE_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.AMPERE_PER_SQUARE_METER">
+         <title>public static final String AMPERE_PER_SQUARE_METER = "A/m²"</title>
+         <para>
+Unit of current density. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called ampere per square
+ meter.
+   </para>
+      </section>
+      <section xreflabel="ANGSTROM"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.ANGSTROM">
+         <title>public static final String ANGSTROM = "Å"</title>
+         <para>
+Unit of length. It's one of other non-SI units. The unit is called
+ angstrom.
+   </para>
+      </section>
+      <section xreflabel="BAR"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.BAR">
+         <title>public static final String BAR = "bar"</title>
+         <para>
+Unit of pressure. It's one of other non-SI units. The unit is called bar.
+   </para>
+      </section>
+      <section xreflabel="BARN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.BARN">
+         <title>public static final String BARN = "b"</title>
+         <para>
+Unit of area. It's one of other non-SI units. The unit is called barn.
+   </para>
+      </section>
+      <section xreflabel="BECQUEREL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.BECQUEREL">
+         <title>public static final String BECQUEREL = "Bq"</title>
+         <para>
+Unit of activity referred to a radionuclide. It's one of the coherent
+ derived units in the SI with special names and symbols. The unit is
+ called becquerel.
+   </para>
+      </section>
+      <section xreflabel="BEL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.BEL">
+         <title>public static final String BEL = "B"</title>
+         <para>
+Unit of logarithmic ratio quantities. It's one of other non-SI units. The
+ unit is called bel.
+   </para>
+      </section>
+      <section xreflabel="CANDELA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.CANDELA">
+         <title>public static final String CANDELA = "cd"</title>
+         <para>
+Unit of luminous intensity defined by the International System of Units
+ (SI). It's one of be base units called candela.
+   </para>
+      </section>
+      <section xreflabel="CANDELA_PER_SQUARE_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.CANDELA_PER_SQUARE_METER">
+         <title>public static final String CANDELA_PER_SQUARE_METER = "cd/m²"</title>
+         <para>
+Unit of luminance. It's one of coherent derived units in the SI expressed
+ in terms of base units. The unit is called candela per square meter.
+   </para>
+      </section>
+      <section xreflabel="COULOMB"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.COULOMB">
+         <title>public static final String COULOMB = "C"</title>
+         <para>
+Unit of electronic charge, amount of electricity. It's one of the
+ coherent derived units in the SI with special names and symbols. The unit
+ is called coulomb.
+   </para>
+      </section>
+      <section xreflabel="COULOMB_PER_CUBIC_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.COULOMB_PER_CUBIC_METER">
+         <title>public static final String COULOMB_PER_CUBIC_METER = "C/m³"</title>
+         <para>
+Unit of electric charge density. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called coulomb per cubic meter.
+   </para>
+      </section>
+      <section xreflabel="COULOMB_PER_KILOGRAM"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.COULOMB_PER_KILOGRAM">
+         <title>public static final String COULOMB_PER_KILOGRAM = "C/kg"</title>
+         <para>
+Unit of exposure (x- and gamma-rays). It's one of coherent derived units
+ whose names and symbols include SI coherent derived units with special
+ names and symbols. The unit is called coulomb per kilogram.
+   </para>
+      </section>
+      <section xreflabel="COULOMB_PER_SQUARE_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.COULOMB_PER_SQUARE_METER">
+         <title>public static final String COULOMB_PER_SQUARE_METER = "C/m²"</title>
+         <para>
+Unit of surface charge density, electric flux density, electric
+ displacement. It's one of coherent derived units whose names and symbols
+ include SI coherent derived units with special names and symbols. The
+ unit is called coulomb per square meter.
+   </para>
+      </section>
+      <section xreflabel="CUBIC_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.CUBIC_METER">
+         <title>public static final String CUBIC_METER = "m³"</title>
+         <para>
+Unit of volume. It's one of coherent derived units in the SI expressed in
+ terms of base units. The unit is called cubic meter.
+   </para>
+      </section>
+      <section xreflabel="CUBIC_METER_PER_KILOGRAM"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.CUBIC_METER_PER_KILOGRAM">
+         <title>public static final String CUBIC_METER_PER_KILOGRAM = "m³/kg"</title>
+         <para>
+Unit of specific volume. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called cubic meter per
+ kilogram.
+   </para>
+      </section>
+      <section xreflabel="DAY"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.DAY">
+         <title>public static final String DAY = "d"</title>
+         <para>
+Unit of time. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called day.
+   </para>
+      </section>
+      <section xreflabel="DECIBEL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.DECIBEL">
+         <title>public static final String DECIBEL = "dB"</title>
+         <para>
+Unit of logarithmic ratio quantities. It's one of other non-SI units. The
+ unit is called decibel.
+   </para>
+      </section>
+      <section xreflabel="DEGREE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.DEGREE">
+         <title>public static final String DEGREE = "°"</title>
+         <para>
+Unit of plane angle. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called degree.
+   </para>
+      </section>
+      <section xreflabel="DEGREE_CELSIUS"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.DEGREE_CELSIUS">
+         <title>public static final String DEGREE_CELSIUS = "℃"</title>
+         <para>
+Unit of Celsius temperature. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called degree Celsius.
+   </para>
+      </section>
+      <section xreflabel="DYNE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.DYNE">
+         <title>public static final String DYNE = "dyn"</title>
+         <para>
+Unit of force. It's one of non-SI units associated with the CGS and the
+ CGS-Gaussian system of units. The unit is called dyne.
+   </para>
+      </section>
+      <section xreflabel="ERG"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.ERG">
+         <title>public static final String ERG = "erg"</title>
+         <para>
+Unit of energy. It's one of non-SI units associated with the CGS and the
+ CGS-Gaussian system of units. The unit is called erg.
+   </para>
+      </section>
+      <section xreflabel="FARAD"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.FARAD">
+         <title>public static final String FARAD = "F"</title>
+         <para>
+Unit of capacitance. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called farad.
+   </para>
+      </section>
+      <section xreflabel="FARAD_PER_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.FARAD_PER_METER">
+         <title>public static final String FARAD_PER_METER = "F/m"</title>
+         <para>
+Unit of permittivity. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called farad per meter.
+   </para>
+      </section>
+      <section xreflabel="GAL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.GAL">
+         <title>public static final String GAL = "Gal"</title>
+         <para>
+Unit of acceleration. It's one of non-SI units associated with the CGS
+ and the CGS-Gaussian system of units. The unit is called gal.
+   </para>
+      </section>
+      <section xreflabel="GAUSS"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.GAUSS">
+         <title>public static final String GAUSS = "G"</title>
+         <para>
+Unit of magnetic flux density. It's one of non-SI units associated with
+ the CGS and the CGS-Gaussian system of units. The unit is called gauss.
+   </para>
+      </section>
+      <section xreflabel="GRAY"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.GRAY">
+         <title>public static final String GRAY = "Gy"</title>
+         <para>
+Unit of absorbed dose, specific energy (imparted), kerma. It's one of the
+ coherent derived units in the SI with special names and symbols. The unit
+ is called gray.
+   </para>
+      </section>
+      <section xreflabel="GRAY_PER_SECOND"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.GRAY_PER_SECOND">
+         <title>public static final String GRAY_PER_SECOND = "Gy/s"</title>
+         <para>
+Unit of absorbed dose rate. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called gray per second.
+   </para>
+      </section>
+      <section xreflabel="HECTARE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.HECTARE">
+         <title>public static final String HECTARE = "ha"</title>
+         <para>
+Unit of area. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called hectare.
+   </para>
+      </section>
+      <section xreflabel="HENRY"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.HENRY">
+         <title>public static final String HENRY = "H"</title>
+         <para>
+Unit of inductance. It's one of the coherent derived units in the SI with
+ special names and symbols. The unit is called henry.
+   </para>
+      </section>
+      <section xreflabel="HENRY_PER_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.HENRY_PER_METER">
+         <title>public static final String HENRY_PER_METER = "H/m"</title>
+         <para>
+Unit of permeability. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called henry per meter.
+   </para>
+      </section>
+      <section xreflabel="HERTZ"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.HERTZ">
+         <title>public static final String HERTZ = "Hz"</title>
+         <para>
+Unit of frequency. It's one of the coherent derived units in the SI with
+ special names and symbols. The unit is called hertz.
+   </para>
+      </section>
+      <section xreflabel="HOUR"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.HOUR">
+         <title>public static final String HOUR = "h"</title>
+         <para>
+Unit of time. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called hour.
+   </para>
+      </section>
+      <section xreflabel="JOULE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE">
+         <title>public static final String JOULE = "J"</title>
+         <para>
+Unit of energy, work, amount of electricity. It's one of the coherent
+ derived units in the SI with special names and symbols. The unit is
+ called joule.
+   </para>
+      </section>
+      <section xreflabel="JOULE_PER_CUBIC_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE_PER_CUBIC_METER">
+         <title>public static final String JOULE_PER_CUBIC_METER = "J/m³"</title>
+         <para>
+Unit of energy density. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called joule per cubic meter.
+   </para>
+      </section>
+      <section xreflabel="JOULE_PER_KELVIN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE_PER_KELVIN">
+         <title>public static final String JOULE_PER_KELVIN = "J/K"</title>
+         <para>
+Unit of heat capacity, entropy. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called joule per kelvin.
+   </para>
+      </section>
+      <section xreflabel="JOULE_PER_KILOGRAM"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE_PER_KILOGRAM">
+         <title>public static final String JOULE_PER_KILOGRAM = "J/kg"</title>
+         <para>
+Unit of specific energy. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called joule per kilogram.
+   </para>
+      </section>
+      <section xreflabel="JOULE_PER_KILOGRAM_KELVIN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE_PER_KILOGRAM_KELVIN">
+         <title>public static final String JOULE_PER_KILOGRAM_KELVIN = "J/(kg K)"</title>
+         <para>
+Unit of specific heat capacity, specific entropy. It's one of coherent
+ derived units whose names and symbols include SI coherent derived units
+ with special names and symbols. The unit is called joule per kilogram
+ kelvin.
+   </para>
+      </section>
+      <section xreflabel="JOULE_PER_MOLE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE_PER_MOLE">
+         <title>public static final String JOULE_PER_MOLE = "J/mol"</title>
+         <para>
+Unit of molar energy. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called joule per mole.
+   </para>
+      </section>
+      <section xreflabel="JOULE_PER_MOLE_KELVIN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.JOULE_PER_MOLE_KELVIN">
+         <title>public static final String JOULE_PER_MOLE_KELVIN = "J/(mol K)"</title>
+         <para>
+Unit of molar entropy, molar heat capacity. It's one of coherent derived
+ units whose names and symbols include SI coherent derived units with
+ special names and symbols. The unit is called joule per mole kelvin.
+   </para>
+      </section>
+      <section xreflabel="KATAL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KATAL">
+         <title>public static final String KATAL = "kat"</title>
+         <para>
+Unit of catalytic activity. It's one of the coherent derived units in the
+ SI with special names and symbols. The unit is called katal.
+   </para>
+      </section>
+      <section xreflabel="KATAL_PER_CUBIC_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KATAL_PER_CUBIC_METER">
+         <title>public static final String KATAL_PER_CUBIC_METER = "kat/m³"</title>
+         <para>
+Unit of catalytic activity concentration. It's one of coherent derived
+ units whose names and symbols include SI coherent derived units with
+ special names and symbols. The unit is called katal per cubic meter.
+   </para>
+      </section>
+      <section xreflabel="KELVIN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KELVIN">
+         <title>public static final String KELVIN = "K"</title>
+         <para>
+Unit of thermodynamic temperature defined by the International System of
+ Units (SI). It's one of be base units called kelvin.
+   </para>
+      </section>
+      <section xreflabel="KILOGRAM"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KILOGRAM">
+         <title>public static final String KILOGRAM = "kg"</title>
+         <para>
+Unit of mass defined by the International System of Units (SI). It's one
+ of be base units called kilogram.
+   </para>
+      </section>
+      <section xreflabel="KILOGRAM_PER_CUBIC_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KILOGRAM_PER_CUBIC_METER">
+         <title>public static final String KILOGRAM_PER_CUBIC_METER = "kg/m³"</title>
+         <para>
+Unit of density, mass density, mass concentration. It's one of coherent
+ derived units in the SI expressed in terms of base units. The unit is
+ called kilogram per cubic meter.
+   </para>
+      </section>
+      <section xreflabel="KILOGRAM_PER_SQUARE_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KILOGRAM_PER_SQUARE_METER">
+         <title>public static final String KILOGRAM_PER_SQUARE_METER = "kg/m²"</title>
+         <para>
+Unit of surface density. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called kilogram per square
+ meter.
+   </para>
+      </section>
+      <section xreflabel="KNOT"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.KNOT">
+         <title>public static final String KNOT = "kn"</title>
+         <para>
+Unit of speed. It's one of other non-SI units. The unit is called knot.
+   </para>
+      </section>
+      <section xreflabel="LITER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.LITER">
+         <title>public static final String LITER = "l"</title>
+         <para>
+Unit of volume. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called liter. International
+ System of Units accepts two symbols: lower-case l and capital L. That
+ constant value is using the lower-case l.
+   </para>
+      </section>
+      <section xreflabel="LUMEN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.LUMEN">
+         <title>public static final String LUMEN = "lm"</title>
+         <para>
+Unit of luminous flux. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called lumen.
+   </para>
+      </section>
+      <section xreflabel="LUX"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.LUX">
+         <title>public static final String LUX = "lx"</title>
+         <para>
+Unit of illuminance. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called lux.
+   </para>
+      </section>
+      <section xreflabel="MAXWELL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.MAXWELL">
+         <title>public static final String MAXWELL = "Mx"</title>
+         <para>
+Unit of magnetic flux. It's one of non-SI units associated with the CGS
+ and the CGS-Gaussian system of units. The unit is called maxwell.
+   </para>
+      </section>
+      <section xreflabel="METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.METER">
+         <title>public static final String METER = "m"</title>
+         <para>
+Unit of length defined by the International System of Units (SI). It's
+ one of be base units called meter.
+   </para>
+      </section>
+      <section xreflabel="METER_PER_SECOND"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.METER_PER_SECOND">
+         <title>public static final String METER_PER_SECOND = "m/s"</title>
+         <para>
+Unit of speed, velocity. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called meter per second.
+   </para>
+      </section>
+      <section xreflabel="METER_PER_SECOND_SQUARED"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.METER_PER_SECOND_SQUARED">
+         <title>public static final String METER_PER_SECOND_SQUARED = "m/s²"</title>
+         <para>
+Unit of acceleration. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called meter per second
+ squared.
+   </para>
+      </section>
+      <section xreflabel="MILLIMETER_OF_MERCURY"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.MILLIMETER_OF_MERCURY">
+         <title>public static final String MILLIMETER_OF_MERCURY = "mmHg"</title>
+         <para>
+Unit of pressure. It's one of other non-SI units. The unit is called
+ millimeter of mercury.
+   </para>
+      </section>
+      <section xreflabel="MOLE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.MOLE">
+         <title>public static final String MOLE = "mol"</title>
+         <para>
+Unit of amount of substance defined by the International System of Units
+ (SI). It's one of be base units called mole.
+   </para>
+      </section>
+      <section xreflabel="MOLE_PER_CUBIC_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.MOLE_PER_CUBIC_METER">
+         <title>public static final String MOLE_PER_CUBIC_METER = "mol/m³"</title>
+         <para>
+Unit of amount concentration, concentration. It's one of coherent derived
+ units in the SI expressed in terms of base units. The unit is called mole
+ per cubic meter.
+   </para>
+      </section>
+      <section xreflabel="NAUTICAL_MILE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.NAUTICAL_MILE">
+         <title>public static final String NAUTICAL_MILE = "M"</title>
+         <para>
+Unit of distance. It's one of other non-SI units. The unit is called
+ nautical mile.
+   </para>
+      </section>
+      <section xreflabel="NEPER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.NEPER">
+         <title>public static final String NEPER = "Np"</title>
+         <para>
+Unit of logarithmic ratio quantities. It's one of other non-SI units. The
+ unit is called neper.
+   </para>
+      </section>
+      <section xreflabel="NEWTON"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.NEWTON">
+         <title>public static final String NEWTON = "N"</title>
+         <para>
+Unit of force. It's one of the coherent derived units in the SI with
+ special names and symbols. The unit is called newton.
+   </para>
+      </section>
+      <section xreflabel="NEWTON_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.NEWTON_METER">
+         <title>public static final String NEWTON_METER = "N m"</title>
+         <para>
+Unit of moment of force. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called newton meter.
+   </para>
+      </section>
+      <section xreflabel="NEWTON_PER_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.NEWTON_PER_METER">
+         <title>public static final String NEWTON_PER_METER = "N/m"</title>
+         <para>
+Unit of surface tension. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called newton per meter.
+   </para>
+      </section>
+      <section xreflabel="OERSTED"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.OERSTED">
+         <title>public static final String OERSTED = "Oe"</title>
+         <para>
+Unit of magnetic field. It's one of non-SI units associated with the CGS
+ and the CGS-Gaussian system of units. The unit is called oersted.
+   </para>
+      </section>
+      <section xreflabel="OHM"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.OHM">
+         <title>public static final String OHM = "Ω"</title>
+         <para>
+Unit of electric resistance. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called ohm.
+   </para>
+      </section>
+      <section xreflabel="PASCAL"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PASCAL">
+         <title>public static final String PASCAL = "Pa"</title>
+         <para>
+Unit of pressure, stress. It's one of the coherent derived units in the
+ SI with special names and symbols. The unit is called pascal.
+   </para>
+      </section>
+      <section xreflabel="PASCAL_SECOND"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PASCAL_SECOND">
+         <title>public static final String PASCAL_SECOND = "Pa s"</title>
+         <para>
+Unit of dynamic viscosity. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called pascal second.
+   </para>
+      </section>
+      <section xreflabel="PHOT"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PHOT">
+         <title>public static final String PHOT = "ph"</title>
+         <para>
+Unit of illuminance. It's one of non-SI units associated with the CGS and
+ the CGS-Gaussian system of units. The unit is called phot.
+   </para>
+      </section>
+      <section xreflabel="PLANE_ANGLE_MINUTE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PLANE_ANGLE_MINUTE">
+         <title>public static final String PLANE_ANGLE_MINUTE = "′"</title>
+         <para>
+Unit of plane angle. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called minute.
+   </para>
+      </section>
+      <section xreflabel="PLANE_ANGLE_SECOND"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PLANE_ANGLE_SECOND">
+         <title>public static final String PLANE_ANGLE_SECOND = "″"</title>
+         <para>
+Unit of plane angle. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called second.
+   </para>
+      </section>
+      <section xreflabel="POISE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.POISE">
+         <title>public static final String POISE = "P"</title>
+         <para>
+Unit of dynamic viscosity. It's one of non-SI units associated with the
+ CGS and the CGS-Gaussian system of units. The unit is called poise.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_ATTO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_ATTO">
+         <title>public static final String PREFIX_ATTO = "a"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called atto and represents the 18th negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_CENTI"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_CENTI">
+         <title>public static final String PREFIX_CENTI = "c"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called centi and represents the 2nd negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_DECA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_DECA">
+         <title>public static final String PREFIX_DECA = "da"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called deca and represents the 1st power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_DECI"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_DECI">
+         <title>public static final String PREFIX_DECI = "d"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called deci and represents the 1st negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_EXA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_EXA">
+         <title>public static final String PREFIX_EXA = "E"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called exa and represents the 18th power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_FEMTO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_FEMTO">
+         <title>public static final String PREFIX_FEMTO = "f"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called femto and represents the 15th negative power of
+ ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_GIGA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_GIGA">
+         <title>public static final String PREFIX_GIGA = "G"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called giga and represents the 9th power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_HECTO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_HECTO">
+         <title>public static final String PREFIX_HECTO = "h"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called hecto and represents the 2nd power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_KILO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_KILO">
+         <title>public static final String PREFIX_KILO = "k"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called kilo and represents the 3rd power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_MEGA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_MEGA">
+         <title>public static final String PREFIX_MEGA = "M"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called mega and represents the 6th power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_MICRO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_MICRO">
+         <title>public static final String PREFIX_MICRO = "µ"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called micro and represents the 6th negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_MILLI"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_MILLI">
+         <title>public static final String PREFIX_MILLI = "m"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called milli and represents the 3rd negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_NANO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_NANO">
+         <title>public static final String PREFIX_NANO = "n"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called nano and represents the 9th negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_PICO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_PICO">
+         <title>public static final String PREFIX_PICO = "p"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called pico and represents the 12th negative power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_YOCTO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_YOCTO">
+         <title>public static final String PREFIX_YOCTO = "y"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called yocto and represents the 24th negative power of
+ ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_YOTTA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_YOTTA">
+         <title>public static final String PREFIX_YOTTA = "Y"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called yotta and represents the 24th power of ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_ZEPTO"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_ZEPTO">
+         <title>public static final String PREFIX_ZEPTO = "z"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called zepto and represents the 21th negative power of
+ ten.
+   </para>
+      </section>
+      <section xreflabel="PREFIX_ZETTA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.PREFIX_ZETTA">
+         <title>public static final String PREFIX_ZETTA = "Z"</title>
+         <para>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called zetta and represents the 21th power of ten.
+   </para>
+      </section>
+      <section xreflabel="RADIAN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.RADIAN">
+         <title>public static final String RADIAN = "rad"</title>
+         <para>
+Unit of plane angle. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called radian.
+   </para>
+      </section>
+      <section xreflabel="RADIAN_PER_SECOND"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.RADIAN_PER_SECOND">
+         <title>public static final String RADIAN_PER_SECOND = "rad/s"</title>
+         <para>
+Unit of angular velocity. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called radian per second.
+   </para>
+      </section>
+      <section xreflabel="RADIAN_PER_SECOND_SQUARED"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.RADIAN_PER_SECOND_SQUARED">
+         <title>public static final String RADIAN_PER_SECOND_SQUARED = "rad/s²"</title>
+         <para>
+Unit of angular acceleration. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called radian per second squared.
+   </para>
+      </section>
+      <section xreflabel="RECIPROCAL_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.RECIPROCAL_METER">
+         <title>public static final String RECIPROCAL_METER = "m⁻¹"</title>
+         <para>
+Unit of wavenumber. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called reciprocal meter.
+   </para>
+      </section>
+      <section xreflabel="SECOND"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.SECOND">
+         <title>public static final String SECOND = "s"</title>
+         <para>
+Unit of time defined by the International System of Units (SI). It's one
+ of be base units called second.
+   </para>
+      </section>
+      <section xreflabel="SIEMENS"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.SIEMENS">
+         <title>public static final String SIEMENS = "S"</title>
+         <para>
+Unit of electric conductance. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called siemens.
+   </para>
+      </section>
+      <section xreflabel="SIEVERT"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.SIEVERT">
+         <title>public static final String SIEVERT = "Sv"</title>
+         <para>
+Unit of dose equivalent, ambient dose equivalent, directional dose
+ equivalent, personal dose equivalent. It's one of the coherent derived
+ units in the SI with special names and symbols. The unit is called
+ sievert.
+   </para>
+      </section>
+      <section xreflabel="SQUARE_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.SQUARE_METER">
+         <title>public static final String SQUARE_METER = "m²"</title>
+         <para>
+Unit of area. It's one of coherent derived units in the SI expressed in
+ terms of base units. The unit is called square meter.
+   </para>
+      </section>
+      <section xreflabel="STERADIAN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.STERADIAN">
+         <title>public static final String STERADIAN = "sr"</title>
+         <para>
+Unit of solid angle. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called steradian.
+   </para>
+      </section>
+      <section xreflabel="STILB"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.STILB">
+         <title>public static final String STILB = "sb"</title>
+         <para>
+Unit of luminance. It's one of non-SI units associated with the CGS and
+ the CGS-Gaussian system of units. The unit is called stilb.
+   </para>
+      </section>
+      <section xreflabel="STOKES"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.STOKES">
+         <title>public static final String STOKES = "St"</title>
+         <para>
+Unit of kinematic viscosity. It's one of non-SI units associated with the
+ CGS and the CGS-Gaussian system of units. The unit is called stokes.
+   </para>
+      </section>
+      <section xreflabel="TESLA"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.TESLA">
+         <title>public static final String TESLA = "T"</title>
+         <para>
+Unit of magnetic flux density. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called tesla.
+   </para>
+      </section>
+      <section xreflabel="TIME_MINUTE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.TIME_MINUTE">
+         <title>public static final String TIME_MINUTE = "min"</title>
+         <para>
+Unit of time. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called minute.
+   </para>
+      </section>
+      <section xreflabel="TONNE"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.TONNE">
+         <title>public static final String TONNE = "t"</title>
+         <para>
+Unit of mass. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called tonne.
+   </para>
+      </section>
+      <section xreflabel="VOLT"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.VOLT">
+         <title>public static final String VOLT = "V"</title>
+         <para>
+Unit of electric potential difference, electromotive force. It's one of
+ the coherent derived units in the SI with special names and symbols. The
+ unit is called volt.
+   </para>
+      </section>
+      <section xreflabel="VOLT_PER_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.VOLT_PER_METER">
+         <title>public static final String VOLT_PER_METER = "V/m"</title>
+         <para>
+Unit of electric field strength. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called volt per meter.
+   </para>
+      </section>
+      <section xreflabel="WATT"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.WATT">
+         <title>public static final String WATT = "W"</title>
+         <para>
+Unit of power, radiant flux. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called watt.
+   </para>
+      </section>
+      <section xreflabel="WATT_PER_METER_KELVIN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.WATT_PER_METER_KELVIN">
+         <title>public static final String WATT_PER_METER_KELVIN = "W/(m K)"</title>
+         <para>
+Unit of thermal conductivity. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called watt per meter kelvin.
+   </para>
+      </section>
+      <section xreflabel="WATT_PER_SQUARE_METER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.WATT_PER_SQUARE_METER">
+         <title>public static final String WATT_PER_SQUARE_METER = "W/m²"</title>
+         <para>
+Unit of heat flux density, irradiance. It's one of coherent derived units
+ whose names and symbols include SI coherent derived units with special
+ names and symbols. The unit is called watt per square meter.
+   </para>
+      </section>
+      <section xreflabel="WATT_PER_SQUARE_METER_STERADIAN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.WATT_PER_SQUARE_METER_STERADIAN">
+         <title>public static final String WATT_PER_SQUARE_METER_STERADIAN = "W/(m² sr)"</title>
+         <para>
+Unit of radiance. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called watt per square meter steradian.
+   </para>
+      </section>
+      <section xreflabel="WATT_PER_STERADIAN"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.WATT_PER_STERADIAN">
+         <title>public static final String WATT_PER_STERADIAN = "W/sr"</title>
+         <para>
+Unit of radiant intensity. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called watt per steradian.
+   </para>
+      </section>
+      <section xreflabel="WEBER"
+               role="field"
+               xml:id="org.osgi.service.dal.SIUnits.WEBER">
+         <title>public static final String WEBER = "Wb"</title>
+         <para>
+Unit of magnetic flux. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called weber.
+   </para>
+      </section>
+   </section>
+</section>
