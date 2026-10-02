@@ -1,0 +1,3065 @@
+<?xml version='1.0' encoding='utf-8'?>
+<top>
+  <package name='org.osgi.service.dal' fqn='org.osgi.service.dal' qn='org.osgi.service.dal'>
+<org.osgi.annotation.versioning.Version><value>1.0</value>
+</org.osgi.annotation.versioning.Version>
+   <lead>
+Device Abstraction Layer Package Version 1.0.
+   </lead>
+   <description>
+Device Abstraction Layer Package Version 1.0.
+ 
+ <p>
+ Bundles wishing to use this package must list the package in the
+ Import-Package header of the bundle's manifest. This package has two types of
+ users: the consumers that use the API in this package and the providers that
+ implement the API in this package.
+ 
+ </p><p>
+ Example import for consumers using the API in this package:
+ </p><p>
+ {@code  Import-Package: org.osgi.service.dal; version="[1.0,2.0)"}
+ </p><p>
+ Example import for providers implementing the API in this package:
+ </p><p>
+ {@code  Import-Package: org.osgi.service.dal; version="[1.0,1.1)"}</p>
+   </description>
+<author>@author $Id: 1b37dec36440adea2d9abb9f3b925f4ca4970614 $</author>
+  <class name='Device' fqn='org.osgi.service.dal.Device' qn='Device' package='org.osgi.service.dal' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+Represents the device in the OSGi service registry.
+   </lead>
+   <description>
+Represents the device in the OSGi service registry. Note that {@code Device}
+ services are registered last. Before their registration, there is
+ {@code Function} services registration. The reverse order is used when the
+ services are unregistered. {@code Device} services are unregistered first
+ before {@code Function} services.
+   </description>
+
+    <method name='getServiceProperty' fqn='org.osgi.service.dal.Device.getServiceProperty' qn='Device.getServiceProperty(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='Object' qualifiedTypeName='java.lang.Object' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns the current value of the specified property.
+   </lead>
+   <description>
+Returns the current value of the specified property. The method will
+ return the same value as {@code ServiceReference.getProperty(String)} for
+ the service reference of this device.
+ <p>
+ This method must continue to return property values after the device
+ service has been unregistered.</p>
+   </description>
+
+<param name='propKey'>The property key.</param>
+
+<return>The property value or {@code null} if the property key cannot be
+         mapped to a value.</return>
+
+
+
+    <parameter name='propKey' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getServicePropertyKeys' fqn='org.osgi.service.dal.Device.getServicePropertyKeys' qn='Device.getServicePropertyKeys()' package='org.osgi.service.dal' modifiers='public abstract' typeName='String[]' qualifiedTypeName='java.lang.String[]' typeArgs='' dimension='[]' signature='()' flatSignature='()'>
+   <lead>
+Returns an array with all device service property keys.
+   </lead>
+   <description>
+Returns an array with all device service property keys. The method will
+ return the same value as {@code ServiceReference.getPropertyKeys()} for
+ the service reference of this device. The result cannot be {@code null}.
+   </description>
+
+
+<return>An array with all device service property keys, cannot be
+         {@code null}.</return>
+
+
+
+     </method>
+    <method name='remove' fqn='org.osgi.service.dal.Device.remove' qn='Device.remove()' package='org.osgi.service.dal' modifiers='public abstract' typeName='void' qualifiedTypeName='void' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Removes this device.
+   </lead>
+   <description>
+Removes this device.
+ <p>
+ The method must synchronously:
+ </p><ul>
+ <li>Remove the device from the device network.</li>
+ <li>Set the device status to {@link #STATUS_REMOVED}.</li>
+ <li>Unregister the device service from the OSGi service registry.</li>
+ </ul>
+ The caller should release the device service after successful execution,
+ because the device will not be operational.
+   </description>
+
+
+
+<throws name='DeviceException'>If an operation error is available.</throws>
+<throws name='UnsupportedOperationException'>If the operation is not supported
+         over this device.</throws>
+<throws name='SecurityException'>If the caller does not have the appropriate
+         {@code DevicePermission(this device, }
+         {@link DevicePermission#REMOVE}{@code )} and the Java Runtime
+         Environment supports permissions.</throws>
+<throws name='IllegalStateException'>If this device service object has already
+         been unregistered.</throws>
+
+
+<exception name='DeviceException' fqn='org.osgi.service.dal.DeviceException'/>
+     </method>
+    <field name='DEVICE_CATEGORY' fqn='org.osgi.service.dal.Device.DEVICE_CATEGORY' qn='Device.DEVICE_CATEGORY' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"DAL"'>
+   <lead>
+Constant for the value of the {@link Constants#DEVICE_CATEGORY} service
+ property.
+   </lead>
+   <description>
+Constant for the value of the {@link Constants#DEVICE_CATEGORY} service
+ property. That category is used by all device services.
+   </description>
+<a href='#Constants.DEVICE_CATEGORY'>Constants.DEVICE_CATEGORY</a>
+     </field>
+    <field name='SERVICE_UID' fqn='org.osgi.service.dal.Device.SERVICE_UID' qn='Device.SERVICE_UID' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.UID"'>
+   <lead>
+The service property value contains the device unique identifier.
+   </lead>
+   <description>
+The service property value contains the device unique identifier. It's a
+ mandatory property. The value type is {@code java.lang.String}. To
+ simplify the unique identifier generation, the property value must follow
+ the rule:
+ <p>
+ UID ::= driver-name ':' device-id
+ </p><p>
+ UID - device unique identifier
+ </p><p>
+ driver-name - the value of the {@link #SERVICE_DRIVER} service property
+ </p><p>
+ device-id - device unique identifier in the scope of the driver</p>
+   </description>
+
+     </field>
+    <field name='SERVICE_REFERENCE_UIDS' fqn='org.osgi.service.dal.Device.SERVICE_REFERENCE_UIDS' qn='Device.SERVICE_REFERENCE_UIDS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.reference.UIDs"'>
+   <lead>
+The service property value contains the reference device unique
+ identifiers.
+   </lead>
+   <description>
+The service property value contains the reference device unique
+ identifiers. It's an optional property. The value type is
+ {@code java.lang.String[]}. It can be used to represent different
+ relationships between the devices. For example, the EnOcean controller
+ can have a reference to the USB dongle.
+   </description>
+
+     </field>
+    <field name='SERVICE_DRIVER' fqn='org.osgi.service.dal.Device.SERVICE_DRIVER' qn='Device.SERVICE_DRIVER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.driver"'>
+   <lead>
+The service property value contains the device driver name.
+   </lead>
+   <description>
+The service property value contains the device driver name. For example,
+ EnOcean, Z-Wave, Bluetooth, etc. It's a mandatory property. The value
+ type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_NAME' fqn='org.osgi.service.dal.Device.SERVICE_NAME' qn='Device.SERVICE_NAME' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.name"'>
+   <lead>
+The service property value contains the device name.
+   </lead>
+   <description>
+The service property value contains the device name. It's an optional
+ property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_STATUS' fqn='org.osgi.service.dal.Device.SERVICE_STATUS' qn='Device.SERVICE_STATUS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.status"'>
+   <lead>
+The service property value contains the device status.
+   </lead>
+   <description>
+The service property value contains the device status. It's a mandatory
+ property. The value type is {@code java.lang.Integer}. The possible
+ values are:
+ <ul>
+ <li> {@link #STATUS_ONLINE}</li>
+ <li> {@link #STATUS_OFFLINE}</li>
+ <li> {@link #STATUS_REMOVED}</li>
+ <li> {@link #STATUS_PROCESSING}</li>
+ <li> {@link #STATUS_NOT_INITIALIZED}</li>
+ <li> {@link #STATUS_NOT_CONFIGURED}</li>
+ </ul>
+   </description>
+
+     </field>
+    <field name='SERVICE_STATUS_DETAIL' fqn='org.osgi.service.dal.Device.SERVICE_STATUS_DETAIL' qn='Device.SERVICE_STATUS_DETAIL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.status.detail"'>
+   <lead>
+The service property value contains the device status detail.
+   </lead>
+   <description>
+The service property value contains the device status detail. It holds
+ the reason for the current device status. It's an optional property. The
+ value type is {@code java.lang.Integer}. There are two value categories:
+ <ul>
+ <li>positive values - those values contain details related to the current
+ status. Examples: {@link #STATUS_DETAIL_CONNECTING} and
+ {@link #STATUS_DETAIL_INITIALIZING}.</li>
+ <li>negative values - those values contain errors related to the current
+ status. Examples: {@link #STATUS_DETAIL_CONFIGURATION_UNAPPLIED},
+ {@link #STATUS_DETAIL_BROKEN} and
+ {@link #STATUS_DETAIL_COMMUNICATION_ERROR}.</li>
+ </ul>
+   </description>
+
+     </field>
+    <field name='SERVICE_HARDWARE_VENDOR' fqn='org.osgi.service.dal.Device.SERVICE_HARDWARE_VENDOR' qn='Device.SERVICE_HARDWARE_VENDOR' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.hardware.vendor"'>
+   <lead>
+The service property value contains the device hardware vendor.
+   </lead>
+   <description>
+The service property value contains the device hardware vendor. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_HARDWARE_VERSION' fqn='org.osgi.service.dal.Device.SERVICE_HARDWARE_VERSION' qn='Device.SERVICE_HARDWARE_VERSION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.hardware.version"'>
+   <lead>
+The service property value contains the device hardware version.
+   </lead>
+   <description>
+The service property value contains the device hardware version. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_FIRMWARE_VENDOR' fqn='org.osgi.service.dal.Device.SERVICE_FIRMWARE_VENDOR' qn='Device.SERVICE_FIRMWARE_VENDOR' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.firmware.vendor"'>
+   <lead>
+The service property value contains the device firmware vendor.
+   </lead>
+   <description>
+The service property value contains the device firmware vendor. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_FIRMWARE_VERSION' fqn='org.osgi.service.dal.Device.SERVICE_FIRMWARE_VERSION' qn='Device.SERVICE_FIRMWARE_VERSION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.firmware.version"'>
+   <lead>
+The service property value contains the device firmware version.
+   </lead>
+   <description>
+The service property value contains the device firmware version. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_TYPES' fqn='org.osgi.service.dal.Device.SERVICE_TYPES' qn='Device.SERVICE_TYPES' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.types"'>
+   <lead>
+The service property value contains the device types like DVD, TV, etc.
+   </lead>
+   <description>
+The service property value contains the device types like DVD, TV, etc.
+ It's an optional property. The value type is {@code java.lang.String[]}.
+   </description>
+
+     </field>
+    <field name='SERVICE_MODEL' fqn='org.osgi.service.dal.Device.SERVICE_MODEL' qn='Device.SERVICE_MODEL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.model"'>
+   <lead>
+The service property value contains the device model.
+   </lead>
+   <description>
+The service property value contains the device model. It's an optional
+ property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_SERIAL_NUMBER' fqn='org.osgi.service.dal.Device.SERVICE_SERIAL_NUMBER' qn='Device.SERVICE_SERIAL_NUMBER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.serial.number"'>
+   <lead>
+The service property value contains the device serial number.
+   </lead>
+   <description>
+The service property value contains the device serial number. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_DESCRIPTION' fqn='org.osgi.service.dal.Device.SERVICE_DESCRIPTION' qn='Device.SERVICE_DESCRIPTION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.device.description"'>
+   <lead>
+The service property value contains the device description.
+   </lead>
+   <description>
+The service property value contains the device description. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='STATUS_REMOVED' fqn='org.osgi.service.dal.Device.STATUS_REMOVED' qn='Device.STATUS_REMOVED' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status indicates that the device has been removed from the
+ network.
+   </lead>
+   <description>
+Device status indicates that the device has been removed from the
+ network. That status must be set as the last device status. After that
+ the device service can be unregistered from the service registry. It can
+ be used as a value of {@link #SERVICE_STATUS} service property.
+   </description>
+
+     </field>
+    <field name='STATUS_OFFLINE' fqn='org.osgi.service.dal.Device.STATUS_OFFLINE' qn='Device.STATUS_OFFLINE' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status indicates that the device is currently not available for
+ operations.
+   </lead>
+   <description>
+Device status indicates that the device is currently not available for
+ operations. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </description>
+
+     </field>
+    <field name='STATUS_ONLINE' fqn='org.osgi.service.dal.Device.STATUS_ONLINE' qn='Device.STATUS_ONLINE' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status indicates that the device is currently available for
+ operations.
+   </lead>
+   <description>
+Device status indicates that the device is currently available for
+ operations. The recent communication with the device has been passed
+ through. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </description>
+
+     </field>
+    <field name='STATUS_PROCESSING' fqn='org.osgi.service.dal.Device.STATUS_PROCESSING' qn='Device.STATUS_PROCESSING' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status indicates that the device is currently busy with an
+ operation.
+   </lead>
+   <description>
+Device status indicates that the device is currently busy with an
+ operation. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </description>
+
+     </field>
+    <field name='STATUS_NOT_INITIALIZED' fqn='org.osgi.service.dal.Device.STATUS_NOT_INITIALIZED' qn='Device.STATUS_NOT_INITIALIZED' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status indicates that the device is currently not initialized.
+   </lead>
+   <description>
+Device status indicates that the device is currently not initialized.
+ Some protocols don't provide device information right after the device is
+ connected. The device can be initialized later when it's awakened. It can
+ be used as a value of {@link #SERVICE_STATUS} service property.
+   </description>
+
+     </field>
+    <field name='STATUS_NOT_CONFIGURED' fqn='org.osgi.service.dal.Device.STATUS_NOT_CONFIGURED' qn='Device.STATUS_NOT_CONFIGURED' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status indicates that the device is currently not configured.
+   </lead>
+   <description>
+Device status indicates that the device is currently not configured. The
+ device can require additional actions to become completely connected to
+ the network. It can be used as a value of {@link #SERVICE_STATUS} service
+ property.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_CONNECTING' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_CONNECTING' qn='Device.STATUS_DETAIL_CONNECTING' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device is currently connecting to
+ the network.
+   </lead>
+   <description>
+Device status detail indicates that the device is currently connecting to
+ the network. It can be used as a value of {@link #SERVICE_STATUS_DETAIL}
+ service property. The device status must be {@link #STATUS_PROCESSING}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_INITIALIZING' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_INITIALIZING' qn='Device.STATUS_DETAIL_INITIALIZING' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device is currently in process of
+ initialization.
+   </lead>
+   <description>
+Device status detail indicates that the device is currently in process of
+ initialization. It can be used as a value of
+ {@link #SERVICE_STATUS_DETAIL} service property. The device status must
+ be {@link #STATUS_PROCESSING}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_REMOVING' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_REMOVING' qn='Device.STATUS_DETAIL_REMOVING' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device is leaving the network.
+   </lead>
+   <description>
+Device status detail indicates that the device is leaving the network. It
+ can be used as a value of {@link #SERVICE_STATUS_DETAIL} service
+ property. The device status must be {@link #STATUS_PROCESSING}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_FIRMWARE_UPDATING' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_FIRMWARE_UPDATING' qn='Device.STATUS_DETAIL_FIRMWARE_UPDATING' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device firmware is updating.
+   </lead>
+   <description>
+Device status detail indicates that the device firmware is updating. It
+ can be used as a value of {@link #SERVICE_STATUS_DETAIL} service
+ property. The device status must be {@link #STATUS_PROCESSING}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_CONFIGURATION_UNAPPLIED' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_CONFIGURATION_UNAPPLIED' qn='Device.STATUS_DETAIL_CONFIGURATION_UNAPPLIED' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device configuration is not
+ applied.
+   </lead>
+   <description>
+Device status detail indicates that the device configuration is not
+ applied. It can be used as a value of {@link #SERVICE_STATUS_DETAIL}
+ service property. The device status must be
+ {@link #STATUS_NOT_CONFIGURED}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_BROKEN' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_BROKEN' qn='Device.STATUS_DETAIL_BROKEN' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device is broken.
+   </lead>
+   <description>
+Device status detail indicates that the device is broken. It can be used
+ as a value of {@link #SERVICE_STATUS_DETAIL} service property. The device
+ status must be {@link #STATUS_OFFLINE}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_COMMUNICATION_ERROR' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_COMMUNICATION_ERROR' qn='Device.STATUS_DETAIL_COMMUNICATION_ERROR' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device communication is
+ problematic.
+   </lead>
+   <description>
+Device status detail indicates that the device communication is
+ problematic. It can be used as a value of {@link #SERVICE_STATUS_DETAIL}
+ service property. The device status must be {@link #STATUS_ONLINE} or
+ {@link #STATUS_NOT_INITIALIZED}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_DATA_INSUFFICIENT' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_DATA_INSUFFICIENT' qn='Device.STATUS_DETAIL_DATA_INSUFFICIENT' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device doesn't provide enough
+ information and cannot be determined.
+   </lead>
+   <description>
+Device status detail indicates that the device doesn't provide enough
+ information and cannot be determined. It can be used as a value of
+ {@link #SERVICE_STATUS_DETAIL} service property. The device status must
+ be {@link #STATUS_NOT_INITIALIZED}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_INACCESSIBLE' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_INACCESSIBLE' qn='Device.STATUS_DETAIL_INACCESSIBLE' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device is not accessible and
+ further communication is not possible.
+   </lead>
+   <description>
+Device status detail indicates that the device is not accessible and
+ further communication is not possible. It can be used as a value of
+ {@link #SERVICE_STATUS_DETAIL} service property. The device status must
+ be {@link #STATUS_OFFLINE}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_CONFIGURATION_ERROR' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_CONFIGURATION_ERROR' qn='Device.STATUS_DETAIL_CONFIGURATION_ERROR' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device cannot be configured.
+   </lead>
+   <description>
+Device status detail indicates that the device cannot be configured. It
+ can be used as a value of {@link #SERVICE_STATUS_DETAIL} service
+ property. The device status must be {@link #STATUS_NOT_CONFIGURED}.
+   </description>
+
+     </field>
+    <field name='STATUS_DETAIL_DUTY_CYCLE' fqn='org.osgi.service.dal.Device.STATUS_DETAIL_DUTY_CYCLE' qn='Device.STATUS_DETAIL_DUTY_CYCLE' package='org.osgi.service.dal' modifiers='public static final' typeName='Integer' qualifiedTypeName='java.lang.Integer' dimension=''>
+   <lead>
+Device status detail indicates that the device is in duty cycle.
+   </lead>
+   <description>
+Device status detail indicates that the device is in duty cycle. It can
+ be used as a value of {@link #SERVICE_STATUS_DETAIL} service property.
+ The device status must be {@link #STATUS_OFFLINE}.
+   </description>
+
+     </field>
+  </class>
+  <class name='DeviceException' fqn='org.osgi.service.dal.DeviceException' qn='DeviceException' package='org.osgi.service.dal' typeParam='' modifiers='public class' superclass='IOException' kind='CLASS'>
+   <lead>
+{@code DeviceException} is a special {@code IOException}, which is thrown to
+ indicate that there is a device operation fail.
+   </lead>
+   <description>
+{@code DeviceException} is a special {@code IOException}, which is thrown to
+ indicate that there is a device operation fail. The error reason can be
+ located with {@link #getCode()} method. The cause is available with
+ {@link #getCause()}.
+   </description>
+
+    <method name='DeviceException' fqn='org.osgi.service.dal.DeviceException.DeviceException' qn='DeviceException.DeviceException()' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='()' flatSignature='()' isConstructor='true'>
+   <lead>
+Construct a new device exception with {@code null} message.
+   </lead>
+   <description>
+Construct a new device exception with {@code null} message. The cause is
+ not initialized and the exception code is set to {@link #UNKNOWN}.
+   </description>
+
+
+
+
+
+     </method>
+    <method name='DeviceException' fqn='org.osgi.service.dal.DeviceException.DeviceException' qn='DeviceException.DeviceException(String)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String)' flatSignature='(String)' isConstructor='true'>
+   <lead>
+Constructs a new device exception with the given message.
+   </lead>
+   <description>
+Constructs a new device exception with the given message. The cause is
+ not initialized and the exception code is set to {@link #UNKNOWN}.
+   </description>
+
+<param name='message'>The exception message.</param>
+
+
+
+
+    <parameter name='message' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='DeviceException' fqn='org.osgi.service.dal.DeviceException.DeviceException' qn='DeviceException.DeviceException(String,Throwable)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String,java.lang.Throwable)' flatSignature='(String,Throwable)' isConstructor='true'>
+   <lead>
+Constructs a new device exception with the given message and cause.
+   </lead>
+   <description>
+Constructs a new device exception with the given message and cause. The
+ exception code is set to {@link #UNKNOWN}.
+   </description>
+
+<param name='message'>The exception message.</param>
+<param name='cause'>The exception cause.</param>
+
+
+
+
+    <parameter name='message' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='cause' dimension='' typeName='Throwable' fqn='java.lang.Throwable' varargs='false'/>
+     </method>
+    <method name='DeviceException' fqn='org.osgi.service.dal.DeviceException.DeviceException' qn='DeviceException.DeviceException(String,Throwable,int)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String,java.lang.Throwable,int)' flatSignature='(String,Throwable,int)' isConstructor='true'>
+   <lead>
+Constructs a new device exception with the given message, cause and code.
+   </lead>
+   <description>
+Constructs a new device exception with the given message, cause and code.
+   </description>
+
+<param name='message'>The exception message.</param>
+<param name='cause'>The exception cause.</param>
+<param name='code'>The exception code.</param>
+
+
+
+
+    <parameter name='message' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='cause' dimension='' typeName='Throwable' fqn='java.lang.Throwable' varargs='false'/>
+    <parameter name='code' dimension='' typeName='int' fqn='int' varargs='false'/>
+     </method>
+    <method name='getCode' fqn='org.osgi.service.dal.DeviceException.getCode' qn='DeviceException.getCode()' package='org.osgi.service.dal' modifiers='public' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the exception code.
+   </lead>
+   <description>
+Returns the exception code. It indicates the reason for this exception.
+ The code can be:
+ <ul>
+ <li>{@link #UNKNOWN}</li>
+ <li>{@link #COMMUNICATION_ERROR}</li>
+ <li>{@link #TIMEOUT}</li>
+ <li>{@link #NOT_INITIALIZED}</li>
+ <li>{@link #NO_DATA}</li>
+ <li>custom code</li>
+ </ul>
+ Zero and positive values are reserved for this definition and further
+ extensions of the device exception codes. Custom codes can be used only
+ as negative values to prevent potential collisions.
+   </description>
+
+
+<return>An exception code.</return>
+
+
+
+     </method>
+    <field name='UNKNOWN' fqn='org.osgi.service.dal.DeviceException.UNKNOWN' qn='DeviceException.UNKNOWN' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='0'>
+   <lead>
+An exception code indicates that the error is unknown.
+   </lead>
+   <description>
+An exception code indicates that the error is unknown.
+   </description>
+
+     </field>
+    <field name='COMMUNICATION_ERROR' fqn='org.osgi.service.dal.DeviceException.COMMUNICATION_ERROR' qn='DeviceException.COMMUNICATION_ERROR' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='1'>
+   <lead>
+An exception code indicates that there is an error in the communication.
+   </lead>
+   <description>
+An exception code indicates that there is an error in the communication.
+   </description>
+
+     </field>
+    <field name='TIMEOUT' fqn='org.osgi.service.dal.DeviceException.TIMEOUT' qn='DeviceException.TIMEOUT' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='2'>
+   <lead>
+An exception code indicates that there is expired timeout without any
+ processing.
+   </lead>
+   <description>
+An exception code indicates that there is expired timeout without any
+ processing.
+   </description>
+
+     </field>
+    <field name='NOT_INITIALIZED' fqn='org.osgi.service.dal.DeviceException.NOT_INITIALIZED' qn='DeviceException.NOT_INITIALIZED' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='3'>
+   <lead>
+An exception code indicates that the device is not initialized.
+   </lead>
+   <description>
+An exception code indicates that the device is not initialized. The
+ device status is {@link Device#STATUS_NOT_INITIALIZED} or
+ {@link Device#STATUS_PROCESSING}.
+   </description>
+
+     </field>
+    <field name='NO_DATA' fqn='org.osgi.service.dal.DeviceException.NO_DATA' qn='DeviceException.NO_DATA' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='4'>
+   <lead>
+An exception code indicates that the requested value is currently not
+ available.
+   </lead>
+   <description>
+An exception code indicates that the requested value is currently not
+ available.
+   </description>
+
+     </field>
+  </class>
+  <class name='DevicePermission' fqn='org.osgi.service.dal.DevicePermission' qn='DevicePermission' package='org.osgi.service.dal' typeParam='' modifiers='public class' superclass='BasicPermission' kind='CLASS'>
+   <lead>
+A bundle's authority to perform specific privileged administrative operations
+ on the devices.
+   </lead>
+   <description>
+A bundle's authority to perform specific privileged administrative operations
+ on the devices. The method {@link Device#remove()} is protected with
+ {@link #REMOVE} permission action.
+ <p>
+ The name of the permission is a filter based. See OSGi Core Specification,
+ Filter Based Permissions. The filter gives an access to all device service
+ properties. Filter attribute names are processed in a case sensitive manner.</p>
+   </description>
+
+    <method name='DevicePermission' fqn='org.osgi.service.dal.DevicePermission.DevicePermission' qn='DevicePermission.DevicePermission(String,String)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String,java.lang.String)' flatSignature='(String,String)' isConstructor='true'>
+   <lead>
+Creates a new {@code DevicePermission} with the given filter and actions.
+   </lead>
+   <description>
+Creates a new {@code DevicePermission} with the given filter and actions.
+ The constructor must only be used to create a permission that is going to
+ be checked.
+ <p>
+ A filter example: (dal.device.hardware.vendor=acme)
+ </p><p>
+ An action: remove</p>
+   </description>
+
+<param name='filter'>A filter expression that can use any device service
+        property. The filter attribute names are processed in a case
+        insensitive manner. A special value of "*" can be used to match
+        all devices.</param>
+<param name='action'>{@link #REMOVE} action.</param>
+
+
+<throws name='IllegalArgumentException'>If the filter syntax is not correct or
+         invalid action is specified.</throws>
+<throws name='NullPointerException'>If the filter or action is null.</throws>
+
+
+    <parameter name='filter' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='action' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='DevicePermission' fqn='org.osgi.service.dal.DevicePermission.DevicePermission' qn='DevicePermission.DevicePermission(Device,String)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(org.osgi.service.dal.Device,java.lang.String)' flatSignature='(Device,String)' isConstructor='true'>
+   <lead>
+Creates a new {@code DevicePermission} with the given device and actions.
+   </lead>
+   <description>
+Creates a new {@code DevicePermission} with the given device and actions.
+ The permission must be used for the security checks like:
+ <p>
+ {@code securityManager.checkPermission(new DevicePermission(this, "remove"))}
+ . The permissions constructed by this constructor must not be added to
+ the {@code DevicePermission} permission collections.</p>
+   </description>
+
+<param name='device'>The device that needs to be checked for a permission.</param>
+<param name='action'>{@link #REMOVE} action.</param>
+
+
+<throws name='IllegalArgumentException'>If an invalid action is specified.</throws>
+<throws name='NullPointerException'>If the device or action is null.</throws>
+
+
+    <parameter name='device' dimension='' typeName='Device' fqn='org.osgi.service.dal.Device' varargs='false'/>
+    <parameter name='action' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='equals' fqn='org.osgi.service.dal.DevicePermission.equals' qn='DevicePermission.equals(Object)' package='org.osgi.service.dal' modifiers='public' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='(java.lang.Object)' flatSignature='(Object)'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Two {@code DevicePermission} instances are equal if:
+ <ul>
+ <li>Represents the same filter and action.</li>
+ <li>Represents the same device (in respect to device unique identifier)
+ and action.</li>
+ </ul>
+   </lead>
+   <description>
+Two {@code DevicePermission} instances are equal if:
+ <ul>
+ <li>Represents the same filter and action.</li>
+ <li>Represents the same device (in respect to device unique identifier)
+ and action.</li>
+ </ul>
+   </description>
+
+<param name='obj'>The object being compared for equality with this object.</param>
+
+<return>{@code true} if two permissions are equal, {@code false}
+         otherwise.</return>
+
+
+
+    <parameter name='obj' dimension='' typeName='Object' fqn='java.lang.Object' varargs='false'/>
+     </method>
+    <method name='hashCode' fqn='org.osgi.service.dal.DevicePermission.hashCode' qn='DevicePermission.hashCode()' package='org.osgi.service.dal' modifiers='public' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Returns the hash code value for this object.
+   </lead>
+   <description>
+Returns the hash code value for this object.
+   </description>
+
+
+<return>Hash code value for this object.</return>
+
+
+
+     </method>
+    <method name='getActions' fqn='org.osgi.service.dal.DevicePermission.getActions' qn='DevicePermission.getActions()' package='org.osgi.service.dal' modifiers='public' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Returns the canonical string representation of {@link #REMOVE} action.
+   </lead>
+   <description>
+Returns the canonical string representation of {@link #REMOVE} action.
+   </description>
+
+
+<return>The canonical string representation of the actions.</return>
+
+
+
+     </method>
+    <method name='implies' fqn='org.osgi.service.dal.DevicePermission.implies' qn='DevicePermission.implies(Permission)' package='org.osgi.service.dal' modifiers='public' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='(java.security.Permission)' flatSignature='(Permission)'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Determines if the specified permission is implied by this object.
+   </lead>
+   <description>
+Determines if the specified permission is implied by this object. The
+ method will return {@code false} if the specified permission was not
+ constructed by {@link #DevicePermission(Device, String)}.
+ 
+ Returns {@code true} if the specified permission is a
+ {@code DevicePermission} and this permission filter matches the specified
+ permission device properties.
+   </description>
+
+<param name='p'>The permission to be implied. It must be constructed by
+        {@link #DevicePermission(Device, String)}.</param>
+
+<return>{@code true} if the specified permission is implied by this
+         permission, {@code false} otherwise.</return>
+
+<throws name='IllegalArgumentException'>If the specified permission is not
+         constructed by {@link #DevicePermission(Device, String)}.</throws>
+
+
+    <parameter name='p' dimension='' typeName='Permission' fqn='java.security.Permission' varargs='false'/>
+     </method>
+    <method name='newPermissionCollection' fqn='org.osgi.service.dal.DevicePermission.newPermissionCollection' qn='DevicePermission.newPermissionCollection()' package='org.osgi.service.dal' modifiers='public' typeName='PermissionCollection' qualifiedTypeName='java.security.PermissionCollection' typeArgs='' dimension='' signature='()' flatSignature='()'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Returns a new {@code PermissionCollection} suitable for storing
+ {@code DevicePermission} instances.
+   </lead>
+   <description>
+Returns a new {@code PermissionCollection} suitable for storing
+ {@code DevicePermission} instances.
+   </description>
+
+
+<return>A new {@code PermissionCollection} instance.</return>
+
+
+
+     </method>
+    <field name='REMOVE' fqn='org.osgi.service.dal.DevicePermission.REMOVE' qn='DevicePermission.REMOVE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"remove"'>
+   <lead>
+A permission action to remove the device.
+   </lead>
+   <description>
+A permission action to remove the device.
+   </description>
+
+     </field>
+  </class>
+  <class name='Function' fqn='org.osgi.service.dal.Function' qn='Function' package='org.osgi.service.dal' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+Function service provides specific device operations and properties.
+   </lead>
+   <description>
+Function service provides specific device operations and properties. Each
+ function service must implement this interface. In additional to this
+ interface, the implementation can provide own:
+ <ul>
+ <li>properties;</li>
+ <li>operations.</li>
+ </ul>
+ <p>
+ The function service is registered in the service registry with these service
+ properties:
+ </p><ul>
+ <li>{@link #SERVICE_UID} - mandatory service property. The property value
+ contains the function unique identifier.</li>
+ <li>{@link #SERVICE_DEVICE_UID} - optional service property. The property
+ value is the Functional Device identifiers. The function belongs to those
+ devices.</li>
+ <li>{@link #SERVICE_REFERENCE_UIDS} - optional service property. The property
+ value contains the reference function unique identifiers.</li>
+ <li>{@link #SERVICE_TYPE} - mandatory service property. The property value is
+ the function type.</li>
+ <li>{@link #SERVICE_VERSION} - optional service property. The property value
+ contains the function version.</li>
+ <li>{@link #SERVICE_DESCRIPTION} - optional service property. The property
+ value is the function description.</li>
+ <li>{@link #SERVICE_OPERATION_NAMES} - optional service property. The
+ property is missing when there are no function operations and property must
+ be set when there are function operations. The property value is the function
+ operation names.</li>
+ <li>{@link #SERVICE_PROPERTY_NAMES} - optional service property. The property
+ is missing when there are no function properties and property must be set
+ when there are function properties. The property value is the function
+ property names.</li>
+ </ul>
+ <p>
+ On start up, the {@code Function} services are registered before the
+ {@code Device} services. It's possible that {@link #SERVICE_DEVICE_UID} point
+ to missing services at the moment of the registration. The reverse order is
+ used when the services are unregistered. {@code Function} services are
+ unregistered last after {@code Device} services.
+ </p><p>
+ The {@code Function} service should be registered only under the function
+ class hierarchy. Other classes can be used if there are no ambiguous
+ representations. For example, an ambiguous representation can be a function
+ registered under two independent function classes like {@code BinarySwitch}
+ and {@code Meter}. In this example, both functions support the same property
+ {@code state} with different meaning.
+ {@code getPropertyMetadata(String propertyName)} method cannot determinate
+ which property is requested. It can be <code>BinarySwitch state</code> or
+ <code>Meter state</code>.
+ </p><p>
+ To simplify the generic function discovery, the {@code Function} interface
+ must be used for the service registration. In this way, the generic
+ applications can easily find all services, which are functions in the service
+ registry. Because of this rule, this registration is not allowed:
+ </p><p>
+ <code>context.registerService(MeterV1.class.getName(), this, regProps);</code>
+ </p><p>
+ If the implementation would like to mark that there is a function, but no
+ specific function interface exists, the registration can be:
+ </p><p>
+ <code>context.registerService(Function.class.getName(), this, regProps);</code>
+ </p><p>
+ Note that such functions usually don't have operations and properties.
+ </p><p>
+ The function properties must be integrated according to these rules:
+ </p><ul>
+ <li>Getter methods must be available for all properties with
+ {@link PropertyMetadata#ACCESS_READABLE} access.</li>
+ <li>Getter method must return a subclass of {@link FunctionData}.</li>
+ <li>Setter methods must be available for all properties with
+ {@link PropertyMetadata#ACCESS_WRITABLE} access.</li>
+ <li>
+ Setter methods can be any combination of:
+ <ul>
+ <li>Setter method which accepts a subclass of {@link FunctionData}.</li>
+ <li>
+ Setter method which accepts the values used by the {@link FunctionData}
+ subclass, if there are no equal types.</li>
+ </ul>
+ It's possible to have only one or both of them. Examples:
+ <ul>
+ <li>
+ There is {@code MyFunctionData} bean with {@code BigDecimal} value for a
+ {@code data} property. Valid setters are {@code setData(MyFunctionData data)}
+ and {@code setData(BigDecimal data)}.</li>
+ <li>
+ There is {@code MySecondFunctionData} bean with {@code BigDecimal} prefix and
+ {@code BigDecimal} suffix for a {@code data} property. The prefix and suffix
+ are using equal types and we cannot have a setter with the values used by
+ {@code MySecondFunctionData}. The only one possible setter is
+ {@code setData(MySecondFunctionData data)}.</li>
+ </ul>
+ </li>
+ <li>No methods are required for properties with
+ {@link PropertyMetadata#ACCESS_EVENTABLE} access.</li>
+ </ul>
+ <p>
+ The accessor method names must be defined according JavaBeans specification.
+ </p><p>
+ The function operations are java methods, which cannot override the property
+ accessor methods. They can have zero or more parameters and zero or one
+ return value.
+ </p><p>
+ Operation arguments and function properties are restricted by the same set of
+ rules. The data type can be one of the following types:
+ </p><ul>
+ <li>Java primitive type or corresponding reference type.</li>
+ <li>{@code java.lang.String}.</li>
+ <li>Numerical type i.e. the type which extends <code>java.lang.Number</code>.
+ The numerical type must follow these conventions:
+ <ul>
+ <li>The type must provide a public static method called {@code valueOf} that
+ returns an instance of the given type and takes a single {@code String}
+ argument or a public constructor which takes a single {@code String}
+ argument.</li>
+ <li>
+ The {@code String} argument from the previous bullet can be provided by
+ {@code toString()} method of the instance.</li>
+ </ul>
+ </li>
+ <li>{@code Beans}, but the beans properties must use those rules. Java Beans
+ are defined in JavaBeans specification.</li>
+ <li>
+ {@code java.util.Map}s. The keys can be {@code java.lang.String}. The values
+ of a single type follow these rules.</li>
+ <li>Arrays of defined types.</li>
+ </ul>
+ <p>
+ The properties metadata is accessible with
+ {@link #getPropertyMetadata(String)}. The operations metadata is accessible
+ with {@link #getOperationMetadata(String)}.
+ </p><p>
+ In order to provide common behavior, all functions must follow a set of
+ common rules related to the implementation of their setters, getters,
+ operations and events:
+ </p><ul>
+ <li>
+ The setter method must be executed synchronously. If the underlying protocol
+ can return response to the setter call, it must be awaited. It simplifies the
+ property value modifications and doesn't require asynchronous callback.</li>
+ <li>
+ The operation method must be executed synchronously. If the underlying
+ protocol can return an operation confirmation or response, they must be
+ awaited. It simplifies the operation execution and doesn't require
+ asynchronous callback.</li>
+ <li>
+ The getter must return the last know cached property value. The device
+ implementation is responsible to keep that value up to date. It'll speed up
+ the applications when the function property values are collected. The same
+ cached value can be shared between a few requests instead of a few calls to
+ the real device.</li>
+ <li>The function operations, getters and setters must not override
+ {@code java.lang.Object} and this interface methods.</li>
+ </ul>
+   </description>
+
+    <method name='getPropertyMetadata' fqn='org.osgi.service.dal.Function.getPropertyMetadata' qn='Function.getPropertyMetadata(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='PropertyMetadata' qualifiedTypeName='org.osgi.service.dal.PropertyMetadata' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Provides metadata about the function property.
+   </lead>
+   <description>
+Provides metadata about the function property.
+ <p>
+ This method must continue to return the property metadata after the
+ function service has been unregistered.</p>
+   </description>
+
+<param name='propertyName'>The function property name, for which metadata is
+        requested.</param>
+
+<return>The property metadata for the given property name. {@code null}
+         if the property metadata is not available.</return>
+
+<throws name='IllegalArgumentException'>If the function property with the
+         specified name is not available.</throws>
+
+
+    <parameter name='propertyName' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getOperationMetadata' fqn='org.osgi.service.dal.Function.getOperationMetadata' qn='Function.getOperationMetadata(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='OperationMetadata' qualifiedTypeName='org.osgi.service.dal.OperationMetadata' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Provides metadata about the function operation.
+   </lead>
+   <description>
+Provides metadata about the function operation.
+ <p>
+ This method must continue to return the operation metadata after the
+ function service has been unregistered.</p>
+   </description>
+
+<param name='operationName'>The function operation name, for which metadata is
+        requested.</param>
+
+<return>The operation metadata for the given operation name. {@code null}
+         if the operation metadata is not available.</return>
+
+<throws name='IllegalArgumentException'>If the function operation with the
+         specified name is not available.</throws>
+
+
+    <parameter name='operationName' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getServiceProperty' fqn='org.osgi.service.dal.Function.getServiceProperty' qn='Function.getServiceProperty(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='Object' qualifiedTypeName='java.lang.Object' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns the current value of the specified property.
+   </lead>
+   <description>
+Returns the current value of the specified property. The method will
+ return the same value as {@code ServiceReference.getProperty(String)} for
+ the service reference of this function.
+ <p>
+ This method must continue to return property values after the device
+ function service has been unregistered.</p>
+   </description>
+
+<param name='propKey'>The property key.</param>
+
+<return>The property value or {@code null} if the property key cannot be
+         mapped to a value.</return>
+
+
+
+    <parameter name='propKey' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getServicePropertyKeys' fqn='org.osgi.service.dal.Function.getServicePropertyKeys' qn='Function.getServicePropertyKeys()' package='org.osgi.service.dal' modifiers='public abstract' typeName='String[]' qualifiedTypeName='java.lang.String[]' typeArgs='' dimension='[]' signature='()' flatSignature='()'>
+   <lead>
+Returns an array with all function service property keys.
+   </lead>
+   <description>
+Returns an array with all function service property keys. The method will
+ return the same value as {@code ServiceReference.getPropertyKeys()} for
+ the service reference of this function. The result cannot be {@code null}
+ .
+   </description>
+
+
+<return>An array with all function service property keys, cannot be
+         {@code null}.</return>
+
+
+
+     </method>
+    <field name='SERVICE_UID' fqn='org.osgi.service.dal.Function.SERVICE_UID' qn='Function.SERVICE_UID' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.UID"'>
+   <lead>
+The service property value contains the function unique identifier.
+   </lead>
+   <description>
+The service property value contains the function unique identifier. It's
+ a mandatory property. The value type is {@code java.lang.String}. To
+ simplify the unique identifier generation, the property value must follow
+ the rule:
+ <p>
+ function UID ::= device-id ':' function-id
+ </p><p>
+ function UID - function unique identifier
+ </p><p>
+ device-id - the value of the {@link Device#SERVICE_UID} Device service
+ property
+ </p><p>
+ function-id - function identifier in the scope of the device
+ </p><p>
+ If the function is not bound to a device, the function unique identifier
+ can be device independent.</p>
+   </description>
+
+     </field>
+    <field name='SERVICE_TYPE' fqn='org.osgi.service.dal.Function.SERVICE_TYPE' qn='Function.SERVICE_TYPE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.type"'>
+   <lead>
+The service property value contains the function type.
+   </lead>
+   <description>
+The service property value contains the function type. It's an optional
+ property. For example, the sensor function can have different types like
+ temperature, pressure, etc. The value type is {@code java.lang.String}.
+ <p>
+ Organizations that want to use function types that do not clash with OSGi
+ Working Group defined types should prefix their types in own namespace.
+ </p><p>
+ The type doesn't mandate specific function interface. It can be used with
+ different functions.</p>
+   </description>
+
+     </field>
+    <field name='SERVICE_VERSION' fqn='org.osgi.service.dal.Function.SERVICE_VERSION' qn='Function.SERVICE_VERSION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.version"'>
+   <lead>
+The service property value contains the function version.
+   </lead>
+   <description>
+The service property value contains the function version. That version
+ can point to specific implementation version and vary in the different
+ vendor implementations. It's an optional property. The value type is
+ {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_DEVICE_UID' fqn='org.osgi.service.dal.Function.SERVICE_DEVICE_UID' qn='Function.SERVICE_DEVICE_UID' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.device.UID"'>
+   <lead>
+The service property value contains the device unique identifier.
+   </lead>
+   <description>
+The service property value contains the device unique identifier. The
+ function belongs to this device. It's an optional property. The value
+ type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_REFERENCE_UIDS' fqn='org.osgi.service.dal.Function.SERVICE_REFERENCE_UIDS' qn='Function.SERVICE_REFERENCE_UIDS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.reference.UIDs"'>
+   <lead>
+The service property value contains the reference function unique
+ identifiers.
+   </lead>
+   <description>
+The service property value contains the reference function unique
+ identifiers. It's an optional property. The value type is
+ {@code java.lang.String[]}. It can be used to represent different
+ relationships between the functions.
+   </description>
+
+     </field>
+    <field name='SERVICE_DESCRIPTION' fqn='org.osgi.service.dal.Function.SERVICE_DESCRIPTION' qn='Function.SERVICE_DESCRIPTION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.description"'>
+   <lead>
+The service property value contains the function description.
+   </lead>
+   <description>
+The service property value contains the function description. It's an
+ optional property. The value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='SERVICE_PROPERTY_NAMES' fqn='org.osgi.service.dal.Function.SERVICE_PROPERTY_NAMES' qn='Function.SERVICE_PROPERTY_NAMES' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.property.names"'>
+   <lead>
+The service property value contains the function property names.
+   </lead>
+   <description>
+The service property value contains the function property names. It's an
+ optional property. The property is missing when there are no function
+ properties and property must be set when there are function properties.
+ The value type is {@code java.lang.String[]}. It's not possible to exist
+ two or more function properties with the same name.
+   </description>
+
+     </field>
+    <field name='SERVICE_OPERATION_NAMES' fqn='org.osgi.service.dal.Function.SERVICE_OPERATION_NAMES' qn='Function.SERVICE_OPERATION_NAMES' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.operation.names"'>
+   <lead>
+The service property value contains the function operation names.
+   </lead>
+   <description>
+The service property value contains the function operation names. It's an
+ optional property. The property is missing when there are no function
+ operations and property must be set when there are function operations.
+ The value type is {@code java.lang.String[]}. It's not possible to exist
+ two or more function operations with the same name i.e. the operation
+ overloading is not allowed.
+   </description>
+
+     </field>
+  </class>
+  <class name='FunctionData' fqn='org.osgi.service.dal.FunctionData' qn='FunctionData' package='org.osgi.service.dal' typeParam='' modifiers='public abstract class' kind='CLASS'>
+   <lead>
+Abstract {@code Function} data wrapper.
+   </lead>
+   <description>
+Abstract {@code Function} data wrapper. A subclass must be used for an access
+ to the property values by all functions. It takes care about the timestamp
+ and additional metadata. The subclasses are responsible to provide concrete
+ value and unit if required.
+   </description>
+
+<implements name='Comparable&lt;Object&gt;' fqn='java.lang.Comparable' qn='Comparable&lt;Object&gt;' package='java.lang' local='org.osgi.service.dal.FunctionData'/>
+    <method name='FunctionData' fqn='org.osgi.service.dal.FunctionData.FunctionData' qn='FunctionData.FunctionData(Map)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.util.Map&lt;java.lang.String,?&gt;)' flatSignature='(Map)' isConstructor='true'>
+<java.lang.SuppressWarnings><value><value>unchecked</value></value>
+</java.lang.SuppressWarnings>
+   <lead>
+Constructs new {@code FunctionData} instance with the specified field
+ values.
+   </lead>
+   <description>
+Constructs new {@code FunctionData} instance with the specified field
+ values. The map keys must match to the field names. The map values will
+ be assigned to the appropriate class fields. For example, the maps can
+ be: {"timestamp"=Long(1384440775495)}. That map will initialize the
+ {@link #FIELD_TIMESTAMP} field with 1384440775495. If timestamp is
+ missing, {@link Long#MIN_VALUE} is used.
+ <ul>
+ <li>{@link #FIELD_TIMESTAMP} - optional field. The value type must be
+ {@code Long}.</li>
+ <li>{@link #FIELD_METADATA} - optional field. The value type must be
+ {@code Map}.</li>
+ </ul>
+   </description>
+
+<param name='fields'>Contains the new {@code FunctionData} instance field
+        values.</param>
+
+
+<throws name='ClassCastException'>If the field value types are not expected.</throws>
+<throws name='NullPointerException'>If the fields map is {@code null}.</throws>
+
+
+    <parameter name='fields' dimension='' typeName='Map&lt;String, ?&gt;' fqn='java.util.Map' varargs='false'/>
+     </method>
+    <method name='FunctionData' fqn='org.osgi.service.dal.FunctionData.FunctionData' qn='FunctionData.FunctionData(long,Map)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(long,java.util.Map&lt;java.lang.String,?&gt;)' flatSignature='(long,Map)' isConstructor='true'>
+   <lead>
+Constructs new {@code FunctionData} instance with the specified
+ arguments.
+   </lead>
+   <description>
+Constructs new {@code FunctionData} instance with the specified
+ arguments.
+   </description>
+
+<param name='timestamp'>The data timestamp optional field.</param>
+<param name='metadata'>The data metadata optional field.</param>
+
+
+
+
+    <parameter name='timestamp' dimension='' typeName='long' fqn='long' varargs='false'/>
+    <parameter name='metadata' dimension='' typeName='Map&lt;String, ?&gt;' fqn='java.util.Map' varargs='false'/>
+     </method>
+    <method name='getTimestamp' fqn='org.osgi.service.dal.FunctionData.getTimestamp' qn='FunctionData.getTimestamp()' package='org.osgi.service.dal' modifiers='public' typeName='long' qualifiedTypeName='long' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns {@code FunctionData} timestamp.
+   </lead>
+   <description>
+Returns {@code FunctionData} timestamp. The timestamp is the difference
+ between the value collecting time and midnight, January 1, 1970 UTC. It's
+ measured in milliseconds. The device driver is responsible to generate
+ that value when the value is received from the device.
+ {@link java.lang.Long#MIN_VALUE} value means no timestamp.
+   </description>
+
+
+<return>{@code FunctionData} timestamp.</return>
+
+
+
+     </method>
+    <method name='getMetadata' fqn='org.osgi.service.dal.FunctionData.getMetadata' qn='FunctionData.getMetadata()' package='org.osgi.service.dal' modifiers='public' typeName='Map&lt;String, ?&gt;' qualifiedTypeName='java.util.Map' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns {@code FunctionData} metadata.
+   </lead>
+   <description>
+Returns {@code FunctionData} metadata. It's dynamic metadata related only
+ to this specific value. Possible keys:
+ <ul>
+ <li>{@link #DESCRIPTION}</li>
+ <li>custom key</li>
+ </ul>
+   </description>
+
+
+<return>{@code FunctionData} metadata or {@code null} is there is no
+         metadata.</return>
+
+
+
+     </method>
+    <method name='equals' fqn='org.osgi.service.dal.FunctionData.equals' qn='FunctionData.equals(Object)' package='org.osgi.service.dal' modifiers='public' typeName='boolean' qualifiedTypeName='boolean' typeArgs='' dimension='' signature='(java.lang.Object)' flatSignature='(Object)'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Two {@code FunctionData} instances are equal if their metadata and
+ timestamp are equivalent.
+   </lead>
+   <description>
+Two {@code FunctionData} instances are equal if their metadata and
+ timestamp are equivalent.
+   </description>
+
+<param name='other'>The other instance to compare. It must be of
+        {@code FunctionData} type.</param>
+
+<return>{@code true} if this instance and argument have equivalent
+         metadata and timestamp, {@code false} otherwise.</return>
+
+
+<a href='#java.lang.Object.equals(java.lang.Object)'>java.lang.Object.equals(java.lang.Object)</a>
+    <parameter name='other' dimension='' typeName='Object' fqn='java.lang.Object' varargs='false'/>
+     </method>
+    <method name='hashCode' fqn='org.osgi.service.dal.FunctionData.hashCode' qn='FunctionData.hashCode()' package='org.osgi.service.dal' modifiers='public' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='()' flatSignature='()'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Returns the hash code of this {@code FunctionData}.
+   </lead>
+   <description>
+Returns the hash code of this {@code FunctionData}.
+   </description>
+
+
+<return>{@code FunctionData} hash code.</return>
+
+
+<a href='#java.lang.Object.hashCode()'>java.lang.Object.hashCode()</a>
+     </method>
+    <method name='compareTo' fqn='org.osgi.service.dal.FunctionData.compareTo' qn='FunctionData.compareTo(Object)' package='org.osgi.service.dal' modifiers='public' typeName='int' qualifiedTypeName='int' typeArgs='' dimension='' signature='(java.lang.Object)' flatSignature='(Object)'>
+<java.lang.Override></java.lang.Override>
+   <lead>
+Compares this {@code FunctionData} instance with the given argument.
+   </lead>
+   <description>
+Compares this {@code FunctionData} instance with the given argument. If
+ the argument is not {@code FunctionData}, it throws
+ {@code ClassCastException}. Otherwise, this method returns:
+ <ul>
+ <li>{@code -1} if this instance timestamp is less than the argument
+ timestamp. If they are equivalent, it can be the result of the metadata
+ map deep comparison.</li>
+ <li>{@code 0} if all fields are equivalent.</li>
+ <li>{@code 1} if this instance timestamp is greater than the argument
+ timestamp. If they are equivalent, it can be the result of the metadata
+ map deep comparison.</li>
+ </ul>
+ Metadata map deep comparison compares the elements of all nested
+ {@code java.util.Map} and array instances. {@code null} is less than any
+ other non-null instance.
+   </description>
+
+<param name='o'>{@code FunctionData} to be compared.</param>
+
+<return>{@code -1}, {@code 0} or {@code 1} depending on the comparison
+         rules.</return>
+
+<throws name='ClassCastException'>If the method argument is not of type
+         {@code FunctionData} or metadata maps contain values of different
+         types for the same key.</throws>
+<throws name='NullPointerException'>If the method argument is {@code null}.</throws>
+
+<a href='#java.lang.Comparable.compareTo(java.lang.Object)'>java.lang.Comparable.compareTo(java.lang.Object)</a>
+    <parameter name='o' dimension='' typeName='Object' fqn='java.lang.Object' varargs='false'/>
+     </method>
+    <field name='FIELD_TIMESTAMP' fqn='org.osgi.service.dal.FunctionData.FIELD_TIMESTAMP' qn='FunctionData.FIELD_TIMESTAMP' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"timestamp"'>
+   <lead>
+Represents the timestamp field name.
+   </lead>
+   <description>
+Represents the timestamp field name. The field value is available with
+ {@link #getTimestamp()}. The field type is {@code long}. The constant can
+ be used as a key to {@link #FunctionData(Map)}.
+   </description>
+
+     </field>
+    <field name='FIELD_METADATA' fqn='org.osgi.service.dal.FunctionData.FIELD_METADATA' qn='FunctionData.FIELD_METADATA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"metadata"'>
+   <lead>
+Represents the metadata field name.
+   </lead>
+   <description>
+Represents the metadata field name. The field value is available with
+ {@link #getMetadata()}. The field type is {@code Map}. The constant can
+ be used as a key to {@link #FunctionData(Map)}.
+   </description>
+
+     </field>
+    <field name='DESCRIPTION' fqn='org.osgi.service.dal.FunctionData.DESCRIPTION' qn='FunctionData.DESCRIPTION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"description"'>
+   <lead>
+Metadata key, which value represents the data description.
+   </lead>
+   <description>
+Metadata key, which value represents the data description. The property
+ value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+  </class>
+  <class name='FunctionEvent' fqn='org.osgi.service.dal.FunctionEvent' qn='FunctionEvent' package='org.osgi.service.dal' typeParam='' modifiers='public class' superclass='Event' kind='CLASS'>
+   <lead>
+Asynchronous event, which marks a function property value modification.
+   </lead>
+   <description>
+Asynchronous event, which marks a function property value modification. The
+ event can be triggered when there is a new property value, but it's possible
+ to have events in series with no value change. The event properties must
+ contain:
+ <ul>
+ <li>{@link #FUNCTION_UID} - the event source function unique identifier.</li>
+ <li>{@link #PROPERTY_NAME} - the property name.</li>
+ <li>{@link #PROPERTY_VALUE} - the property value. The property value type
+ must be a subclass of FunctionData.</li>
+ </ul>
+   </description>
+
+    <method name='FunctionEvent' fqn='org.osgi.service.dal.FunctionEvent.FunctionEvent' qn='FunctionEvent.FunctionEvent(String,Dictionary)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String,java.util.Dictionary&lt;java.lang.String,?&gt;)' flatSignature='(String,Dictionary)' isConstructor='true'>
+   <lead>
+Constructs a new event with the specified topic and properties.
+   </lead>
+   <description>
+Constructs a new event with the specified topic and properties.
+   </description>
+
+<param name='topic'>The event topic.</param>
+<param name='properties'>The event properties.</param>
+
+
+
+
+    <parameter name='topic' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='properties' dimension='' typeName='Dictionary&lt;String, ?&gt;' fqn='java.util.Dictionary' varargs='false'/>
+     </method>
+    <method name='FunctionEvent' fqn='org.osgi.service.dal.FunctionEvent.FunctionEvent' qn='FunctionEvent.FunctionEvent(String,Map)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String,java.util.Map&lt;java.lang.String,?&gt;)' flatSignature='(String,Map)' isConstructor='true'>
+   <lead>
+Constructs a new event with the specified topic and properties.
+   </lead>
+   <description>
+Constructs a new event with the specified topic and properties.
+   </description>
+
+<param name='topic'>The event topic.</param>
+<param name='properties'>The event properties.</param>
+
+
+
+
+    <parameter name='topic' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='properties' dimension='' typeName='Map&lt;String, ?&gt;' fqn='java.util.Map' varargs='false'/>
+     </method>
+    <method name='FunctionEvent' fqn='org.osgi.service.dal.FunctionEvent.FunctionEvent' qn='FunctionEvent.FunctionEvent(String,String,String,FunctionData)' package='org.osgi.service.dal' typeArgs='' modifiers='public' signature='(java.lang.String,java.lang.String,java.lang.String,org.osgi.service.dal.FunctionData)' flatSignature='(String,String,String,FunctionData)' isConstructor='true'>
+   <lead>
+Constructs a new event with the specified topic, function UID, property
+ name and property value.
+   </lead>
+   <description>
+Constructs a new event with the specified topic, function UID, property
+ name and property value.
+   </description>
+
+<param name='topic'>The event topic.</param>
+<param name='functionUID'>The event source function UID.</param>
+<param name='propName'>The event source property name.</param>
+<param name='propValue'>The event source property value.</param>
+
+
+
+
+    <parameter name='topic' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='functionUID' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='propName' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+    <parameter name='propValue' dimension='' typeName='FunctionData' fqn='org.osgi.service.dal.FunctionData' varargs='false'/>
+     </method>
+    <method name='getFunctionUID' fqn='org.osgi.service.dal.FunctionEvent.getFunctionUID' qn='FunctionEvent.getFunctionUID()' package='org.osgi.service.dal' modifiers='public' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the property value change source function identifier.
+   </lead>
+   <description>
+Returns the property value change source function identifier. The value
+ is same as the value of {@link #FUNCTION_UID} property.
+   </description>
+
+
+<return>The property value change source function.</return>
+
+
+
+     </method>
+    <method name='getFunctionPropertyName' fqn='org.osgi.service.dal.FunctionEvent.getFunctionPropertyName' qn='FunctionEvent.getFunctionPropertyName()' package='org.osgi.service.dal' modifiers='public' typeName='String' qualifiedTypeName='java.lang.String' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the property name.
+   </lead>
+   <description>
+Returns the property name. The value is same as the value of
+ {@link #PROPERTY_NAME}.
+   </description>
+
+
+<return>The property name.</return>
+
+
+
+     </method>
+    <method name='getFunctionPropertyValue' fqn='org.osgi.service.dal.FunctionEvent.getFunctionPropertyValue' qn='FunctionEvent.getFunctionPropertyValue()' package='org.osgi.service.dal' modifiers='public' typeName='FunctionData' qualifiedTypeName='org.osgi.service.dal.FunctionData' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns the property value.
+   </lead>
+   <description>
+Returns the property value. The value is same as the value of
+ {@link #PROPERTY_VALUE}.
+   </description>
+
+
+<return>The property value.</return>
+
+
+
+     </method>
+    <field name='EVENT_PACKAGE' fqn='org.osgi.service.dal.FunctionEvent.EVENT_PACKAGE' qn='FunctionEvent.EVENT_PACKAGE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"org/osgi/service/dal/"'>
+   <lead>
+Represents the event package.
+   </lead>
+   <description>
+Represents the event package. That constant can be useful for the event
+ handlers depending on the event filters.
+   </description>
+
+     </field>
+    <field name='EVENT_CLASS' fqn='org.osgi.service.dal.FunctionEvent.EVENT_CLASS' qn='FunctionEvent.EVENT_CLASS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"org/osgi/service/dal/FunctionEvent/"'>
+   <lead>
+Represents the event class.
+   </lead>
+   <description>
+Represents the event class. That constant can be useful for the event
+ handlers depending on the event filters.
+   </description>
+
+     </field>
+    <field name='TOPIC_PROPERTY_CHANGED' fqn='org.osgi.service.dal.FunctionEvent.TOPIC_PROPERTY_CHANGED' qn='FunctionEvent.TOPIC_PROPERTY_CHANGED' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"org/osgi/service/dal/FunctionEvent/PROPERTY_CHANGED"'>
+   <lead>
+Represents the event topic for the function property changed.
+   </lead>
+   <description>
+Represents the event topic for the function property changed.
+   </description>
+
+     </field>
+    <field name='FUNCTION_UID' fqn='org.osgi.service.dal.FunctionEvent.FUNCTION_UID' qn='FunctionEvent.FUNCTION_UID' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.UID"'>
+   <lead>
+Represents an event property key for function UID.
+   </lead>
+   <description>
+Represents an event property key for function UID. The property value
+ type is {@code java.lang.String}. The value represents the property value
+ change source function identifier.
+   </description>
+
+     </field>
+    <field name='PROPERTY_NAME' fqn='org.osgi.service.dal.FunctionEvent.PROPERTY_NAME' qn='FunctionEvent.PROPERTY_NAME' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.property.name"'>
+   <lead>
+Represents an event property key for the function property name.
+   </lead>
+   <description>
+Represents an event property key for the function property name. The
+ property value type is {@code java.lang.String}. The value represents the
+ property name.
+   </description>
+
+     </field>
+    <field name='PROPERTY_VALUE' fqn='org.osgi.service.dal.FunctionEvent.PROPERTY_VALUE' qn='FunctionEvent.PROPERTY_VALUE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dal.function.property.value"'>
+   <lead>
+Represents an event property key for the function property value.
+   </lead>
+   <description>
+Represents an event property key for the function property value. The
+ property value type is a subclass of {@code FunctionData}. The value
+ represents the property value.
+   </description>
+
+     </field>
+  </class>
+  <class name='OperationMetadata' fqn='org.osgi.service.dal.OperationMetadata' qn='OperationMetadata' package='org.osgi.service.dal' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+Contains metadata about function operation.
+   </lead>
+   <description>
+Contains metadata about function operation.
+   </description>
+<a href='#Function'>Function</a><a href='#PropertyMetadata'>PropertyMetadata</a>
+    <method name='getMetadata' fqn='org.osgi.service.dal.OperationMetadata.getMetadata' qn='OperationMetadata.getMetadata()' package='org.osgi.service.dal' modifiers='public abstract' typeName='Map&lt;String, ?&gt;' qualifiedTypeName='java.util.Map' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns metadata about the function operation.
+   </lead>
+   <description>
+Returns metadata about the function operation. The keys of the
+ {@code java.util.Map} result must be of {@code java.lang.String} type.
+ Possible keys:
+ <ul>
+ <li>{@link #DESCRIPTION}</li>
+ <li>custom key</li>
+ </ul>
+   </description>
+
+
+<return>The operation metadata or {@code null} if no such metadata is
+         available.</return>
+
+
+
+     </method>
+    <method name='getReturnValueMetadata' fqn='org.osgi.service.dal.OperationMetadata.getReturnValueMetadata' qn='OperationMetadata.getReturnValueMetadata()' package='org.osgi.service.dal' modifiers='public abstract' typeName='PropertyMetadata' qualifiedTypeName='org.osgi.service.dal.PropertyMetadata' typeArgs='' dimension='' signature='()' flatSignature='()'>
+   <lead>
+Returns metadata about the operation return value or {@code null} if no
+ such metadata is available.
+   </lead>
+   <description>
+Returns metadata about the operation return value or {@code null} if no
+ such metadata is available.
+   </description>
+
+
+<return>Operation return value metadata.</return>
+
+
+
+     </method>
+    <method name='getParametersMetadata' fqn='org.osgi.service.dal.OperationMetadata.getParametersMetadata' qn='OperationMetadata.getParametersMetadata()' package='org.osgi.service.dal' modifiers='public abstract' typeName='PropertyMetadata[]' qualifiedTypeName='org.osgi.service.dal.PropertyMetadata[]' typeArgs='' dimension='[]' signature='()' flatSignature='()'>
+   <lead>
+Returns metadata about the operation parameters or {@code null} if no
+ such metadata is available.
+   </lead>
+   <description>
+Returns metadata about the operation parameters or {@code null} if no
+ such metadata is available.
+   </description>
+
+
+<return>Operation parameters metadata.</return>
+
+
+
+     </method>
+    <field name='DESCRIPTION' fqn='org.osgi.service.dal.OperationMetadata.DESCRIPTION' qn='OperationMetadata.DESCRIPTION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"description"'>
+   <lead>
+Metadata key, which value represents the operation description.
+   </lead>
+   <description>
+Metadata key, which value represents the operation description. The
+ property value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+  </class>
+  <class name='PropertyMetadata' fqn='org.osgi.service.dal.PropertyMetadata' qn='PropertyMetadata' package='org.osgi.service.dal' typeParam='' modifiers='public abstract' interface='yes' kind='INTERFACE'>
+   <lead>
+Contains metadata about a function property, a function operation parameter
+ or a function operation return value.
+   </lead>
+   <description>
+Contains metadata about a function property, a function operation parameter
+ or a function operation return value.
+ 
+ The access to the function properties is a bitmap value of {@link #ACCESS}
+ metadata key. Function properties can be accessed in three ways. Any
+ combinations between them are possible:
+ <ul>
+ <li>
+ {@link #ACCESS_READABLE} - available for all properties, which can be read.
+ Function must provide a getter method for an access to the property value.</li>
+ <li>
+ {@link #ACCESS_WRITABLE} - available for all properties, which can be
+ modified. Function must provide a setter method for a modification of the
+ property value.</li>
+ <li>
+ {@link #ACCESS_EVENTABLE} - available for all properties, which can report
+ the property value. {@link FunctionEvent}s are sent on property change.</li>
+ </ul>
+   </description>
+<a href='#Function'>Function</a><a href='#PropertyMetadata'>PropertyMetadata</a>
+    <method name='getMetadata' fqn='org.osgi.service.dal.PropertyMetadata.getMetadata' qn='PropertyMetadata.getMetadata(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='Map&lt;String, ?&gt;' qualifiedTypeName='java.util.Map' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns metadata about the function property or operation parameter.
+   </lead>
+   <description>
+Returns metadata about the function property or operation parameter. The
+ keys of the {@code java.util.Map} result must be of
+ {@code java.lang.String} type. Possible keys:
+ <ul>
+ <li>{@link #DESCRIPTION} - doesn't depend on the given unit.</li>
+ <li>{@link #ACCESS} - available only for function property and missing
+ for function operation parameters. It doesn't depend on the given unit.</li>
+ <li>{@link #UNITS} - doesn't depend on the given unit.</li>
+ <li>custom key - can depend on the unit. Organizations that want to use
+ custom keys that do not clash with OSGi Working Group defined should prefix
+ their keys in own namespace.</li>
+ </ul>
+   </description>
+
+<param name='unit'>The unit to align the metadata if it's applicable. It can be
+        null, which means that the default unit will be used.</param>
+
+<return>The property metadata or {@code null} if no such metadata is
+         available.</return>
+
+
+
+    <parameter name='unit' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getStep' fqn='org.osgi.service.dal.PropertyMetadata.getStep' qn='PropertyMetadata.getStep(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='FunctionData' qualifiedTypeName='org.osgi.service.dal.FunctionData' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns the difference between two values in series.
+   </lead>
+   <description>
+Returns the difference between two values in series. For example, if the
+ range is [0, 100], the step can be 10.
+   </description>
+
+<param name='unit'>The unit to align the step, can be {@code null}.</param>
+
+<return>The step according to the specified unit or {@code null} if no
+         step is supported.</return>
+
+<throws name='IllegalArgumentException'>If the unit is not supported.</throws>
+
+
+    <parameter name='unit' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getEnumValues' fqn='org.osgi.service.dal.PropertyMetadata.getEnumValues' qn='PropertyMetadata.getEnumValues(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='FunctionData[]' qualifiedTypeName='org.osgi.service.dal.FunctionData[]' typeArgs='' dimension='[]' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns the property possible values according to the specified unit.
+   </lead>
+   <description>
+Returns the property possible values according to the specified unit. If
+ the unit is {@code null}, the values set is aligned to the default unit.
+ If there is no such set of supported values, {@code null} is returned.
+ The values must be sorted in increasing order.
+   </description>
+
+<param name='unit'>The unit to align the supported values, can be {@code null}.</param>
+
+<return>The supported values according to the specified unit or
+         {@code null} if no such values are supported. The values must be
+         sorted in increasing order.</return>
+
+<throws name='IllegalArgumentException'>If the unit is not supported.</throws>
+
+
+    <parameter name='unit' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getMinValue' fqn='org.osgi.service.dal.PropertyMetadata.getMinValue' qn='PropertyMetadata.getMinValue(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='FunctionData' qualifiedTypeName='org.osgi.service.dal.FunctionData' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns the property minimum value according to the specified unit.
+   </lead>
+   <description>
+Returns the property minimum value according to the specified unit. If
+ the unit is {@code null}, the minimum value is aligned to the default
+ unit. If there is no minimum value, {@code null} is returned.
+   </description>
+
+<param name='unit'>The unit to align the minimum value, can be {@code null} .</param>
+
+<return>The minimum value according to the specified unit or {@code null}
+         if no minimum value is supported.</return>
+
+<throws name='IllegalArgumentException'>If the unit is not supported.</throws>
+
+
+    <parameter name='unit' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <method name='getMaxValue' fqn='org.osgi.service.dal.PropertyMetadata.getMaxValue' qn='PropertyMetadata.getMaxValue(String)' package='org.osgi.service.dal' modifiers='public abstract' typeName='FunctionData' qualifiedTypeName='org.osgi.service.dal.FunctionData' typeArgs='' dimension='' signature='(java.lang.String)' flatSignature='(String)'>
+   <lead>
+Returns the property maximum value according to the specified unit.
+   </lead>
+   <description>
+Returns the property maximum value according to the specified unit. If
+ the unit is {@code null}, the maximum value is aligned to the default
+ unit. If there is no maximum value, {@code null} is returned.
+   </description>
+
+<param name='unit'>The unit to align the maximum value, can be {@code null} .</param>
+
+<return>The maximum value according to the specified unit or {@code null}
+         if no maximum value is supported.</return>
+
+<throws name='IllegalArgumentException'>If the unit is not supported.</throws>
+
+
+    <parameter name='unit' dimension='' typeName='String' fqn='java.lang.String' varargs='false'/>
+     </method>
+    <field name='ACCESS_READABLE' fqn='org.osgi.service.dal.PropertyMetadata.ACCESS_READABLE' qn='PropertyMetadata.ACCESS_READABLE' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='1'>
+   <lead>
+Marks the readable function properties.
+   </lead>
+   <description>
+Marks the readable function properties. The flag can be used as a part of
+ bitmap value of {@link #ACCESS}. The readable access mandates function to
+ provide a property getter method.
+   </description>
+<a href='#Function'>Function</a>
+     </field>
+    <field name='ACCESS_WRITABLE' fqn='org.osgi.service.dal.PropertyMetadata.ACCESS_WRITABLE' qn='PropertyMetadata.ACCESS_WRITABLE' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='2'>
+   <lead>
+Marks the writable function properties.
+   </lead>
+   <description>
+Marks the writable function properties. The flag can be used as a part of
+ bitmap value of {@link #ACCESS}. The writable access mandates function to
+ provide a property setter methods.
+   </description>
+<a href='#Function'>Function</a>
+     </field>
+    <field name='ACCESS_EVENTABLE' fqn='org.osgi.service.dal.PropertyMetadata.ACCESS_EVENTABLE' qn='PropertyMetadata.ACCESS_EVENTABLE' package='org.osgi.service.dal' modifiers='public static final' typeName='int' qualifiedTypeName='int' dimension='' constantValue='4'>
+   <lead>
+Marks the eventable function properties.
+   </lead>
+   <description>
+Marks the eventable function properties. The flag can be used as a part
+ of bitmap value of {@link #ACCESS}.
+   </description>
+<a href='#Function'>Function</a>
+     </field>
+    <field name='ACCESS' fqn='org.osgi.service.dal.PropertyMetadata.ACCESS' qn='PropertyMetadata.ACCESS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"access"'>
+   <lead>
+Metadata key, which value represents the access to the function property.
+   </lead>
+   <description>
+Metadata key, which value represents the access to the function property.
+ The property value is a bitmap of {@code Integer} type. The bitmap can be
+ any combination of:
+ <ul>
+ <li>{@link #ACCESS_READABLE}</li>
+ <li>{@link #ACCESS_WRITABLE}</li>
+ <li>{@link #ACCESS_EVENTABLE}</li>
+ </ul>
+ For example, value {@code Integer(3)} means that the property is readable
+ and writable, but not eventable.
+ <p>
+ The property access is available only for function properties and it's
+ missing for the operation parameters.</p>
+   </description>
+
+     </field>
+    <field name='DESCRIPTION' fqn='org.osgi.service.dal.PropertyMetadata.DESCRIPTION' qn='PropertyMetadata.DESCRIPTION' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"description"'>
+   <lead>
+Metadata key, which value represents the property description.
+   </lead>
+   <description>
+Metadata key, which value represents the property description. The
+ property value type is {@code java.lang.String}.
+   </description>
+
+     </field>
+    <field name='UNITS' fqn='org.osgi.service.dal.PropertyMetadata.UNITS' qn='PropertyMetadata.UNITS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"units"'>
+   <lead>
+Metadata key, which value represents the property supported units.
+   </lead>
+   <description>
+Metadata key, which value represents the property supported units. The
+ property value type is {@code java.lang.String[]}. The array first
+ element at index {@code 0} represents the default unit. Each unit must
+ follow those rules:
+ <ul>
+ <li>The International System of Units must be used where it's applicable.
+ For example, kg for kilogram and km for kilometer.</li>
+ <li>If the unit name matches to an Unicode symbol name, the Unicode
+ symbol must be used. For example, the degree unit matches to the Unicode
+ degree sign ({@code °}).</li>
+ <li>If the unit name doesn't match to an Unicode symbol, the unit symbol
+ must be built by Unicode Basic Latin block of characters, superscript and
+ subscript characters. For example, watt per square meter steradian is
+ built by {@code W/(m² sr)}.</li>
+ </ul>
+ If those rules cannot be applied to the unit symbol, custom rules are
+ allowed. A set of predefined unit symbols are available in
+ {@link SIUnits} interface.
+   </description>
+
+     </field>
+  </class>
+  <class name='SIUnits' fqn='org.osgi.service.dal.SIUnits' qn='SIUnits' package='org.osgi.service.dal' typeParam='' modifiers='public final class' kind='CLASS'>
+   <lead>
+Contains most of the International System of Units unit symbols.
+   </lead>
+   <description>
+Contains most of the International System of Units unit symbols. The constant
+ name represents the unit name. The constant value represents the unit symbol
+ as it's defined in {@link PropertyMetadata#UNITS}.
+   </description>
+
+    <field name='METER' fqn='org.osgi.service.dal.SIUnits.METER' qn='SIUnits.METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m"'>
+   <lead>
+Unit of length defined by the International System of Units (SI).
+   </lead>
+   <description>
+Unit of length defined by the International System of Units (SI). It's
+ one of be base units called meter.
+   </description>
+
+     </field>
+    <field name='KILOGRAM' fqn='org.osgi.service.dal.SIUnits.KILOGRAM' qn='SIUnits.KILOGRAM' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"kg"'>
+   <lead>
+Unit of mass defined by the International System of Units (SI).
+   </lead>
+   <description>
+Unit of mass defined by the International System of Units (SI). It's one
+ of be base units called kilogram.
+   </description>
+
+     </field>
+    <field name='SECOND' fqn='org.osgi.service.dal.SIUnits.SECOND' qn='SIUnits.SECOND' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"s"'>
+   <lead>
+Unit of time defined by the International System of Units (SI).
+   </lead>
+   <description>
+Unit of time defined by the International System of Units (SI). It's one
+ of be base units called second.
+   </description>
+
+     </field>
+    <field name='AMPERE' fqn='org.osgi.service.dal.SIUnits.AMPERE' qn='SIUnits.AMPERE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"A"'>
+   <lead>
+Unit of electric current defined by the International System of Units
+ (SI).
+   </lead>
+   <description>
+Unit of electric current defined by the International System of Units
+ (SI). It's one of be base units called ampere.
+   </description>
+
+     </field>
+    <field name='KELVIN' fqn='org.osgi.service.dal.SIUnits.KELVIN' qn='SIUnits.KELVIN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"K"'>
+   <lead>
+Unit of thermodynamic temperature defined by the International System of
+ Units (SI).
+   </lead>
+   <description>
+Unit of thermodynamic temperature defined by the International System of
+ Units (SI). It's one of be base units called kelvin.
+   </description>
+
+     </field>
+    <field name='MOLE' fqn='org.osgi.service.dal.SIUnits.MOLE' qn='SIUnits.MOLE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"mol"'>
+   <lead>
+Unit of amount of substance defined by the International System of Units
+ (SI).
+   </lead>
+   <description>
+Unit of amount of substance defined by the International System of Units
+ (SI). It's one of be base units called mole.
+   </description>
+
+     </field>
+    <field name='CANDELA' fqn='org.osgi.service.dal.SIUnits.CANDELA' qn='SIUnits.CANDELA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"cd"'>
+   <lead>
+Unit of luminous intensity defined by the International System of Units
+ (SI).
+   </lead>
+   <description>
+Unit of luminous intensity defined by the International System of Units
+ (SI). It's one of be base units called candela.
+   </description>
+
+     </field>
+    <field name='SQUARE_METER' fqn='org.osgi.service.dal.SIUnits.SQUARE_METER' qn='SIUnits.SQUARE_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m²"'>
+   <lead>
+Unit of area.
+   </lead>
+   <description>
+Unit of area. It's one of coherent derived units in the SI expressed in
+ terms of base units. The unit is called square meter.
+   </description>
+
+     </field>
+    <field name='CUBIC_METER' fqn='org.osgi.service.dal.SIUnits.CUBIC_METER' qn='SIUnits.CUBIC_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m³"'>
+   <lead>
+Unit of volume.
+   </lead>
+   <description>
+Unit of volume. It's one of coherent derived units in the SI expressed in
+ terms of base units. The unit is called cubic meter.
+   </description>
+
+     </field>
+    <field name='METER_PER_SECOND' fqn='org.osgi.service.dal.SIUnits.METER_PER_SECOND' qn='SIUnits.METER_PER_SECOND' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m/s"'>
+   <lead>
+Unit of speed, velocity.
+   </lead>
+   <description>
+Unit of speed, velocity. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called meter per second.
+   </description>
+
+     </field>
+    <field name='METER_PER_SECOND_SQUARED' fqn='org.osgi.service.dal.SIUnits.METER_PER_SECOND_SQUARED' qn='SIUnits.METER_PER_SECOND_SQUARED' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m/s²"'>
+   <lead>
+Unit of acceleration.
+   </lead>
+   <description>
+Unit of acceleration. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called meter per second
+ squared.
+   </description>
+
+     </field>
+    <field name='RECIPROCAL_METER' fqn='org.osgi.service.dal.SIUnits.RECIPROCAL_METER' qn='SIUnits.RECIPROCAL_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m⁻¹"'>
+   <lead>
+Unit of wavenumber.
+   </lead>
+   <description>
+Unit of wavenumber. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called reciprocal meter.
+   </description>
+
+     </field>
+    <field name='KILOGRAM_PER_CUBIC_METER' fqn='org.osgi.service.dal.SIUnits.KILOGRAM_PER_CUBIC_METER' qn='SIUnits.KILOGRAM_PER_CUBIC_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"kg/m³"'>
+   <lead>
+Unit of density, mass density, mass concentration.
+   </lead>
+   <description>
+Unit of density, mass density, mass concentration. It's one of coherent
+ derived units in the SI expressed in terms of base units. The unit is
+ called kilogram per cubic meter.
+   </description>
+
+     </field>
+    <field name='KILOGRAM_PER_SQUARE_METER' fqn='org.osgi.service.dal.SIUnits.KILOGRAM_PER_SQUARE_METER' qn='SIUnits.KILOGRAM_PER_SQUARE_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"kg/m²"'>
+   <lead>
+Unit of surface density.
+   </lead>
+   <description>
+Unit of surface density. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called kilogram per square
+ meter.
+   </description>
+
+     </field>
+    <field name='CUBIC_METER_PER_KILOGRAM' fqn='org.osgi.service.dal.SIUnits.CUBIC_METER_PER_KILOGRAM' qn='SIUnits.CUBIC_METER_PER_KILOGRAM' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m³/kg"'>
+   <lead>
+Unit of specific volume.
+   </lead>
+   <description>
+Unit of specific volume. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called cubic meter per
+ kilogram.
+   </description>
+
+     </field>
+    <field name='AMPERE_PER_SQUARE_METER' fqn='org.osgi.service.dal.SIUnits.AMPERE_PER_SQUARE_METER' qn='SIUnits.AMPERE_PER_SQUARE_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"A/m²"'>
+   <lead>
+Unit of current density.
+   </lead>
+   <description>
+Unit of current density. It's one of coherent derived units in the SI
+ expressed in terms of base units. The unit is called ampere per square
+ meter.
+   </description>
+
+     </field>
+    <field name='AMPERE_PER_METER' fqn='org.osgi.service.dal.SIUnits.AMPERE_PER_METER' qn='SIUnits.AMPERE_PER_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"A/m"'>
+   <lead>
+Unit of magnetic field strength.
+   </lead>
+   <description>
+Unit of magnetic field strength. It's one of coherent derived units in
+ the SI expressed in terms of base units. The unit is called ampere per
+ meter.
+   </description>
+
+     </field>
+    <field name='MOLE_PER_CUBIC_METER' fqn='org.osgi.service.dal.SIUnits.MOLE_PER_CUBIC_METER' qn='SIUnits.MOLE_PER_CUBIC_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"mol/m³"'>
+   <lead>
+Unit of amount concentration, concentration.
+   </lead>
+   <description>
+Unit of amount concentration, concentration. It's one of coherent derived
+ units in the SI expressed in terms of base units. The unit is called mole
+ per cubic meter.
+   </description>
+
+     </field>
+    <field name='CANDELA_PER_SQUARE_METER' fqn='org.osgi.service.dal.SIUnits.CANDELA_PER_SQUARE_METER' qn='SIUnits.CANDELA_PER_SQUARE_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"cd/m²"'>
+   <lead>
+Unit of luminance.
+   </lead>
+   <description>
+Unit of luminance. It's one of coherent derived units in the SI expressed
+ in terms of base units. The unit is called candela per square meter.
+   </description>
+
+     </field>
+    <field name='RADIAN' fqn='org.osgi.service.dal.SIUnits.RADIAN' qn='SIUnits.RADIAN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"rad"'>
+   <lead>
+Unit of plane angle.
+   </lead>
+   <description>
+Unit of plane angle. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called radian.
+   </description>
+
+     </field>
+    <field name='STERADIAN' fqn='org.osgi.service.dal.SIUnits.STERADIAN' qn='SIUnits.STERADIAN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"sr"'>
+   <lead>
+Unit of solid angle.
+   </lead>
+   <description>
+Unit of solid angle. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called steradian.
+   </description>
+
+     </field>
+    <field name='HERTZ' fqn='org.osgi.service.dal.SIUnits.HERTZ' qn='SIUnits.HERTZ' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Hz"'>
+   <lead>
+Unit of frequency.
+   </lead>
+   <description>
+Unit of frequency. It's one of the coherent derived units in the SI with
+ special names and symbols. The unit is called hertz.
+   </description>
+
+     </field>
+    <field name='NEWTON' fqn='org.osgi.service.dal.SIUnits.NEWTON' qn='SIUnits.NEWTON' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"N"'>
+   <lead>
+Unit of force.
+   </lead>
+   <description>
+Unit of force. It's one of the coherent derived units in the SI with
+ special names and symbols. The unit is called newton.
+   </description>
+
+     </field>
+    <field name='PASCAL' fqn='org.osgi.service.dal.SIUnits.PASCAL' qn='SIUnits.PASCAL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Pa"'>
+   <lead>
+Unit of pressure, stress.
+   </lead>
+   <description>
+Unit of pressure, stress. It's one of the coherent derived units in the
+ SI with special names and symbols. The unit is called pascal.
+   </description>
+
+     </field>
+    <field name='JOULE' fqn='org.osgi.service.dal.SIUnits.JOULE' qn='SIUnits.JOULE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J"'>
+   <lead>
+Unit of energy, work, amount of electricity.
+   </lead>
+   <description>
+Unit of energy, work, amount of electricity. It's one of the coherent
+ derived units in the SI with special names and symbols. The unit is
+ called joule.
+   </description>
+
+     </field>
+    <field name='WATT' fqn='org.osgi.service.dal.SIUnits.WATT' qn='SIUnits.WATT' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"W"'>
+   <lead>
+Unit of power, radiant flux.
+   </lead>
+   <description>
+Unit of power, radiant flux. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called watt.
+   </description>
+
+     </field>
+    <field name='COULOMB' fqn='org.osgi.service.dal.SIUnits.COULOMB' qn='SIUnits.COULOMB' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"C"'>
+   <lead>
+Unit of electronic charge, amount of electricity.
+   </lead>
+   <description>
+Unit of electronic charge, amount of electricity. It's one of the
+ coherent derived units in the SI with special names and symbols. The unit
+ is called coulomb.
+   </description>
+
+     </field>
+    <field name='VOLT' fqn='org.osgi.service.dal.SIUnits.VOLT' qn='SIUnits.VOLT' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"V"'>
+   <lead>
+Unit of electric potential difference, electromotive force.
+   </lead>
+   <description>
+Unit of electric potential difference, electromotive force. It's one of
+ the coherent derived units in the SI with special names and symbols. The
+ unit is called volt.
+   </description>
+
+     </field>
+    <field name='FARAD' fqn='org.osgi.service.dal.SIUnits.FARAD' qn='SIUnits.FARAD' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"F"'>
+   <lead>
+Unit of capacitance.
+   </lead>
+   <description>
+Unit of capacitance. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called farad.
+   </description>
+
+     </field>
+    <field name='OHM' fqn='org.osgi.service.dal.SIUnits.OHM' qn='SIUnits.OHM' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Ω"'>
+   <lead>
+Unit of electric resistance.
+   </lead>
+   <description>
+Unit of electric resistance. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called ohm.
+   </description>
+
+     </field>
+    <field name='SIEMENS' fqn='org.osgi.service.dal.SIUnits.SIEMENS' qn='SIUnits.SIEMENS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"S"'>
+   <lead>
+Unit of electric conductance.
+   </lead>
+   <description>
+Unit of electric conductance. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called siemens.
+   </description>
+
+     </field>
+    <field name='WEBER' fqn='org.osgi.service.dal.SIUnits.WEBER' qn='SIUnits.WEBER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Wb"'>
+   <lead>
+Unit of magnetic flux.
+   </lead>
+   <description>
+Unit of magnetic flux. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called weber.
+   </description>
+
+     </field>
+    <field name='TESLA' fqn='org.osgi.service.dal.SIUnits.TESLA' qn='SIUnits.TESLA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"T"'>
+   <lead>
+Unit of magnetic flux density.
+   </lead>
+   <description>
+Unit of magnetic flux density. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called tesla.
+   </description>
+
+     </field>
+    <field name='HENRY' fqn='org.osgi.service.dal.SIUnits.HENRY' qn='SIUnits.HENRY' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"H"'>
+   <lead>
+Unit of inductance.
+   </lead>
+   <description>
+Unit of inductance. It's one of the coherent derived units in the SI with
+ special names and symbols. The unit is called henry.
+   </description>
+
+     </field>
+    <field name='DEGREE_CELSIUS' fqn='org.osgi.service.dal.SIUnits.DEGREE_CELSIUS' qn='SIUnits.DEGREE_CELSIUS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"℃"'>
+   <lead>
+Unit of Celsius temperature.
+   </lead>
+   <description>
+Unit of Celsius temperature. It's one of the coherent derived units in
+ the SI with special names and symbols. The unit is called degree Celsius.
+   </description>
+
+     </field>
+    <field name='LUMEN' fqn='org.osgi.service.dal.SIUnits.LUMEN' qn='SIUnits.LUMEN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"lm"'>
+   <lead>
+Unit of luminous flux.
+   </lead>
+   <description>
+Unit of luminous flux. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called lumen.
+   </description>
+
+     </field>
+    <field name='LUX' fqn='org.osgi.service.dal.SIUnits.LUX' qn='SIUnits.LUX' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"lx"'>
+   <lead>
+Unit of illuminance.
+   </lead>
+   <description>
+Unit of illuminance. It's one of the coherent derived units in the SI
+ with special names and symbols. The unit is called lux.
+   </description>
+
+     </field>
+    <field name='BECQUEREL' fqn='org.osgi.service.dal.SIUnits.BECQUEREL' qn='SIUnits.BECQUEREL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Bq"'>
+   <lead>
+Unit of activity referred to a radionuclide.
+   </lead>
+   <description>
+Unit of activity referred to a radionuclide. It's one of the coherent
+ derived units in the SI with special names and symbols. The unit is
+ called becquerel.
+   </description>
+
+     </field>
+    <field name='GRAY' fqn='org.osgi.service.dal.SIUnits.GRAY' qn='SIUnits.GRAY' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Gy"'>
+   <lead>
+Unit of absorbed dose, specific energy (imparted), kerma.
+   </lead>
+   <description>
+Unit of absorbed dose, specific energy (imparted), kerma. It's one of the
+ coherent derived units in the SI with special names and symbols. The unit
+ is called gray.
+   </description>
+
+     </field>
+    <field name='SIEVERT' fqn='org.osgi.service.dal.SIUnits.SIEVERT' qn='SIUnits.SIEVERT' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Sv"'>
+   <lead>
+Unit of dose equivalent, ambient dose equivalent, directional dose
+ equivalent, personal dose equivalent.
+   </lead>
+   <description>
+Unit of dose equivalent, ambient dose equivalent, directional dose
+ equivalent, personal dose equivalent. It's one of the coherent derived
+ units in the SI with special names and symbols. The unit is called
+ sievert.
+   </description>
+
+     </field>
+    <field name='KATAL' fqn='org.osgi.service.dal.SIUnits.KATAL' qn='SIUnits.KATAL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"kat"'>
+   <lead>
+Unit of catalytic activity.
+   </lead>
+   <description>
+Unit of catalytic activity. It's one of the coherent derived units in the
+ SI with special names and symbols. The unit is called katal.
+   </description>
+
+     </field>
+    <field name='PASCAL_SECOND' fqn='org.osgi.service.dal.SIUnits.PASCAL_SECOND' qn='SIUnits.PASCAL_SECOND' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Pa s"'>
+   <lead>
+Unit of dynamic viscosity.
+   </lead>
+   <description>
+Unit of dynamic viscosity. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called pascal second.
+   </description>
+
+     </field>
+    <field name='NEWTON_METER' fqn='org.osgi.service.dal.SIUnits.NEWTON_METER' qn='SIUnits.NEWTON_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"N m"'>
+   <lead>
+Unit of moment of force.
+   </lead>
+   <description>
+Unit of moment of force. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called newton meter.
+   </description>
+
+     </field>
+    <field name='NEWTON_PER_METER' fqn='org.osgi.service.dal.SIUnits.NEWTON_PER_METER' qn='SIUnits.NEWTON_PER_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"N/m"'>
+   <lead>
+Unit of surface tension.
+   </lead>
+   <description>
+Unit of surface tension. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called newton per meter.
+   </description>
+
+     </field>
+    <field name='RADIAN_PER_SECOND' fqn='org.osgi.service.dal.SIUnits.RADIAN_PER_SECOND' qn='SIUnits.RADIAN_PER_SECOND' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"rad/s"'>
+   <lead>
+Unit of angular velocity.
+   </lead>
+   <description>
+Unit of angular velocity. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called radian per second.
+   </description>
+
+     </field>
+    <field name='RADIAN_PER_SECOND_SQUARED' fqn='org.osgi.service.dal.SIUnits.RADIAN_PER_SECOND_SQUARED' qn='SIUnits.RADIAN_PER_SECOND_SQUARED' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"rad/s²"'>
+   <lead>
+Unit of angular acceleration.
+   </lead>
+   <description>
+Unit of angular acceleration. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called radian per second squared.
+   </description>
+
+     </field>
+    <field name='WATT_PER_SQUARE_METER' fqn='org.osgi.service.dal.SIUnits.WATT_PER_SQUARE_METER' qn='SIUnits.WATT_PER_SQUARE_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"W/m²"'>
+   <lead>
+Unit of heat flux density, irradiance.
+   </lead>
+   <description>
+Unit of heat flux density, irradiance. It's one of coherent derived units
+ whose names and symbols include SI coherent derived units with special
+ names and symbols. The unit is called watt per square meter.
+   </description>
+
+     </field>
+    <field name='JOULE_PER_KELVIN' fqn='org.osgi.service.dal.SIUnits.JOULE_PER_KELVIN' qn='SIUnits.JOULE_PER_KELVIN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J/K"'>
+   <lead>
+Unit of heat capacity, entropy.
+   </lead>
+   <description>
+Unit of heat capacity, entropy. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called joule per kelvin.
+   </description>
+
+     </field>
+    <field name='JOULE_PER_KILOGRAM_KELVIN' fqn='org.osgi.service.dal.SIUnits.JOULE_PER_KILOGRAM_KELVIN' qn='SIUnits.JOULE_PER_KILOGRAM_KELVIN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J/(kg K)"'>
+   <lead>
+Unit of specific heat capacity, specific entropy.
+   </lead>
+   <description>
+Unit of specific heat capacity, specific entropy. It's one of coherent
+ derived units whose names and symbols include SI coherent derived units
+ with special names and symbols. The unit is called joule per kilogram
+ kelvin.
+   </description>
+
+     </field>
+    <field name='JOULE_PER_KILOGRAM' fqn='org.osgi.service.dal.SIUnits.JOULE_PER_KILOGRAM' qn='SIUnits.JOULE_PER_KILOGRAM' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J/kg"'>
+   <lead>
+Unit of specific energy.
+   </lead>
+   <description>
+Unit of specific energy. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called joule per kilogram.
+   </description>
+
+     </field>
+    <field name='WATT_PER_METER_KELVIN' fqn='org.osgi.service.dal.SIUnits.WATT_PER_METER_KELVIN' qn='SIUnits.WATT_PER_METER_KELVIN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"W/(m K)"'>
+   <lead>
+Unit of thermal conductivity.
+   </lead>
+   <description>
+Unit of thermal conductivity. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called watt per meter kelvin.
+   </description>
+
+     </field>
+    <field name='JOULE_PER_CUBIC_METER' fqn='org.osgi.service.dal.SIUnits.JOULE_PER_CUBIC_METER' qn='SIUnits.JOULE_PER_CUBIC_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J/m³"'>
+   <lead>
+Unit of energy density.
+   </lead>
+   <description>
+Unit of energy density. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called joule per cubic meter.
+   </description>
+
+     </field>
+    <field name='VOLT_PER_METER' fqn='org.osgi.service.dal.SIUnits.VOLT_PER_METER' qn='SIUnits.VOLT_PER_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"V/m"'>
+   <lead>
+Unit of electric field strength.
+   </lead>
+   <description>
+Unit of electric field strength. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called volt per meter.
+   </description>
+
+     </field>
+    <field name='COULOMB_PER_CUBIC_METER' fqn='org.osgi.service.dal.SIUnits.COULOMB_PER_CUBIC_METER' qn='SIUnits.COULOMB_PER_CUBIC_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"C/m³"'>
+   <lead>
+Unit of electric charge density.
+   </lead>
+   <description>
+Unit of electric charge density. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called coulomb per cubic meter.
+   </description>
+
+     </field>
+    <field name='COULOMB_PER_SQUARE_METER' fqn='org.osgi.service.dal.SIUnits.COULOMB_PER_SQUARE_METER' qn='SIUnits.COULOMB_PER_SQUARE_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"C/m²"'>
+   <lead>
+Unit of surface charge density, electric flux density, electric
+ displacement.
+   </lead>
+   <description>
+Unit of surface charge density, electric flux density, electric
+ displacement. It's one of coherent derived units whose names and symbols
+ include SI coherent derived units with special names and symbols. The
+ unit is called coulomb per square meter.
+   </description>
+
+     </field>
+    <field name='FARAD_PER_METER' fqn='org.osgi.service.dal.SIUnits.FARAD_PER_METER' qn='SIUnits.FARAD_PER_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"F/m"'>
+   <lead>
+Unit of permittivity.
+   </lead>
+   <description>
+Unit of permittivity. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called farad per meter.
+   </description>
+
+     </field>
+    <field name='HENRY_PER_METER' fqn='org.osgi.service.dal.SIUnits.HENRY_PER_METER' qn='SIUnits.HENRY_PER_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"H/m"'>
+   <lead>
+Unit of permeability.
+   </lead>
+   <description>
+Unit of permeability. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called henry per meter.
+   </description>
+
+     </field>
+    <field name='JOULE_PER_MOLE' fqn='org.osgi.service.dal.SIUnits.JOULE_PER_MOLE' qn='SIUnits.JOULE_PER_MOLE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J/mol"'>
+   <lead>
+Unit of molar energy.
+   </lead>
+   <description>
+Unit of molar energy. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called joule per mole.
+   </description>
+
+     </field>
+    <field name='JOULE_PER_MOLE_KELVIN' fqn='org.osgi.service.dal.SIUnits.JOULE_PER_MOLE_KELVIN' qn='SIUnits.JOULE_PER_MOLE_KELVIN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"J/(mol K)"'>
+   <lead>
+Unit of molar entropy, molar heat capacity.
+   </lead>
+   <description>
+Unit of molar entropy, molar heat capacity. It's one of coherent derived
+ units whose names and symbols include SI coherent derived units with
+ special names and symbols. The unit is called joule per mole kelvin.
+   </description>
+
+     </field>
+    <field name='COULOMB_PER_KILOGRAM' fqn='org.osgi.service.dal.SIUnits.COULOMB_PER_KILOGRAM' qn='SIUnits.COULOMB_PER_KILOGRAM' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"C/kg"'>
+   <lead>
+Unit of exposure (x- and gamma-rays).
+   </lead>
+   <description>
+Unit of exposure (x- and gamma-rays). It's one of coherent derived units
+ whose names and symbols include SI coherent derived units with special
+ names and symbols. The unit is called coulomb per kilogram.
+   </description>
+
+     </field>
+    <field name='GRAY_PER_SECOND' fqn='org.osgi.service.dal.SIUnits.GRAY_PER_SECOND' qn='SIUnits.GRAY_PER_SECOND' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Gy/s"'>
+   <lead>
+Unit of absorbed dose rate.
+   </lead>
+   <description>
+Unit of absorbed dose rate. It's one of coherent derived units whose
+ names and symbols include SI coherent derived units with special names
+ and symbols. The unit is called gray per second.
+   </description>
+
+     </field>
+    <field name='WATT_PER_STERADIAN' fqn='org.osgi.service.dal.SIUnits.WATT_PER_STERADIAN' qn='SIUnits.WATT_PER_STERADIAN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"W/sr"'>
+   <lead>
+Unit of radiant intensity.
+   </lead>
+   <description>
+Unit of radiant intensity. It's one of coherent derived units whose names
+ and symbols include SI coherent derived units with special names and
+ symbols. The unit is called watt per steradian.
+   </description>
+
+     </field>
+    <field name='WATT_PER_SQUARE_METER_STERADIAN' fqn='org.osgi.service.dal.SIUnits.WATT_PER_SQUARE_METER_STERADIAN' qn='SIUnits.WATT_PER_SQUARE_METER_STERADIAN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"W/(m² sr)"'>
+   <lead>
+Unit of radiance.
+   </lead>
+   <description>
+Unit of radiance. It's one of coherent derived units whose names and
+ symbols include SI coherent derived units with special names and symbols.
+ The unit is called watt per square meter steradian.
+   </description>
+
+     </field>
+    <field name='KATAL_PER_CUBIC_METER' fqn='org.osgi.service.dal.SIUnits.KATAL_PER_CUBIC_METER' qn='SIUnits.KATAL_PER_CUBIC_METER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"kat/m³"'>
+   <lead>
+Unit of catalytic activity concentration.
+   </lead>
+   <description>
+Unit of catalytic activity concentration. It's one of coherent derived
+ units whose names and symbols include SI coherent derived units with
+ special names and symbols. The unit is called katal per cubic meter.
+   </description>
+
+     </field>
+    <field name='TIME_MINUTE' fqn='org.osgi.service.dal.SIUnits.TIME_MINUTE' qn='SIUnits.TIME_MINUTE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"min"'>
+   <lead>
+Unit of time.
+   </lead>
+   <description>
+Unit of time. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called minute.
+   </description>
+
+     </field>
+    <field name='HOUR' fqn='org.osgi.service.dal.SIUnits.HOUR' qn='SIUnits.HOUR' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"h"'>
+   <lead>
+Unit of time.
+   </lead>
+   <description>
+Unit of time. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called hour.
+   </description>
+
+     </field>
+    <field name='DAY' fqn='org.osgi.service.dal.SIUnits.DAY' qn='SIUnits.DAY' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"d"'>
+   <lead>
+Unit of time.
+   </lead>
+   <description>
+Unit of time. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called day.
+   </description>
+
+     </field>
+    <field name='DEGREE' fqn='org.osgi.service.dal.SIUnits.DEGREE' qn='SIUnits.DEGREE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"°"'>
+   <lead>
+Unit of plane angle.
+   </lead>
+   <description>
+Unit of plane angle. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called degree.
+   </description>
+
+     </field>
+    <field name='PLANE_ANGLE_MINUTE' fqn='org.osgi.service.dal.SIUnits.PLANE_ANGLE_MINUTE' qn='SIUnits.PLANE_ANGLE_MINUTE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"′"'>
+   <lead>
+Unit of plane angle.
+   </lead>
+   <description>
+Unit of plane angle. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called minute.
+   </description>
+
+     </field>
+    <field name='PLANE_ANGLE_SECOND' fqn='org.osgi.service.dal.SIUnits.PLANE_ANGLE_SECOND' qn='SIUnits.PLANE_ANGLE_SECOND' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"″"'>
+   <lead>
+Unit of plane angle.
+   </lead>
+   <description>
+Unit of plane angle. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called second.
+   </description>
+
+     </field>
+    <field name='HECTARE' fqn='org.osgi.service.dal.SIUnits.HECTARE' qn='SIUnits.HECTARE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"ha"'>
+   <lead>
+Unit of area.
+   </lead>
+   <description>
+Unit of area. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called hectare.
+   </description>
+
+     </field>
+    <field name='LITER' fqn='org.osgi.service.dal.SIUnits.LITER' qn='SIUnits.LITER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"l"'>
+   <lead>
+Unit of volume.
+   </lead>
+   <description>
+Unit of volume. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called liter. International
+ System of Units accepts two symbols: lower-case l and capital L. That
+ constant value is using the lower-case l.
+   </description>
+
+     </field>
+    <field name='TONNE' fqn='org.osgi.service.dal.SIUnits.TONNE' qn='SIUnits.TONNE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"t"'>
+   <lead>
+Unit of mass.
+   </lead>
+   <description>
+Unit of mass. It's one of non-SI units accepted for use with the
+ International System of Units. The unit is called tonne.
+   </description>
+
+     </field>
+    <field name='BAR' fqn='org.osgi.service.dal.SIUnits.BAR' qn='SIUnits.BAR' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"bar"'>
+   <lead>
+Unit of pressure.
+   </lead>
+   <description>
+Unit of pressure. It's one of other non-SI units. The unit is called bar.
+   </description>
+
+     </field>
+    <field name='MILLIMETER_OF_MERCURY' fqn='org.osgi.service.dal.SIUnits.MILLIMETER_OF_MERCURY' qn='SIUnits.MILLIMETER_OF_MERCURY' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"mmHg"'>
+   <lead>
+Unit of pressure.
+   </lead>
+   <description>
+Unit of pressure. It's one of other non-SI units. The unit is called
+ millimeter of mercury.
+   </description>
+
+     </field>
+    <field name='ANGSTROM' fqn='org.osgi.service.dal.SIUnits.ANGSTROM' qn='SIUnits.ANGSTROM' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Å"'>
+   <lead>
+Unit of length.
+   </lead>
+   <description>
+Unit of length. It's one of other non-SI units. The unit is called
+ angstrom.
+   </description>
+
+     </field>
+    <field name='NAUTICAL_MILE' fqn='org.osgi.service.dal.SIUnits.NAUTICAL_MILE' qn='SIUnits.NAUTICAL_MILE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"M"'>
+   <lead>
+Unit of distance.
+   </lead>
+   <description>
+Unit of distance. It's one of other non-SI units. The unit is called
+ nautical mile.
+   </description>
+
+     </field>
+    <field name='BARN' fqn='org.osgi.service.dal.SIUnits.BARN' qn='SIUnits.BARN' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"b"'>
+   <lead>
+Unit of area.
+   </lead>
+   <description>
+Unit of area. It's one of other non-SI units. The unit is called barn.
+   </description>
+
+     </field>
+    <field name='KNOT' fqn='org.osgi.service.dal.SIUnits.KNOT' qn='SIUnits.KNOT' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"kn"'>
+   <lead>
+Unit of speed.
+   </lead>
+   <description>
+Unit of speed. It's one of other non-SI units. The unit is called knot.
+   </description>
+
+     </field>
+    <field name='NEPER' fqn='org.osgi.service.dal.SIUnits.NEPER' qn='SIUnits.NEPER' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Np"'>
+   <lead>
+Unit of logarithmic ratio quantities.
+   </lead>
+   <description>
+Unit of logarithmic ratio quantities. It's one of other non-SI units. The
+ unit is called neper.
+   </description>
+
+     </field>
+    <field name='BEL' fqn='org.osgi.service.dal.SIUnits.BEL' qn='SIUnits.BEL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"B"'>
+   <lead>
+Unit of logarithmic ratio quantities.
+   </lead>
+   <description>
+Unit of logarithmic ratio quantities. It's one of other non-SI units. The
+ unit is called bel.
+   </description>
+
+     </field>
+    <field name='DECIBEL' fqn='org.osgi.service.dal.SIUnits.DECIBEL' qn='SIUnits.DECIBEL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dB"'>
+   <lead>
+Unit of logarithmic ratio quantities.
+   </lead>
+   <description>
+Unit of logarithmic ratio quantities. It's one of other non-SI units. The
+ unit is called decibel.
+   </description>
+
+     </field>
+    <field name='ERG' fqn='org.osgi.service.dal.SIUnits.ERG' qn='SIUnits.ERG' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"erg"'>
+   <lead>
+Unit of energy.
+   </lead>
+   <description>
+Unit of energy. It's one of non-SI units associated with the CGS and the
+ CGS-Gaussian system of units. The unit is called erg.
+   </description>
+
+     </field>
+    <field name='DYNE' fqn='org.osgi.service.dal.SIUnits.DYNE' qn='SIUnits.DYNE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"dyn"'>
+   <lead>
+Unit of force.
+   </lead>
+   <description>
+Unit of force. It's one of non-SI units associated with the CGS and the
+ CGS-Gaussian system of units. The unit is called dyne.
+   </description>
+
+     </field>
+    <field name='POISE' fqn='org.osgi.service.dal.SIUnits.POISE' qn='SIUnits.POISE' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"P"'>
+   <lead>
+Unit of dynamic viscosity.
+   </lead>
+   <description>
+Unit of dynamic viscosity. It's one of non-SI units associated with the
+ CGS and the CGS-Gaussian system of units. The unit is called poise.
+   </description>
+
+     </field>
+    <field name='STOKES' fqn='org.osgi.service.dal.SIUnits.STOKES' qn='SIUnits.STOKES' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"St"'>
+   <lead>
+Unit of kinematic viscosity.
+   </lead>
+   <description>
+Unit of kinematic viscosity. It's one of non-SI units associated with the
+ CGS and the CGS-Gaussian system of units. The unit is called stokes.
+   </description>
+
+     </field>
+    <field name='STILB' fqn='org.osgi.service.dal.SIUnits.STILB' qn='SIUnits.STILB' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"sb"'>
+   <lead>
+Unit of luminance.
+   </lead>
+   <description>
+Unit of luminance. It's one of non-SI units associated with the CGS and
+ the CGS-Gaussian system of units. The unit is called stilb.
+   </description>
+
+     </field>
+    <field name='PHOT' fqn='org.osgi.service.dal.SIUnits.PHOT' qn='SIUnits.PHOT' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"ph"'>
+   <lead>
+Unit of illuminance.
+   </lead>
+   <description>
+Unit of illuminance. It's one of non-SI units associated with the CGS and
+ the CGS-Gaussian system of units. The unit is called phot.
+   </description>
+
+     </field>
+    <field name='GAL' fqn='org.osgi.service.dal.SIUnits.GAL' qn='SIUnits.GAL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Gal"'>
+   <lead>
+Unit of acceleration.
+   </lead>
+   <description>
+Unit of acceleration. It's one of non-SI units associated with the CGS
+ and the CGS-Gaussian system of units. The unit is called gal.
+   </description>
+
+     </field>
+    <field name='MAXWELL' fqn='org.osgi.service.dal.SIUnits.MAXWELL' qn='SIUnits.MAXWELL' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Mx"'>
+   <lead>
+Unit of magnetic flux.
+   </lead>
+   <description>
+Unit of magnetic flux. It's one of non-SI units associated with the CGS
+ and the CGS-Gaussian system of units. The unit is called maxwell.
+   </description>
+
+     </field>
+    <field name='GAUSS' fqn='org.osgi.service.dal.SIUnits.GAUSS' qn='SIUnits.GAUSS' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"G"'>
+   <lead>
+Unit of magnetic flux density.
+   </lead>
+   <description>
+Unit of magnetic flux density. It's one of non-SI units associated with
+ the CGS and the CGS-Gaussian system of units. The unit is called gauss.
+   </description>
+
+     </field>
+    <field name='OERSTED' fqn='org.osgi.service.dal.SIUnits.OERSTED' qn='SIUnits.OERSTED' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Oe"'>
+   <lead>
+Unit of magnetic field.
+   </lead>
+   <description>
+Unit of magnetic field. It's one of non-SI units associated with the CGS
+ and the CGS-Gaussian system of units. The unit is called oersted.
+   </description>
+
+     </field>
+    <field name='PREFIX_DECA' fqn='org.osgi.service.dal.SIUnits.PREFIX_DECA' qn='SIUnits.PREFIX_DECA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"da"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called deca and represents the 1st power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_HECTO' fqn='org.osgi.service.dal.SIUnits.PREFIX_HECTO' qn='SIUnits.PREFIX_HECTO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"h"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called hecto and represents the 2nd power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_KILO' fqn='org.osgi.service.dal.SIUnits.PREFIX_KILO' qn='SIUnits.PREFIX_KILO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"k"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called kilo and represents the 3rd power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_MEGA' fqn='org.osgi.service.dal.SIUnits.PREFIX_MEGA' qn='SIUnits.PREFIX_MEGA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"M"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called mega and represents the 6th power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_GIGA' fqn='org.osgi.service.dal.SIUnits.PREFIX_GIGA' qn='SIUnits.PREFIX_GIGA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"G"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called giga and represents the 9th power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_EXA' fqn='org.osgi.service.dal.SIUnits.PREFIX_EXA' qn='SIUnits.PREFIX_EXA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"E"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called exa and represents the 18th power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_ZETTA' fqn='org.osgi.service.dal.SIUnits.PREFIX_ZETTA' qn='SIUnits.PREFIX_ZETTA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Z"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called zetta and represents the 21th power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_YOTTA' fqn='org.osgi.service.dal.SIUnits.PREFIX_YOTTA' qn='SIUnits.PREFIX_YOTTA' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"Y"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal multiples of SI
+ units. It's called yotta and represents the 24th power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_DECI' fqn='org.osgi.service.dal.SIUnits.PREFIX_DECI' qn='SIUnits.PREFIX_DECI' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"d"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called deci and represents the 1st negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_CENTI' fqn='org.osgi.service.dal.SIUnits.PREFIX_CENTI' qn='SIUnits.PREFIX_CENTI' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"c"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called centi and represents the 2nd negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_MILLI' fqn='org.osgi.service.dal.SIUnits.PREFIX_MILLI' qn='SIUnits.PREFIX_MILLI' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"m"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called milli and represents the 3rd negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_MICRO' fqn='org.osgi.service.dal.SIUnits.PREFIX_MICRO' qn='SIUnits.PREFIX_MICRO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"µ"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called micro and represents the 6th negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_NANO' fqn='org.osgi.service.dal.SIUnits.PREFIX_NANO' qn='SIUnits.PREFIX_NANO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"n"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called nano and represents the 9th negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_PICO' fqn='org.osgi.service.dal.SIUnits.PREFIX_PICO' qn='SIUnits.PREFIX_PICO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"p"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called pico and represents the 12th negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_FEMTO' fqn='org.osgi.service.dal.SIUnits.PREFIX_FEMTO' qn='SIUnits.PREFIX_FEMTO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"f"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called femto and represents the 15th negative power of
+ ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_ATTO' fqn='org.osgi.service.dal.SIUnits.PREFIX_ATTO' qn='SIUnits.PREFIX_ATTO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"a"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called atto and represents the 18th negative power of ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_ZEPTO' fqn='org.osgi.service.dal.SIUnits.PREFIX_ZEPTO' qn='SIUnits.PREFIX_ZEPTO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"z"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called zepto and represents the 21th negative power of
+ ten.
+   </description>
+
+     </field>
+    <field name='PREFIX_YOCTO' fqn='org.osgi.service.dal.SIUnits.PREFIX_YOCTO' qn='SIUnits.PREFIX_YOCTO' package='org.osgi.service.dal' modifiers='public static final' typeName='String' qualifiedTypeName='java.lang.String' dimension='' constantValue='"y"'>
+   <lead>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units.
+   </lead>
+   <description>
+Adopted prefix symbol to form the symbols of the decimal submultiples of
+ SI units. It's called yocto and represents the 24th negative power of
+ ten.
+   </description>
+
+     </field>
+  </class>
+  </package>
+</top>

@@ -1,0 +1,11 @@
+org/osgi/service/dal/FunctionEvent.class
+org/osgi/service/dal/PropertyMetadata.class
+org/osgi/service/dal/FunctionData.class
+org/osgi/service/dal/Function.class
+org/osgi/service/dal/DevicePermissionCollection.class
+org/osgi/service/dal/DevicePermission.class
+org/osgi/service/dal/DeviceException.class
+org/osgi/service/dal/SIUnits.class
+org/osgi/service/dal/package-info.class
+org/osgi/service/dal/OperationMetadata.class
+org/osgi/service/dal/Device.class

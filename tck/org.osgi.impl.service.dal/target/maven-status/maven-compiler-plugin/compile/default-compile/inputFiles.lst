@@ -1,0 +1,17 @@
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/Activator.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/DeviceSimulatorImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/DeviceUtil.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/OperationMetadataImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/PropertyMetadataImpl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/SimulatedDevice.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/SimulatedFunction.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/SimulatedService.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedAlarm.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedBooleanControl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedBooleanSensor.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedKeypad.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedMeter.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedMultiLevelControl.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedMultiLevelSensor.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/functions/SimulatedWakeUp.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.impl.service.dal/src/main/java/org/osgi/impl/service/dal/simulator/DeviceSimulator.java

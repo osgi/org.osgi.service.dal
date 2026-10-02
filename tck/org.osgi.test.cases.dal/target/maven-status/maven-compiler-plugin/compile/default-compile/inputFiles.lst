@@ -1,0 +1,15 @@
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/AbstractDeviceTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/DeviceExceptionTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/DevicePermissionTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/DeviceSignatureTestCase.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/DeviceTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/FunctionDataTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/FunctionEventTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/FunctionTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/SIUnitsTest.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/TestDevice.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/TestFunctionData.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/TestServiceListener.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/TestUtil.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/step/DeviceTestSteps.java
+/home/stbischof/git/OSGI_MIGRATE/osgi_target/org.osgi.service.dal/tck/org.osgi.test.cases.dal/src/main/java/org/osgi/test/cases/dal/step/TestStepDeviceProxy.java
