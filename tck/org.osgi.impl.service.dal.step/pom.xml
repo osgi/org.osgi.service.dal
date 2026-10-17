@@ -13,7 +13,7 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.framework</artifactId>
-			<version>1.10.0</version>
+			<version>${org.osgi.framework.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.service.dal.functions</artifactId>
-			<version>1.0.1</version>
+			<version>${org.osgi.service.dal.functions.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.test.cases.dal.functions</artifactId>
-			<version>8.1.0</version>
+			<version>${org.osgi.test.cases.dal.functions.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.util.tracker</artifactId>
-			<version>1.5.4</version>
+			<version>${org.osgi.util.tracker.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
