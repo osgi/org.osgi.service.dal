@@ -38,7 +38,7 @@ import org.osgi.service.dal.functions.WakeUp;
 import org.osgi.test.cases.dal.functions.step.FunctionsTestSteps;
 import org.osgi.test.cases.dal.secure.step.SecureDeviceTestSteps;
 import org.osgi.test.cases.dal.step.DeviceTestSteps;
-import org.osgi.test.support.step.TestStep;
+import org.osgi.tck.step.TestStep;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
@@ -89,7 +89,7 @@ public class TestStepImpl implements TestStep {
 	}
 
 	/**
-	 * @see org.osgi.test.support.step.TestStep#execute(java.lang.String,
+	 * @see org.osgi.tck.step.TestStep#execute(java.lang.String,
 	 *      java.lang.String)
 	 */
 	@Override

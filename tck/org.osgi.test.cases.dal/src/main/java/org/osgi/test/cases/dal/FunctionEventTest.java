@@ -18,16 +18,18 @@
 
 package org.osgi.test.cases.dal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dal.FunctionEvent;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
 
 /**
  * Validates the {@link FunctionEvent}.
  */
-public final class FunctionEventTest extends DefaultTestBundleControl {
+public final class FunctionEventTest {
 
 	private static final String				PROP_NAME		= "test-prop";
 	private static final String				FUNCTION_UID	= "test-function-uid";
@@ -36,6 +38,7 @@ public final class FunctionEventTest extends DefaultTestBundleControl {
 	/**
 	 * Test the function event properties.
 	 */
+	@Test
 	public void testEventProperties() {
 		Dictionary<String,Object> eventProps = new Hashtable<>();
 		eventProps.put(FunctionEvent.PROPERTY_NAME, PROP_NAME);
@@ -47,8 +50,8 @@ public final class FunctionEventTest extends DefaultTestBundleControl {
 	}
 
 	private void checkEventProps(FunctionEvent event) {
-		assertEquals("The event function UID is not correct!", FUNCTION_UID, event.getFunctionUID());
-		assertEquals("The event function property name is not correct!", PROP_NAME, event.getFunctionPropertyName());
-		assertEquals("The event function property value is not correct!", PROP_VALUE, event.getFunctionPropertyValue());
+		assertThat(event.getFunctionUID()).as("The event function UID is not correct!").isEqualTo(FUNCTION_UID);
+		assertThat(event.getFunctionPropertyName()).as("The event function property name is not correct!").isEqualTo(PROP_NAME);
+		assertThat(event.getFunctionPropertyValue()).as("The event function property value is not correct!").isEqualTo(PROP_VALUE);
 	}
 }
