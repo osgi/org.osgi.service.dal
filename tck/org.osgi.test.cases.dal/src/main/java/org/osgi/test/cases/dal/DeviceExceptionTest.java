@@ -18,29 +18,33 @@
 
 package org.osgi.test.cases.dal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
+
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dal.DeviceException;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
 
 /**
  * Validates {@link DeviceException} class.
  */
-public final class DeviceExceptionTest extends DefaultTestBundleControl {
+public final class DeviceExceptionTest {
 
 	/**
 	 * Tests the exception default constructor.
 	 */
+	@Test
 	public void testEmptyException() {
 		DeviceException de = new DeviceException();
-		assertNull("No exception message is expected.", de.getMessage());
-		assertEquals("Unknown exception code is expected.",
-				DeviceException.UNKNOWN, de.getCode());
-		assertNull("No exception cause is expected.", de.getCause());
+		assertThat(de.getMessage()).as("No exception message is expected.").isNull();
+		assertThat(de.getCode()).as("Unknown exception code is expected.").isEqualTo(DeviceException.UNKNOWN);
+		assertThat(de.getCause()).as("No exception cause is expected.").isNull();
 	}
 
 	/**
 	 * Tests the exception message.
 	 */
+	@Test
 	public void testExceptionMessage() {
 		checkExceptionMessage("test exception message");
 		checkExceptionMessage(null);
@@ -49,6 +53,7 @@ public final class DeviceExceptionTest extends DefaultTestBundleControl {
 	/**
 	 * Tests the exception cause.
 	 */
+	@Test
 	public void testExceptionCause() {
 		checkExceptionCause(new IOException());
 		checkExceptionCause(null);
@@ -57,6 +62,7 @@ public final class DeviceExceptionTest extends DefaultTestBundleControl {
 	/**
 	 * Tests the exception codes.
 	 */
+	@Test
 	public void testExceptionCodes() {
 		int[] exceptionCodes = new int[] {
 				DeviceException.COMMUNICATION_ERROR,
@@ -68,26 +74,26 @@ public final class DeviceExceptionTest extends DefaultTestBundleControl {
 		};
 		for (int i = 0; i < exceptionCodes.length; i++) {
 			DeviceException de = new DeviceException(null, null, exceptionCodes[i]);
-			assertEquals("The exception code is not correct.", exceptionCodes[i], de.getCode());
+			assertThat(de.getCode()).as("The exception code is not correct.").isEqualTo(exceptionCodes[i]);
 		}
 	}
 
 	private void checkExceptionMessage(String message) {
 		DeviceException de = new DeviceException(message);
-		assertEquals("The exception message is not correct.", message, de.getMessage());
+		assertThat(de.getMessage()).as("The exception message is not correct.").isEqualTo(message);
 
 		de = new DeviceException(message, null);
-		assertEquals("The exception message is not correct.", message, de.getMessage());
+		assertThat(de.getMessage()).as("The exception message is not correct.").isEqualTo(message);
 
 		de = new DeviceException(message, null, DeviceException.UNKNOWN);
-		assertEquals("The exception message is not correct.", message, de.getMessage());
+		assertThat(de.getMessage()).as("The exception message is not correct.").isEqualTo(message);
 	}
 
 	private void checkExceptionCause(Throwable cause) {
 		DeviceException de = new DeviceException(null, cause);
-		assertSame("The exception cause is not correct.", cause, de.getCause());
+		assertThat(de.getCause()).as("The exception cause is not correct.").isSameAs(cause);
 
 		de = new DeviceException(null, cause, DeviceException.UNKNOWN);
-		assertEquals("The exception cause is not correct.", cause, de.getCause());
+		assertThat(de.getCause()).as("The exception cause is not correct.").isEqualTo(cause);
 	}
 }

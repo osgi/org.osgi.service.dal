@@ -34,7 +34,7 @@ import org.osgi.service.dal.FunctionEvent;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
-import org.osgi.test.support.step.TestStepProxy;
+import org.osgi.tck.step.TestStepProxy;
 
 /**
  * The class is wrapper over {@code TestStepProxy}. It simplifies the usage of

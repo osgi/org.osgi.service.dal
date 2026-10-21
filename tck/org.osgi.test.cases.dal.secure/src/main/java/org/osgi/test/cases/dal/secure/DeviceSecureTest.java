@@ -19,6 +19,7 @@
 package org.osgi.test.cases.dal.secure;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.security.AccessControlContext;
 import java.security.AccessController;
@@ -30,29 +31,36 @@ import java.security.PrivilegedExceptionAction;
 import java.security.ProtectionDomain;
 import java.util.Collection;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.dal.Device;
 import org.osgi.service.dal.DevicePermission;
 import org.osgi.test.cases.dal.secure.step.SecureDeviceTestSteps;
 import org.osgi.test.cases.dal.step.TestStepDeviceProxy;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
+import org.osgi.test.common.annotation.InjectBundleContext;
 
 /**
  * Test class validates the device operations and properties.
  */
-public class DeviceSecureTest extends DefaultTestBundleControl {
+public class DeviceSecureTest {
+
+	@InjectBundleContext
+	BundleContext		context;
 
 	private TestStepDeviceProxy	testStepProxy;
 
-	protected void setUp() throws Exception { // NOPMD
-		super.setUp();
-		this.testStepProxy = new TestStepDeviceProxy(super.getContext());
+	@BeforeEach
+	public void setUp() throws Exception { // NOPMD
+		this.testStepProxy = new TestStepDeviceProxy(context);
 	}
 
-	protected void tearDown() throws Exception { // NOPMD
+	@AfterEach
+	public void tearDown() throws Exception { // NOPMD
 		this.testStepProxy.close();
-		super.tearDown();
 	}
 
 	/**
@@ -62,6 +70,7 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 	 * @throws PrivilegedActionException If an expected error is available while
 	 *         removing the device.
 	 */
+	@Test
 	public void testRemoveDeviceAllow() throws PrivilegedActionException {
 		this.testStepProxy.execute(
 				SecureDeviceTestSteps.STEP_ID_AVAILABLE_DEVICE,
@@ -71,7 +80,7 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 		Collection<ServiceReference<Device>> deviceSRefs = getDeviceSRefs(null);
 		boolean isRemoved = false;
 		for (ServiceReference<Device> deviceSRef : deviceSRefs) {
-			final Device device = super.getContext().getService(deviceSRef);
+			final Device device = context.getService(deviceSRef);
 			if (null == device) {
 				continue;
 			}
@@ -81,15 +90,14 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 							device.remove();
 							return null;
 						}, acc);
-				assertNull("The device service is not unregistered.",
-						super.getContext().getService(deviceSRef));
+				assertThat(context.getService(deviceSRef)).as("The device service is not unregistered.").isNull();
 				isRemoved = true;
 				break;
 			} catch (UnsupportedOperationException upe) {
 				// expected
 			}
 		}
-		assertTrue("No device with remove support.", isRemoved);
+		assertThat(isRemoved).as("No device with remove support.").isTrue();
 	}
 
 	/**
@@ -99,6 +107,7 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 	 * @throws PrivilegedActionException If an unexpected error is available
 	 *         while removing the device.
 	 */
+	@Test
 	public void testRemoveDeviceDeny() throws PrivilegedActionException {
 		this.testStepProxy.execute(
 				SecureDeviceTestSteps.STEP_ID_AVAILABLE_DEVICE,
@@ -107,7 +116,7 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 		Collection<ServiceReference<Device>> deviceSRefs = getDeviceSRefs(null);
 		boolean securityCheck = false;
 		for (ServiceReference<Device> deviceSRef : deviceSRefs) {
-			final Device device = super.getContext().getService(deviceSRef);
+			final Device device = context.getService(deviceSRef);
 			if (null == device) {
 				continue;
 			}
@@ -124,7 +133,7 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 				securityCheck = true;
 			}
 		}
-		assertTrue("At least one device remvoe method must be protected with security check.", securityCheck);
+		assertThat(securityCheck).as("At least one device remvoe method must be protected with security check.").isTrue();
 	}
 
 	private static AccessControlContext prepareACC(Permission permission) {
@@ -139,7 +148,7 @@ public class DeviceSecureTest extends DefaultTestBundleControl {
 
 	private Collection<ServiceReference<Device>> getDeviceSRefs(String filter) {
 		try {
-			Collection<ServiceReference<Device>> deviceSRefs = super.getContext()
+			Collection<ServiceReference<Device>> deviceSRefs = context
 					.getServiceReferences(Device.class, filter);
 			assertThat(deviceSRefs).as("No device services; filter=%s.", filter)
 					.isNotEmpty();

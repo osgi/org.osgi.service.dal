@@ -19,9 +19,11 @@
 package org.osgi.test.cases.dal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import java.util.Collection;
 
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
@@ -29,7 +31,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.dal.Device;
 import org.osgi.service.dal.DeviceException;
 import org.osgi.test.cases.dal.step.DeviceTestSteps;
-import org.osgi.test.support.step.TestStep;
+import org.osgi.tck.step.TestStep;
 
 /**
  * Test class validates the device operations and properties.
@@ -42,6 +44,7 @@ public class DeviceTest extends AbstractDeviceTest {
 	 * 
 	 * @throws DeviceException An error while removing the device.
 	 */
+	@Test
 	public void testRemoveDevice() throws DeviceException {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_DEVICE,
@@ -49,21 +52,20 @@ public class DeviceTest extends AbstractDeviceTest {
 		Collection<ServiceReference<Device>> deviceSRefs = getDeviceSRefs(null);
 		boolean isRemoved = false;
 		for (ServiceReference<Device> deviceSRef : deviceSRefs) {
-			Device device = super.getContext().getService(deviceSRef);
+			Device device = context.getService(deviceSRef);
 			if (null == device) {
 				continue;
 			}
 			try {
 				device.remove();
-				assertNull("The device service is not unregistered.",
-						super.getContext().getService(deviceSRef));
+				assertThat(context.getService(deviceSRef)).as("The device service is not unregistered.").isNull();
 				isRemoved = true;
 				break;
 			} catch (UnsupportedOperationException uoe) {
 				// expected
 			}
 		}
-		assertTrue("No device with remove support.", isRemoved);
+		assertThat(isRemoved).as("No device with remove support.").isTrue();
 	}
 
 	/**
@@ -73,27 +75,25 @@ public class DeviceTest extends AbstractDeviceTest {
 	 *         filter.
 	 * @throws DeviceException An error while removing the device.
 	 */
+	@Test
 	public void testAddDevice() throws InvalidSyntaxException, DeviceException {
 		super.deviceServiceListener.clear();
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_REGISTER_DEVICE,
 				DeviceTestSteps.STEP_MESSAGE_REGISTER_DEVICE);
 		ServiceEvent[] serviceEvents = super.deviceServiceListener.getEvents();
-		assertTrue(
-				"At least one device should be registered, but there are no events.",
-				serviceEvents.length > 0);
+		assertThat(serviceEvents.length > 0).as("At least one device should be registered, but there are no events.").isTrue();
 		for (int i = 0; i < serviceEvents.length; i++) {
-			assertEquals(
-					"The event type must be registered.",
-					ServiceEvent.REGISTERED, serviceEvents[i].getType());
+			assertThat(serviceEvents[i].getType()).as("The event type must be registered.").isEqualTo(ServiceEvent.REGISTERED);
 			String deviceUID = (String) serviceEvents[i].getServiceReference().getProperty(Device.SERVICE_UID);
-			assertNotNull("The device unique identifier is missing.", deviceUID);
+			assertThat(deviceUID).as("The device unique identifier is missing.").isNotNull();
 		}
 	}
 
 	/**
 	 * Tests the device properties with device service properties.
 	 */
+	@Test
 	public void testDeviceProperties() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_DEVICE,
@@ -101,25 +101,24 @@ public class DeviceTest extends AbstractDeviceTest {
 		Collection<ServiceReference<Device>> deviceSRefs = getDeviceSRefs(null);
 		boolean compared = false;
 		for (ServiceReference<Device> deviceSRef : deviceSRefs) {
-			Device device = super.getContext().getService(deviceSRef);
+			Device device = context.getService(deviceSRef);
 			if (null == device) {
 				continue;
 			}
 			String[] refKeys = deviceSRef.getPropertyKeys();
 			for (int ii = 0; ii < refKeys.length; ii++) {
-				assertTrue(
-						"The device property and service property values are different.",
-						TestUtil.areEqual(deviceSRef.getProperty(refKeys[ii]),
-								device.getServiceProperty(refKeys[ii])));
+				assertThat(TestUtil.areEqual(deviceSRef.getProperty(refKeys[ii]),
+								device.getServiceProperty(refKeys[ii]))).as("The device property and service property values are different.").isTrue();
 			}
 			compared = true;
 		}
-		assertTrue("No device properties have been compared.", compared);
+		assertThat(compared).as("No device properties have been compared.").isTrue();
 	}
 
 	/**
 	 * Tests the types of the device properties.
 	 */
+	@Test
 	public void testDevicePropertyTypes() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_DEVICES_ALL_PROPS,
@@ -143,6 +142,7 @@ public class DeviceTest extends AbstractDeviceTest {
 	/**
 	 * Tests the availability of the required device properties.
 	 */
+	@Test
 	public void testRequiredDeviceProperties() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_DEVICE,
@@ -170,14 +170,13 @@ public class DeviceTest extends AbstractDeviceTest {
 			Class< ? > propertyType = devices[i]
 					.getServiceProperty(propertyName)
 					.getClass();
-			assertTrue("The device proeprty type is not correct: " + propertyName + ", type: " + propertyType,
-					TestUtil.contains(expectedTypes, propertyType));
+			assertThat(TestUtil.contains(expectedTypes, propertyType)).as("The device proeprty type is not correct: " + propertyName + ", type: " + propertyType).isTrue();
 		}
 	}
 
 	private Collection<ServiceReference<Device>> getDeviceSRefs(String filter) {
 		try {
-			Collection<ServiceReference<Device>> deviceSRefs = super.getContext()
+			Collection<ServiceReference<Device>> deviceSRefs = context
 					.getServiceReferences(Device.class, filter);
 			assertThat(deviceSRefs).as("No device services; filter=%s.", filter)
 					.isNotEmpty();
@@ -189,16 +188,14 @@ public class DeviceTest extends AbstractDeviceTest {
 	}
 
 	private Device[] getDevices(String devicePropName) throws InvalidSyntaxException {
-		BundleContext bc = super.getContext();
+		BundleContext bc = context;
 		Collection<ServiceReference<Device>> deviceSRefs = getDeviceSRefs(
 				"(" + devicePropName + "=*)");
 
 		Device[] devices = deviceSRefs.stream().map(ref -> {
 			Device device = bc.getService(ref);
-			assertNotNull(
-					"The device service is missing with UID: "
-							+ ref.getProperty(Device.SERVICE_UID),
-					device);
+			assertThat(device).as("The device service is missing with UID: "
+							+ ref.getProperty(Device.SERVICE_UID)).isNotNull();
 			return device;
 		}).toArray(Device[]::new);
 		return devices;

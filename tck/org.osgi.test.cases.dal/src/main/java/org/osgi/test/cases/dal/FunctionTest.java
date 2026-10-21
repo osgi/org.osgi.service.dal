@@ -18,11 +18,15 @@
 
 package org.osgi.test.cases.dal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
@@ -43,6 +47,7 @@ public class FunctionTest extends AbstractDeviceTest {
 	 * Validates that the {@code Function} class is a part of the function
 	 * registration.
 	 */
+	@Test
 	public void testRegistrationClasses() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_FUNCTION,
@@ -56,7 +61,7 @@ public class FunctionTest extends AbstractDeviceTest {
 		}
 		for (int i = 0; i < functions.length; i++) {
 			String[] regClasses = (String[]) functions[i].getServiceProperty(Constants.OBJECTCLASS);
-			assertTrue("At least one registration class is expected!", regClasses.length >= 1);
+			assertThat(regClasses.length >= 1).as("At least one registration class is expected!").isTrue();
 			String functionClassName = Function.class.getName();
 			boolean functionClassInUse = false;
 			for (int ii = 0; ii < regClasses.length; ii++) {
@@ -65,7 +70,7 @@ public class FunctionTest extends AbstractDeviceTest {
 					break;
 				}
 			}
-			assertTrue("Function class is not used for the function registration.", functionClassInUse);
+			assertThat(functionClassInUse).as("Function class is not used for the function registration.").isTrue();
 		}
 	}
 
@@ -76,26 +81,23 @@ public class FunctionTest extends AbstractDeviceTest {
 	 * @throws InvalidSyntaxException If the registered device UID breaks the
 	 *         LDAP filter.
 	 */
+	@Test
 	public void testRegistrationOrder() throws InvalidSyntaxException {
 		super.deviceServiceListener.clear();
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_REGISTER_DEVICE_FUNCTION,
 				DeviceTestSteps.STEP_MESSAGE_REGISTER_DEVICE_FUNCTION);
 		ServiceEvent[] serviceEvents = super.deviceServiceListener.getEvents();
-		assertTrue(
-				"At least one device should be registered, but there are no events.",
-				serviceEvents.length > 0);
+		assertThat(serviceEvents.length > 0).as("At least one device should be registered, but there are no events.").isTrue();
 		for (int i = 0; i < serviceEvents.length; i++) {
-			assertEquals(
-					"The event type must be registered.",
-					ServiceEvent.REGISTERED, serviceEvents[i].getType());
+			assertThat(serviceEvents[i].getType()).as("The event type must be registered.").isEqualTo(ServiceEvent.REGISTERED);
 			String deviceUID = (String) serviceEvents[i].getServiceReference().getProperty(Device.SERVICE_UID);
-			assertNotNull("The device unique identifier is missing.", deviceUID);
+			assertThat(deviceUID).as("The device unique identifier is missing.").isNotNull();
 			Function[] functions = getFunctions(Function.SERVICE_DEVICE_UID, deviceUID);
 			long deviceServiceID = ((Long) super.getDevice(deviceUID).getServiceProperty(Constants.SERVICE_ID)).longValue();
 			for (int ii = 0; ii < functions.length; ii++) {
 				long functionServiceID = ((Long) functions[ii].getServiceProperty(Constants.SERVICE_ID)).longValue();
-				assertTrue("The function must be registered before the device!", functionServiceID < deviceServiceID);
+				assertThat(functionServiceID < deviceServiceID).as("The function must be registered before the device!").isTrue();
 			}
 		}
 	}
@@ -108,47 +110,40 @@ public class FunctionTest extends AbstractDeviceTest {
 	 *         LDAP filter.
 	 * @throws DeviceException An error while removing the device.
 	 */
+	@Test
 	public void testUnregistrationOrder() throws InvalidSyntaxException, DeviceException {
 		super.deviceServiceListener.clear();
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_REGISTER_DEVICE_FUNCTION,
 				DeviceTestSteps.STEP_MESSAGE_REGISTER_DEVICE_FUNCTION);
 		ServiceEvent[] serviceEvents = super.deviceServiceListener.getEvents();
-		assertTrue(
-				"At least one device should be registered.",
-				serviceEvents.length > 0);
+		assertThat(serviceEvents.length > 0).as("At least one device should be registered.").isTrue();
 		for (int i = 0; i < serviceEvents.length; i++) {
 			String deviceUID = (String) serviceEvents[i].getServiceReference().getProperty(Device.SERVICE_UID);
-			assertNotNull("The device unique identifier is missing.", deviceUID);
+			assertThat(deviceUID).as("The device unique identifier is missing.").isNotNull();
 			Device device = super.getDevice(deviceUID);
 			Function[] functions = getFunctions(Function.SERVICE_DEVICE_UID, deviceUID);
 			super.deviceServiceListener.clear();
 			TestServiceListener testServiceListener = new TestServiceListener(
-					super.getContext(), TestServiceListener.DEVICE_FUNCTION_FILTER);
+					context, TestServiceListener.DEVICE_FUNCTION_FILTER);
 			try {
 				device.remove();
 				ServiceEvent[] deviceServiceEvents = testServiceListener.getEvents();
-				assertTrue("At least two service events are expected on device remove.", deviceServiceEvents.length > 1);
+				assertThat(deviceServiceEvents.length > 1).as("At least two service events are expected on device remove.").isTrue();
 				for (int ii = 0; ii < functions.length; ii++) {
 					boolean isDeviceUnregistered = false;
 					boolean isFunctionUnregistered = false;
-					assertEquals(
-							"The event type must be service modified.",
-							ServiceEvent.MODIFIED,
-							deviceServiceEvents[0].getType());
+					assertThat(deviceServiceEvents[0].getType()).as("The event type must be service modified.").isEqualTo(ServiceEvent.MODIFIED);
 					for (int iii = 1; iii < deviceServiceEvents.length; iii++) {
-						assertEquals(
-								"The event type must be unregistering.",
-								ServiceEvent.UNREGISTERING,
-								deviceServiceEvents[iii].getType());
+						assertThat(deviceServiceEvents[iii].getType()).as("The event type must be unregistering.").isEqualTo(ServiceEvent.UNREGISTERING);
 						if (deviceUID.equals(deviceServiceEvents[iii].getServiceReference().getProperty(Device.SERVICE_UID))) {
-							assertFalse("The device is already unregistered!", isDeviceUnregistered);
+							assertThat(isDeviceUnregistered).as("The device is already unregistered!").isFalse();
 							isDeviceUnregistered = true;
 						} else
 							if (functions[ii].getServiceProperty(Function.SERVICE_UID).equals(
 									deviceServiceEvents[iii].getServiceReference().getProperty(Function.SERVICE_UID))) {
-								assertTrue("The device must be unregistered first!", isDeviceUnregistered);
-								assertFalse("The function is already unregistered!", isFunctionUnregistered);
+								assertThat(isDeviceUnregistered).as("The device must be unregistered first!").isTrue();
+								assertThat(isFunctionUnregistered).as("The function is already unregistered!").isFalse();
 								isFunctionUnregistered = true;
 							}
 					}
@@ -162,6 +157,7 @@ public class FunctionTest extends AbstractDeviceTest {
 	/**
 	 * Checks that all functions support all required properties.
 	 */
+	@Test
 	public void testRequiredFunctionProperties() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_FUNCTION,
@@ -178,6 +174,7 @@ public class FunctionTest extends AbstractDeviceTest {
 	 * Checks that {@link Function#getServiceProperty(String)} returns the same
 	 * value as {@link ServiceReference#getProperty(String)}.
 	 */
+	@Test
 	public void testFunctionProperties() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_FUNCTION,
@@ -185,24 +182,23 @@ public class FunctionTest extends AbstractDeviceTest {
 		ServiceReference< ? >[] functionSRefs = getFunctionSRefs();
 		boolean compared = false;
 		for (int i = 0; i < functionSRefs.length; i++) {
-			Function function = (Function) super.getContext().getService(functionSRefs[i]);
+			Function function = (Function) context.getService(functionSRefs[i]);
 			if (null == function) {
 				continue;
 			}
 			String[] refKeys = functionSRefs[i].getPropertyKeys();
 			for (int ii = 0; ii < refKeys.length; ii++) {
-				assertTrue(
-						"The function property and service property values are different.",
-						TestUtil.areEqual(functionSRefs[i].getProperty(refKeys[ii]), function.getServiceProperty(refKeys[ii])));
+				assertThat(TestUtil.areEqual(functionSRefs[i].getProperty(refKeys[ii]), function.getServiceProperty(refKeys[ii]))).as("The function property and service property values are different.").isTrue();
 			}
 			compared = true;
 		}
-		assertTrue("No function properties have been compared.", compared);
+		assertThat(compared).as("No function properties have been compared.").isTrue();
 	}
 
 	/**
 	 * Checks that function property value type is correct.
 	 */
+	@Test
 	public void testFunctionPropertyTypes() {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_FUNCTIONS_ALL_PROPS,
@@ -223,6 +219,7 @@ public class FunctionTest extends AbstractDeviceTest {
 	 * @throws NoSuchMethodException If the getter is missing.
 	 * @throws ClassNotFoundException If the function class cannot be find.
 	 */
+	@Test
 	public void testPropertyGetter() throws NoSuchMethodException, ClassNotFoundException {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_PROPERTY_READABLE,
@@ -245,6 +242,7 @@ public class FunctionTest extends AbstractDeviceTest {
 	 * @throws NoSuchMethodException If the getter is missing.
 	 * @throws ClassNotFoundException If the function class cannot be find.
 	 */
+	@Test
 	public void testPropertySetters() throws NoSuchMethodException, ClassNotFoundException {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_PROPERTY_WRITABLE,
@@ -266,6 +264,7 @@ public class FunctionTest extends AbstractDeviceTest {
 	 * 
 	 * @throws ClassNotFoundException If the function class cannot be loaded.
 	 */
+	@Test
 	public void testOperations() throws ClassNotFoundException {
 		super.testStepProxy.execute(
 				DeviceTestSteps.STEP_ID_AVAILABLE_OPERATION,
@@ -279,34 +278,30 @@ public class FunctionTest extends AbstractDeviceTest {
 		for (int i = 0; i < functions.length; i++) {
 			String[] operationNames = (String[]) functions[i].getServiceProperty(Function.SERVICE_OPERATION_NAMES);
 			for (int ii = 0; ii < operationNames.length; ii++) {
-				Method[] methods = TestUtil.getFunctionMethods(functions[i], operationNames[ii], super.getContext());
-				assertNotNull("There is no method for operation: " + operationNames[ii], methods);
-				assertEquals("There is operation overloading for: " + operationNames[ii], 1, methods.length);
+				Method[] methods = TestUtil.getFunctionMethods(functions[i], operationNames[ii], context);
+				assertThat(methods).as("There is no method for operation: " + operationNames[ii]).isNotNull();
+				assertThat(methods.length).as("There is operation overloading for: " + operationNames[ii]).isOne();
 			}
 		}
 	}
 
 	private void checkPropertySetter(Function function, String propertyName) throws ClassNotFoundException {
 		String setterName = TestUtil.getBeanAccessor(propertyName, "set");
-		Method[] setters = TestUtil.getFunctionMethods(function, setterName, super.getContext());
-		assertNotNull("There are no setters for property: " + propertyName, setters);
-		assertTrue("There must be one or two setters.",
-				(1 == setters.length) || (2 == setters.length));
+		Method[] setters = TestUtil.getFunctionMethods(function, setterName, context);
+		assertThat(setters).as("There are no setters for property: " + propertyName).isNotNull();
+		assertThat((1 == setters.length) || (2 == setters.length)).as("There must be one or two setters.").isTrue();
 		boolean setterWithOneParam = false;
 		boolean setterWithTwoParam = false;
 		for (int i = 0; i < setters.length; i++) {
-			assertEquals(
-					"No return type is expected for the property setter: " + propertyName,
-					Void.TYPE,
-					setters[i].getReturnType());
+			assertThat(setters[i].getReturnType()).as("No return type is expected for the property setter: " + propertyName).isEqualTo(Void.TYPE);
 			Class< ? >[] paramTypes = setters[i].getParameterTypes();
 			switch (paramTypes.length) {
 				case 1 :
-					assertFalse("There must be only one setter with one parameters: " + setters[i], setterWithOneParam);
+					assertThat(setterWithOneParam).as("There must be only one setter with one parameters: " + setters[i]).isFalse();
 					setterWithOneParam = true;
 					break;
 				case 2 :
-					assertFalse("There must be only one setter with two parameters: " + setters[i], setterWithTwoParam);
+					assertThat(setterWithTwoParam).as("There must be only one setter with two parameters: " + setters[i]).isFalse();
 					setterWithTwoParam = true;
 					break;
 				default :
@@ -317,23 +312,21 @@ public class FunctionTest extends AbstractDeviceTest {
 
 	private void checkPropertyGetter(Function function, String propertyName) throws NoSuchMethodException, ClassNotFoundException {
 		String getterName = TestUtil.getBeanAccessor(propertyName, "get");
-		Method[] getters = TestUtil.getFunctionMethods(function, getterName, super.getContext());
-		assertEquals("Only one getter is expected: " + getterName, 1, getters.length);
+		Method[] getters = TestUtil.getFunctionMethods(function, getterName, context);
+		assertThat(getters.length).as("Only one getter is expected: " + getterName).isOne();
 		Method getter = getters[0];
-		assertEquals("The getter must not accept parameters.", 0, getter.getParameterTypes().length);
+		assertThat(getter.getParameterTypes().length).as("The getter must not accept parameters.").isZero();
 		Class< ? > returnType = getter.getReturnType();
-		assertNotNull("The function getter must have return type: " + getterName, returnType);
-		assertTrue(
-				"The function getter must return a subclass of " + FunctionData.class.getName(),
-				FunctionData.class.isAssignableFrom(returnType));
+		assertThat(returnType).as("The function getter must have return type: " + getterName).isNotNull();
+		assertThat(FunctionData.class.isAssignableFrom(returnType)).as("The function getter must return a subclass of " + FunctionData.class.getName()).isTrue();
 	}
 
 	private ServiceReference< ? >[] getFunctionSRefs() {
 		try {
-			ServiceReference< ? >[] functionSRefs = super.getContext()
+			ServiceReference< ? >[] functionSRefs = context
 					.getServiceReferences(
 					(String)null, '(' + Function.SERVICE_UID + "=*)");
-			assertNotNull("There are no functions.", functionSRefs);
+			assertThat(functionSRefs).as("There are no functions.").isNotNull();
 			return functionSRefs;
 		} catch (InvalidSyntaxException e) {
 			// null is valid filter
@@ -343,13 +336,13 @@ public class FunctionTest extends AbstractDeviceTest {
 
 	private Function[] getFunctions(String functionClass, int propertyAccess) {
 		try {
-			ServiceReference< ? >[] functionSRefs = super.getContext()
+			ServiceReference< ? >[] functionSRefs = context
 					.getServiceReferences(
 					functionClass, '(' + Function.SERVICE_PROPERTY_NAMES + "=*)");
-			assertNotNull("There are no functions.", functionSRefs);
+			assertThat(functionSRefs).as("There are no functions.").isNotNull();
 			List<Function> result = new ArrayList<>(functionSRefs.length);
 			for (int i = 0; i < functionSRefs.length; i++) {
-				Function function = (Function) super.getContext().getService(functionSRefs[i]);
+				Function function = (Function) context.getService(functionSRefs[i]);
 				if (null == function) {
 					continue;
 				}
@@ -362,9 +355,7 @@ public class FunctionTest extends AbstractDeviceTest {
 					}
 				}
 			}
-			assertFalse(
-					"There is no function, which contains a proeprty with an access: " + propertyAccess,
-					result.isEmpty());
+			assertThat(result).as("There is no function, which contains a proeprty with an access: " + propertyAccess).isNotEmpty();
 			return result.toArray(new Function[0]);
 		} catch (InvalidSyntaxException e) {
 			// the filter is valid
@@ -398,8 +389,7 @@ public class FunctionTest extends AbstractDeviceTest {
 			Class< ? > propertyType = functions[i]
 					.getServiceProperty(propertyName)
 					.getClass();
-			assertTrue("The function proeprty type is not correct: " + propertyName + ", type: " + propertyType,
-					TestUtil.contains(expectedTypes, propertyType));
+			assertThat(TestUtil.contains(expectedTypes, propertyType)).as("The function proeprty type is not correct: " + propertyName + ", type: " + propertyType).isTrue();
 		}
 	}
 }

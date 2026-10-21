@@ -18,9 +18,13 @@
 
 package org.osgi.test.cases.dal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
 import org.osgi.service.dal.FunctionData;
 
 /**
@@ -31,6 +35,7 @@ public class FunctionDataTest extends AbstractDeviceTest {
 	/**
 	 * Validates {@link FunctionData#equals(Object)} method.
 	 */
+	@Test
 	public void testEqualsAndHashCode() {
 		// test without metadata
 		checkEqualsAndHashCode(null);
@@ -59,30 +64,28 @@ public class FunctionDataTest extends AbstractDeviceTest {
 		metadata.put("test-value", Boolean.TRUE);
 		Map<String,Object> otherMetadata = new HashMap<>();
 		otherMetadata.put("test-value", "true");
-		assertFalse("The function data instances are equal for different metadata.",
-				(new TestFunctionData(Long.MIN_VALUE, metadata)).equals(
-						new TestFunctionData(Long.MIN_VALUE, otherMetadata)));
+		assertThat((new TestFunctionData(Long.MIN_VALUE, metadata)).equals(
+						new TestFunctionData(Long.MIN_VALUE, otherMetadata))).as("The function data instances are equal for different metadata.").isFalse();
 
 		metadata.clear();
 		otherMetadata.clear();
 		metadata.put("test-value", new int[] {1, 2, 3});
 		otherMetadata.put("test-value", new int[] {1, 2, 4});
-		assertFalse("The function data instances are equal for different metadata.",
-				(new TestFunctionData(Long.MIN_VALUE, metadata)).equals(
-						new TestFunctionData(Long.MIN_VALUE, otherMetadata)));
+		assertThat((new TestFunctionData(Long.MIN_VALUE, metadata)).equals(
+						new TestFunctionData(Long.MIN_VALUE, otherMetadata))).as("The function data instances are equal for different metadata.").isFalse();
 
 		metadata.clear();
 		otherMetadata.clear();
 		metadata.put("test-value", metadata);
 		otherMetadata.put("test-value", otherMetadata);
-		assertFalse("The function data instances are equal for self-contained metadata.",
-				(new TestFunctionData(Long.MIN_VALUE, metadata)).equals(
-						new TestFunctionData(Long.MIN_VALUE, otherMetadata)));
+		assertThat((new TestFunctionData(Long.MIN_VALUE, metadata)).equals(
+						new TestFunctionData(Long.MIN_VALUE, otherMetadata))).as("The function data instances are equal for self-contained metadata.").isFalse();
 	}
 
 	/**
 	 * Validates {@link FunctionData#compareTo(Object)} method.
 	 */
+	@Test
 	public void testComparison() {
 		Map<String,Object> metadata = new HashMap<>();
 		metadata.put("test-value", Integer.valueOf(1));
@@ -110,35 +113,33 @@ public class FunctionDataTest extends AbstractDeviceTest {
 	/**
 	 * Validates {@link FunctionData#FunctionData(long, java.util.Map)}.
 	 */
+	@Test
 	public void testFields() {
 		long currentTime = System.currentTimeMillis();
 		// check with null metadata
 		FunctionData data = new TestFunctionData(currentTime, null);
-		assertEquals("The function data timestamp is not correct.",
-				currentTime, data.getTimestamp());
-		assertNull("There is function data metadata.", data.getMetadata());
+		assertThat(data.getTimestamp()).as("The function data timestamp is not correct.").isEqualTo(currentTime);
+		assertThat(data.getMetadata()).as("There is function data metadata.").isNull();
 
 		// check with metadata
 		Map<String,Object> metadata = new HashMap<>();
 		data = new TestFunctionData(currentTime, metadata);
-		assertSame("The function data metadata is not correct.",
-				metadata, data.getMetadata());
+		assertThat(data.getMetadata()).as("The function data metadata is not correct.").isSameAs(metadata);
 
 		// check with map constructor
 		Map<String,Object> fields = new HashMap<>();
 		fields.put(FunctionData.FIELD_TIMESTAMP, Long.valueOf(currentTime));
 		fields.put(FunctionData.FIELD_METADATA, metadata);
 		data = new TestFunctionData(fields);
-		assertEquals("The function data timestamp is not correct.",
-				currentTime, data.getTimestamp());
-		assertSame("The function data metadata is not correct.",
-				metadata, data.getMetadata());
+		assertThat(data.getTimestamp()).as("The function data timestamp is not correct.").isEqualTo(currentTime);
+		assertThat(data.getMetadata()).as("The function data metadata is not correct.").isSameAs(metadata);
 	}
 
 	/**
 	 * Validates {@link FunctionData#FunctionData(long, java.util.Map)} with
 	 * invalid fields.
 	 */
+	@Test
 	public void testInvalidFields() {
 		Map<String,Object> fields = new HashMap<>();
 		fields.put(FunctionData.FIELD_TIMESTAMP, "1");
@@ -165,25 +166,20 @@ public class FunctionDataTest extends AbstractDeviceTest {
 		long otherTime = currentTime - 1;
 
 		FunctionData data = new TestFunctionData(currentTime, lessMetadata);
-		assertTrue("Function data timestamp is not compared with higher priority.",
-				data.compareTo(new TestFunctionData(otherTime, greaterMetadata)) > 0);
+		assertThat(data.compareTo(new TestFunctionData(otherTime, greaterMetadata)) > 0).as("Function data timestamp is not compared with higher priority.").isTrue();
 
-		assertTrue("Function data metadata comparison is not correct.",
-				data.compareTo(new TestFunctionData(currentTime, greaterMetadata)) < 0);
+		assertThat(data.compareTo(new TestFunctionData(currentTime, greaterMetadata)) < 0).as("Function data metadata comparison is not correct.").isTrue();
 
-		assertEquals("Function data comparison is not correct.",
-				0, data.compareTo(new TestFunctionData(currentTime, lessMetadata)));
+		assertThat(data.compareTo(new TestFunctionData(currentTime, lessMetadata))).as("Function data comparison is not correct.").isZero();
 	}
 
 	private void checkEqualsAndHashCode(Map<String,Object> metadata) {
 		TestFunctionData testData = new TestFunctionData(Long.MIN_VALUE, metadata);
-		assertFalse("The function data is equal to null.", testData.equals(null)); // NOPMD
-		assertFalse("The function data is equal to java.lang.Object instance.", testData.equals(new Object()));
-		assertEquals("The function data is not equal to itself.", testData, testData);
+		assertThat(testData.equals(null)).as("The function data is equal to null.").isFalse(); // NOPMD
+		assertThat(testData.equals(new Object())).as("The function data is equal to java.lang.Object instance.").isFalse();
+		assertThat(testData).as("The function data is not equal to itself.").isEqualTo(testData);
 		TestFunctionData otherTestData = new TestFunctionData(Long.MIN_VALUE, metadata);
-		assertEquals("The function data is not equal to a copy.",
-				testData, otherTestData);
-		assertEquals("Equal function data instances don't have equal hash code.",
-				testData.hashCode(), otherTestData.hashCode());
+		assertThat(otherTestData).as("The function data is not equal to a copy.").isEqualTo(testData);
+		assertThat(otherTestData.hashCode()).as("Equal function data instances don't have equal hash code.").isEqualTo(testData.hashCode());
 	}
 }

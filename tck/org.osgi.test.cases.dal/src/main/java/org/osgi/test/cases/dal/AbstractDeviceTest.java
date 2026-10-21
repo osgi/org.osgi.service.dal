@@ -18,21 +18,28 @@
 
 package org.osgi.test.cases.dal;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Collection;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.dal.Device;
 import org.osgi.service.dal.Function;
 import org.osgi.test.cases.dal.step.TestStepDeviceProxy;
-import org.osgi.test.support.compatibility.DefaultTestBundleControl;
+import org.osgi.test.common.annotation.InjectBundleContext;
 
 /**
  * Common class for all Device Abstraction Layer TCs. It contains some helper
  * methods.
  */
-public abstract class AbstractDeviceTest extends DefaultTestBundleControl {
+public abstract class AbstractDeviceTest {
+
+	@InjectBundleContext
+	BundleContext		context;
 
 	/**
 	 * A service listener, which can track {@code Device} services.
@@ -46,25 +53,21 @@ public abstract class AbstractDeviceTest extends DefaultTestBundleControl {
 
 	/**
 	 * initializes the listeners and the test step proxy.
-	 * 
-	 * @see org.osgi.test.support.compatibility.DefaultTestBundleControl#setUp()
 	 */
-	protected void setUp() throws Exception { // NOPMD
-		super.setUp();
-		this.testStepProxy = new TestStepDeviceProxy(super.getContext());
+	@BeforeEach
+	public void setUp() throws Exception { // NOPMD
+		this.testStepProxy = new TestStepDeviceProxy(context);
 		this.deviceServiceListener = new TestServiceListener(
-				super.getContext(), TestServiceListener.DEVICE_FILTER);
+				context, TestServiceListener.DEVICE_FILTER);
 	}
 
 	/**
 	 * Unregisters the listeners and closes the test step proxy.
-	 * 
-	 * @see org.osgi.test.support.compatibility.DefaultTestBundleControl#tearDown()
 	 */
-	protected void tearDown() throws Exception { // //NOPMD
+	@AfterEach
+	public void tearDown() throws Exception { // //NOPMD
 		this.testStepProxy.close();
 		this.deviceServiceListener.unregister();
-		super.tearDown();
 	}
 
 	/**
@@ -78,14 +81,13 @@ public abstract class AbstractDeviceTest extends DefaultTestBundleControl {
 	 *         valid LDAP filter.
 	 */
 	protected Device getDevice(String deviceUID) throws InvalidSyntaxException {
-		BundleContext bc = super.getContext();
+		BundleContext bc = context;
 		Collection<ServiceReference<Device>> deviceSRefs = bc
 				.getServiceReferences(Device.class,
 						'(' + Device.SERVICE_UID + '=' + deviceUID + ')');
-		assertEquals("One device with the given UID is expected.", 1,
-				deviceSRefs.size());
+		assertThat(deviceSRefs).as("One device with the given UID is expected.").hasSize(1);
 		Device device = bc.getService(deviceSRefs.iterator().next());
-		assertNotNull("The device service is missing.", device);
+		assertThat(device).as("The device service is missing.").isNotNull();
 		return device;
 	}
 
@@ -110,16 +112,14 @@ public abstract class AbstractDeviceTest extends DefaultTestBundleControl {
 			}
 			filter = '(' + propName + '=' + propValue + ')';
 		}
-		BundleContext bc = super.getContext();
+		BundleContext bc = context;
 		ServiceReference< ? >[] functionSRefs = bc
 				.getServiceReferences((String) null, filter);
-		assertNotNull("There is no function with property: " + propName, functionSRefs);
+		assertThat(functionSRefs).as("There is no function with property: " + propName).isNotNull();
 		Function[] functions = new Function[functionSRefs.length];
 		for (int i = 0; i < functions.length; i++) {
 			functions[i] = (Function) bc.getService(functionSRefs[i]);
-			assertNotNull(
-					"The function service is missing with UID: " + functionSRefs[i].getProperty(Device.SERVICE_UID),
-					functions[i]);
+			assertThat(functions[i]).as("The function service is missing with UID: " + functionSRefs[i].getProperty(Device.SERVICE_UID)).isNotNull();
 		}
 		return functions;
 	}
@@ -134,8 +134,7 @@ public abstract class AbstractDeviceTest extends DefaultTestBundleControl {
 	protected void checkRequiredProperties(ServiceReference< ? > serviceRef,
 			String[] propNames) {
 		for (int i = 0; i < propNames.length; i++) {
-			assertNotNull(propNames[i] + " property is missing",
-					serviceRef.getProperty(propNames[i]));
+			assertThat(serviceRef.getProperty(propNames[i])).as(propNames[i] + " property is missing").isNotNull();
 		}
 	}
 }

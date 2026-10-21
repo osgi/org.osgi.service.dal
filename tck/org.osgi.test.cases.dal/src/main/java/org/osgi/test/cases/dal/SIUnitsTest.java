@@ -18,176 +18,149 @@
 
 package org.osgi.test.cases.dal;
 
-import org.osgi.service.dal.SIUnits;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+import org.osgi.service.dal.SIUnits;
 
 /**
  * Validates the values of {@link SIUnits} constants.
  */
-public final class SIUnitsTest extends TestCase {
+public final class SIUnitsTest {
 
 	/**
 	 * Tests SI base unit symbols.
 	 */
+	@Test
 	public void testSIBaseUnits() {
-		assertEquals("Meter symbol is not correct.", "m", SIUnits.METER);
-		assertEquals("Kilogram symbol is not correct.", "kg", SIUnits.KILOGRAM);
-		assertEquals("Second symbol is not correct.", "s", SIUnits.SECOND);
-		assertEquals("Ampere symbol is not correct.", "A", SIUnits.AMPERE);
-		assertEquals("Kelvin symbol is not correct.", "\u212A", SIUnits.KELVIN);
-		assertEquals("Mole symbol is not correct.", "mol", SIUnits.MOLE);
-		assertEquals("Candela symbol is not correct.", "cd", SIUnits.CANDELA);
+		assertThat(SIUnits.METER).as("Meter symbol is not correct.").isEqualTo("m");
+		assertThat(SIUnits.KILOGRAM).as("Kilogram symbol is not correct.").isEqualTo("kg");
+		assertThat(SIUnits.SECOND).as("Second symbol is not correct.").isEqualTo("s");
+		assertThat(SIUnits.AMPERE).as("Ampere symbol is not correct.").isEqualTo("A");
+		assertThat(SIUnits.KELVIN).as("Kelvin symbol is not correct.").isEqualTo("\u212A");
+		assertThat(SIUnits.MOLE).as("Mole symbol is not correct.").isEqualTo("mol");
+		assertThat(SIUnits.CANDELA).as("Candela symbol is not correct.").isEqualTo("cd");
 	}
 
 	/**
 	 * Tests derived units in the SI expressed in terms of base units.
 	 */
+	@Test
 	public void testSIDerivedUnits() {
-		assertEquals("Square meter symbol is not correct.", SIUnits.METER + "\u00B2", SIUnits.SQUARE_METER);
-		assertEquals("Cubic meter symbol is not correct.", SIUnits.METER + "\u00B3", SIUnits.CUBIC_METER);
-		assertEquals("Meter per second symbol is not correct.",
-				SIUnits.METER + '/' + SIUnits.SECOND, SIUnits.METER_PER_SECOND);
-		assertEquals("Meter per second squared symbol is not correct.",
-				SIUnits.METER + '/' + SIUnits.SECOND + "\u00B2", SIUnits.METER_PER_SECOND_SQUARED);
-		assertEquals("Reciprocal meter symbol is not correct.",
-				SIUnits.METER + "\u207B\u00B9", SIUnits.RECIPROCAL_METER);
-		assertEquals("Kilogram per cubic meter symbol is not correct.",
-				SIUnits.KILOGRAM + '/' + SIUnits.CUBIC_METER, SIUnits.KILOGRAM_PER_CUBIC_METER);
-		assertEquals("Kilogram per square meter symbol is not correct.",
-				SIUnits.KILOGRAM + '/' + SIUnits.SQUARE_METER, SIUnits.KILOGRAM_PER_SQUARE_METER);
-		assertEquals("Cubic meter per kilogram symbol is not correct.",
-				SIUnits.CUBIC_METER + '/' + SIUnits.KILOGRAM, SIUnits.CUBIC_METER_PER_KILOGRAM);
-		assertEquals("Ampere per square meter symbol is not correct.",
-				SIUnits.AMPERE + '/' + SIUnits.SQUARE_METER, SIUnits.AMPERE_PER_SQUARE_METER);
-		assertEquals("Ampere per meter symbol is not correct.",
-				SIUnits.AMPERE + '/' + SIUnits.METER, SIUnits.AMPERE_PER_METER);
-		assertEquals("Mole per cubic meter symbol is not correct.",
-				SIUnits.MOLE + '/' + SIUnits.CUBIC_METER, SIUnits.MOLE_PER_CUBIC_METER);
-		assertEquals("Candela per square meter symbol is not correct.",
-				SIUnits.CANDELA + '/' + SIUnits.SQUARE_METER, SIUnits.CANDELA_PER_SQUARE_METER);
+		assertThat(SIUnits.SQUARE_METER).as("Square meter symbol is not correct.").isEqualTo(SIUnits.METER + "\u00B2");
+		assertThat(SIUnits.CUBIC_METER).as("Cubic meter symbol is not correct.").isEqualTo(SIUnits.METER + "\u00B3");
+		assertThat(SIUnits.METER_PER_SECOND).as("Meter per second symbol is not correct.").isEqualTo(SIUnits.METER + '/' + SIUnits.SECOND);
+		assertThat(SIUnits.METER_PER_SECOND_SQUARED).as("Meter per second squared symbol is not correct.").isEqualTo(SIUnits.METER + '/' + SIUnits.SECOND + "\u00B2");
+		assertThat(SIUnits.RECIPROCAL_METER).as("Reciprocal meter symbol is not correct.").isEqualTo(SIUnits.METER + "\u207B\u00B9");
+		assertThat(SIUnits.KILOGRAM_PER_CUBIC_METER).as("Kilogram per cubic meter symbol is not correct.").isEqualTo(SIUnits.KILOGRAM + '/' + SIUnits.CUBIC_METER);
+		assertThat(SIUnits.KILOGRAM_PER_SQUARE_METER).as("Kilogram per square meter symbol is not correct.").isEqualTo(SIUnits.KILOGRAM + '/' + SIUnits.SQUARE_METER);
+		assertThat(SIUnits.CUBIC_METER_PER_KILOGRAM).as("Cubic meter per kilogram symbol is not correct.").isEqualTo(SIUnits.CUBIC_METER + '/' + SIUnits.KILOGRAM);
+		assertThat(SIUnits.AMPERE_PER_SQUARE_METER).as("Ampere per square meter symbol is not correct.").isEqualTo(SIUnits.AMPERE + '/' + SIUnits.SQUARE_METER);
+		assertThat(SIUnits.AMPERE_PER_METER).as("Ampere per meter symbol is not correct.").isEqualTo(SIUnits.AMPERE + '/' + SIUnits.METER);
+		assertThat(SIUnits.MOLE_PER_CUBIC_METER).as("Mole per cubic meter symbol is not correct.").isEqualTo(SIUnits.MOLE + '/' + SIUnits.CUBIC_METER);
+		assertThat(SIUnits.CANDELA_PER_SQUARE_METER).as("Candela per square meter symbol is not correct.").isEqualTo(SIUnits.CANDELA + '/' + SIUnits.SQUARE_METER);
 	}
 
 	/**
 	 * Tests derived units in the SI with special names and symbols.
 	 */
+	@Test
 	public void testSISpecialDerivedUnits() {
-		assertEquals("Radian symbol is not correct.", "rad", SIUnits.RADIAN);
-		assertEquals("Steradian symbol is not correct.", "sr", SIUnits.STERADIAN);
-		assertEquals("Hertz symbol is not correct.", "Hz", SIUnits.HERTZ);
-		assertEquals("Newton symbol is not correct.", "N", SIUnits.NEWTON);
-		assertEquals("Pascal symbol is not correct.", "Pa", SIUnits.PASCAL);
-		assertEquals("Joule symbol is not correct.", "J", SIUnits.JOULE);
-		assertEquals("Watt symbol is not correct.", "W", SIUnits.WATT);
-		assertEquals("Coulomb symbol is not correct.", "C", SIUnits.COULOMB);
-		assertEquals("Volt symbol is not correct.", "V", SIUnits.VOLT);
-		assertEquals("Farad symbol is not correct.", "F", SIUnits.FARAD);
-		assertEquals("Ohm symbol is not correct.", "\u2126", SIUnits.OHM);
-		assertEquals("Siemens symbol is not correct.", "S", SIUnits.SIEMENS);
-		assertEquals("Weber symbol is not correct.", "Wb", SIUnits.WEBER);
-		assertEquals("Tesla symbol is not correct.", "T", SIUnits.TESLA);
-		assertEquals("Henry symbol is not correct.", "H", SIUnits.HENRY);
-		assertEquals("Degree Celsius symbol is not correct.", "\u2103", SIUnits.DEGREE_CELSIUS);
-		assertEquals("Lumen symbol is not correct.", "lm", SIUnits.LUMEN);
-		assertEquals("Lux symbol is not correct.", "lx", SIUnits.LUX);
-		assertEquals("Becquerel symbol is not correct.", "Bq", SIUnits.BECQUEREL);
-		assertEquals("Gray symbol is not correct.", "Gy", SIUnits.GRAY);
-		assertEquals("Sievert symbol is not correct.", "Sv", SIUnits.SIEVERT);
-		assertEquals("Katal symbol is not correct.", "kat", SIUnits.KATAL);
+		assertThat(SIUnits.RADIAN).as("Radian symbol is not correct.").isEqualTo("rad");
+		assertThat(SIUnits.STERADIAN).as("Steradian symbol is not correct.").isEqualTo("sr");
+		assertThat(SIUnits.HERTZ).as("Hertz symbol is not correct.").isEqualTo("Hz");
+		assertThat(SIUnits.NEWTON).as("Newton symbol is not correct.").isEqualTo("N");
+		assertThat(SIUnits.PASCAL).as("Pascal symbol is not correct.").isEqualTo("Pa");
+		assertThat(SIUnits.JOULE).as("Joule symbol is not correct.").isEqualTo("J");
+		assertThat(SIUnits.WATT).as("Watt symbol is not correct.").isEqualTo("W");
+		assertThat(SIUnits.COULOMB).as("Coulomb symbol is not correct.").isEqualTo("C");
+		assertThat(SIUnits.VOLT).as("Volt symbol is not correct.").isEqualTo("V");
+		assertThat(SIUnits.FARAD).as("Farad symbol is not correct.").isEqualTo("F");
+		assertThat(SIUnits.OHM).as("Ohm symbol is not correct.").isEqualTo("\u2126");
+		assertThat(SIUnits.SIEMENS).as("Siemens symbol is not correct.").isEqualTo("S");
+		assertThat(SIUnits.WEBER).as("Weber symbol is not correct.").isEqualTo("Wb");
+		assertThat(SIUnits.TESLA).as("Tesla symbol is not correct.").isEqualTo("T");
+		assertThat(SIUnits.HENRY).as("Henry symbol is not correct.").isEqualTo("H");
+		assertThat(SIUnits.DEGREE_CELSIUS).as("Degree Celsius symbol is not correct.").isEqualTo("\u2103");
+		assertThat(SIUnits.LUMEN).as("Lumen symbol is not correct.").isEqualTo("lm");
+		assertThat(SIUnits.LUX).as("Lux symbol is not correct.").isEqualTo("lx");
+		assertThat(SIUnits.BECQUEREL).as("Becquerel symbol is not correct.").isEqualTo("Bq");
+		assertThat(SIUnits.GRAY).as("Gray symbol is not correct.").isEqualTo("Gy");
+		assertThat(SIUnits.SIEVERT).as("Sievert symbol is not correct.").isEqualTo("Sv");
+		assertThat(SIUnits.KATAL).as("Katal symbol is not correct.").isEqualTo("kat");
 	}
 
 	/**
 	 * Tests SI coherent derived units whose names and symbols include SI
 	 * coherent derived units with special names and symbols.
 	 */
+	@Test
 	public void testSICompositeSpecialDerivedUnits() {
-		assertEquals("Pascal second symbol is not correct.",
-				SIUnits.PASCAL + ' ' + SIUnits.SECOND, SIUnits.PASCAL_SECOND);
-		assertEquals("Newton meter symbol is not correct.",
-				SIUnits.NEWTON + ' ' + SIUnits.METER, SIUnits.NEWTON_METER);
-		assertEquals("Newton per meter symbol is not correct.",
-				SIUnits.NEWTON + '/' + SIUnits.METER, SIUnits.NEWTON_PER_METER);
-		assertEquals("Radian per second symbol is not correct.",
-				SIUnits.RADIAN + '/' + SIUnits.SECOND, SIUnits.RADIAN_PER_SECOND);
-		assertEquals("Radian per second squared symbol is not correct.",
-				SIUnits.RADIAN + '/' + SIUnits.SECOND + "\u00B2", SIUnits.RADIAN_PER_SECOND_SQUARED);
-		assertEquals("Watt per square meter symbol is not correct.",
-				SIUnits.WATT + '/' + SIUnits.METER + "\u00B2", SIUnits.WATT_PER_SQUARE_METER);
-		assertEquals("Joule per kelvin symbol is not correct.",
-				SIUnits.JOULE + '/' + SIUnits.KELVIN, SIUnits.JOULE_PER_KELVIN);
-		assertEquals("Joule per kilogram kelvin symbol is not correct.",
-				SIUnits.JOULE + "/(" + SIUnits.KILOGRAM + ' ' + SIUnits.KELVIN + ')',
-				SIUnits.JOULE_PER_KILOGRAM_KELVIN);
-		assertEquals("Joule per kilogram symbol is not correct.",
-				SIUnits.JOULE + '/' + SIUnits.KILOGRAM, SIUnits.JOULE_PER_KILOGRAM);
-		assertEquals("Watt per meter kelvin symbol is not correct.",
-				SIUnits.WATT + "/(" + SIUnits.METER + ' ' + SIUnits.KELVIN + ')', SIUnits.WATT_PER_METER_KELVIN);
-		assertEquals("Volt per meter symbol is not correct.",
-				SIUnits.VOLT + '/' + SIUnits.METER, SIUnits.VOLT_PER_METER);
-		assertEquals("Coulomb per cubic meter symbol is not correct.",
-				SIUnits.COULOMB + '/' + SIUnits.METER + "\u00B3", SIUnits.COULOMB_PER_CUBIC_METER);
-		assertEquals("Coulomb per square meter symbol is not correct.",
-				SIUnits.COULOMB + '/' + SIUnits.METER + "\u00B2", SIUnits.COULOMB_PER_SQUARE_METER);
-		assertEquals("Farad per meter symbol is not correct.",
-				SIUnits.FARAD + '/' + SIUnits.METER, SIUnits.FARAD_PER_METER);
-		assertEquals("Henry per meter symbol is not correct.",
-				SIUnits.HENRY + '/' + SIUnits.METER, SIUnits.HENRY_PER_METER);
-		assertEquals("Joule per mole symbol is not correct.",
-				SIUnits.JOULE + '/' + SIUnits.MOLE, SIUnits.JOULE_PER_MOLE);
-		assertEquals("Joule per mole kelvin symbol is not correct.",
-				SIUnits.JOULE + "/(" + SIUnits.MOLE + ' ' + SIUnits.KELVIN + ')', SIUnits.JOULE_PER_MOLE_KELVIN);
-		assertEquals("Coulomb per kilogram symbol is not correct.",
-				SIUnits.COULOMB + '/' + SIUnits.KILOGRAM, SIUnits.COULOMB_PER_KILOGRAM);
-		assertEquals("Gray per second symbol is not correct.",
-				SIUnits.GRAY + '/' + SIUnits.SECOND, SIUnits.GRAY_PER_SECOND);
-		assertEquals("Watt per steradian symbol is not correct.",
-				SIUnits.WATT + '/' + SIUnits.STERADIAN, SIUnits.WATT_PER_STERADIAN);
-		assertEquals("Watt per square meter steradian symbol is not correct.",
-				SIUnits.WATT + "/(" + SIUnits.METER + "\u00B2 " + SIUnits.STERADIAN + ')',
-				SIUnits.WATT_PER_SQUARE_METER_STERADIAN);
-		assertEquals("Katal per cubic meter symbol is not correct.",
-				SIUnits.KATAL + '/' + SIUnits.METER + "\u00B3", SIUnits.KATAL_PER_CUBIC_METER);
+		assertThat(SIUnits.PASCAL_SECOND).as("Pascal second symbol is not correct.").isEqualTo(SIUnits.PASCAL + ' ' + SIUnits.SECOND);
+		assertThat(SIUnits.NEWTON_METER).as("Newton meter symbol is not correct.").isEqualTo(SIUnits.NEWTON + ' ' + SIUnits.METER);
+		assertThat(SIUnits.NEWTON_PER_METER).as("Newton per meter symbol is not correct.").isEqualTo(SIUnits.NEWTON + '/' + SIUnits.METER);
+		assertThat(SIUnits.RADIAN_PER_SECOND).as("Radian per second symbol is not correct.").isEqualTo(SIUnits.RADIAN + '/' + SIUnits.SECOND);
+		assertThat(SIUnits.RADIAN_PER_SECOND_SQUARED).as("Radian per second squared symbol is not correct.").isEqualTo(SIUnits.RADIAN + '/' + SIUnits.SECOND + "\u00B2");
+		assertThat(SIUnits.WATT_PER_SQUARE_METER).as("Watt per square meter symbol is not correct.").isEqualTo(SIUnits.WATT + '/' + SIUnits.METER + "\u00B2");
+		assertThat(SIUnits.JOULE_PER_KELVIN).as("Joule per kelvin symbol is not correct.").isEqualTo(SIUnits.JOULE + '/' + SIUnits.KELVIN);
+		assertThat(SIUnits.JOULE_PER_KILOGRAM_KELVIN).as("Joule per kilogram kelvin symbol is not correct.").isEqualTo(SIUnits.JOULE + "/(" + SIUnits.KILOGRAM + ' ' + SIUnits.KELVIN + ')');
+		assertThat(SIUnits.JOULE_PER_KILOGRAM).as("Joule per kilogram symbol is not correct.").isEqualTo(SIUnits.JOULE + '/' + SIUnits.KILOGRAM);
+		assertThat(SIUnits.WATT_PER_METER_KELVIN).as("Watt per meter kelvin symbol is not correct.").isEqualTo(SIUnits.WATT + "/(" + SIUnits.METER + ' ' + SIUnits.KELVIN + ')');
+		assertThat(SIUnits.VOLT_PER_METER).as("Volt per meter symbol is not correct.").isEqualTo(SIUnits.VOLT + '/' + SIUnits.METER);
+		assertThat(SIUnits.COULOMB_PER_CUBIC_METER).as("Coulomb per cubic meter symbol is not correct.").isEqualTo(SIUnits.COULOMB + '/' + SIUnits.METER + "\u00B3");
+		assertThat(SIUnits.COULOMB_PER_SQUARE_METER).as("Coulomb per square meter symbol is not correct.").isEqualTo(SIUnits.COULOMB + '/' + SIUnits.METER + "\u00B2");
+		assertThat(SIUnits.FARAD_PER_METER).as("Farad per meter symbol is not correct.").isEqualTo(SIUnits.FARAD + '/' + SIUnits.METER);
+		assertThat(SIUnits.HENRY_PER_METER).as("Henry per meter symbol is not correct.").isEqualTo(SIUnits.HENRY + '/' + SIUnits.METER);
+		assertThat(SIUnits.JOULE_PER_MOLE).as("Joule per mole symbol is not correct.").isEqualTo(SIUnits.JOULE + '/' + SIUnits.MOLE);
+		assertThat(SIUnits.JOULE_PER_MOLE_KELVIN).as("Joule per mole kelvin symbol is not correct.").isEqualTo(SIUnits.JOULE + "/(" + SIUnits.MOLE + ' ' + SIUnits.KELVIN + ')');
+		assertThat(SIUnits.COULOMB_PER_KILOGRAM).as("Coulomb per kilogram symbol is not correct.").isEqualTo(SIUnits.COULOMB + '/' + SIUnits.KILOGRAM);
+		assertThat(SIUnits.GRAY_PER_SECOND).as("Gray per second symbol is not correct.").isEqualTo(SIUnits.GRAY + '/' + SIUnits.SECOND);
+		assertThat(SIUnits.WATT_PER_STERADIAN).as("Watt per steradian symbol is not correct.").isEqualTo(SIUnits.WATT + '/' + SIUnits.STERADIAN);
+		assertThat(SIUnits.WATT_PER_SQUARE_METER_STERADIAN).as("Watt per square meter steradian symbol is not correct.").isEqualTo(SIUnits.WATT + "/(" + SIUnits.METER + "\u00B2 " + SIUnits.STERADIAN + ')');
+		assertThat(SIUnits.KATAL_PER_CUBIC_METER).as("Katal per cubic meter symbol is not correct.").isEqualTo(SIUnits.KATAL + '/' + SIUnits.METER + "\u00B3");
 	}
 
 	/**
 	 * Tests non-SI units accepted for use with the International System of
 	 * Units.
 	 */
+	@Test
 	public void testNonSIUnits() {
-		assertEquals("Time minute symbol is not correct.", "min", SIUnits.TIME_MINUTE);
-		assertEquals("Hour symbol is not correct.", "h", SIUnits.HOUR);
-		assertEquals("Day symbol is not correct.", "d", SIUnits.DAY);
-		assertEquals("Degree symbol is not correct.", "\u00B0", SIUnits.DEGREE);
-		assertEquals("Plane angle minute symbol is not correct.", "\u2032", SIUnits.PLANE_ANGLE_MINUTE);
-		assertEquals("Plane angle second symbol is not correct.", "\u2033", SIUnits.PLANE_ANGLE_SECOND);
-		assertEquals("Hectare symbol is not correct.", "ha", SIUnits.HECTARE);
-		assertEquals("Liter symbol is not correct.", "l", SIUnits.LITER);
-		assertEquals("Tonne symbol is not correct.", "t", SIUnits.TONNE);
-		assertEquals("Bar symbol is not correct.", "bar", SIUnits.BAR);
-		assertEquals("Millimeter of mercury symbol is not correct.", "mmHg", SIUnits.MILLIMETER_OF_MERCURY);
-		assertEquals("Angstrom symbol is not correct.", "\u212B", SIUnits.ANGSTROM);
-		assertEquals("Nautical mile symbol is not correct.", "M", SIUnits.NAUTICAL_MILE);
-		assertEquals("Barn symbol is not correct.", "b", SIUnits.BARN);
-		assertEquals("Knot symbol is not correct.", "kn", SIUnits.KNOT);
-		assertEquals("Neper symbol is not correct.", "Np", SIUnits.NEPER);
-		assertEquals("Bel symbol is not correct.", "B", SIUnits.BEL);
-		assertEquals("Decibel symbol is not correct.", "dB", SIUnits.DECIBEL);
+		assertThat(SIUnits.TIME_MINUTE).as("Time minute symbol is not correct.").isEqualTo("min");
+		assertThat(SIUnits.HOUR).as("Hour symbol is not correct.").isEqualTo("h");
+		assertThat(SIUnits.DAY).as("Day symbol is not correct.").isEqualTo("d");
+		assertThat(SIUnits.DEGREE).as("Degree symbol is not correct.").isEqualTo("\u00B0");
+		assertThat(SIUnits.PLANE_ANGLE_MINUTE).as("Plane angle minute symbol is not correct.").isEqualTo("\u2032");
+		assertThat(SIUnits.PLANE_ANGLE_SECOND).as("Plane angle second symbol is not correct.").isEqualTo("\u2033");
+		assertThat(SIUnits.HECTARE).as("Hectare symbol is not correct.").isEqualTo("ha");
+		assertThat(SIUnits.LITER).as("Liter symbol is not correct.").isEqualTo("l");
+		assertThat(SIUnits.TONNE).as("Tonne symbol is not correct.").isEqualTo("t");
+		assertThat(SIUnits.BAR).as("Bar symbol is not correct.").isEqualTo("bar");
+		assertThat(SIUnits.MILLIMETER_OF_MERCURY).as("Millimeter of mercury symbol is not correct.").isEqualTo("mmHg");
+		assertThat(SIUnits.ANGSTROM).as("Angstrom symbol is not correct.").isEqualTo("\u212B");
+		assertThat(SIUnits.NAUTICAL_MILE).as("Nautical mile symbol is not correct.").isEqualTo("M");
+		assertThat(SIUnits.BARN).as("Barn symbol is not correct.").isEqualTo("b");
+		assertThat(SIUnits.KNOT).as("Knot symbol is not correct.").isEqualTo("kn");
+		assertThat(SIUnits.NEPER).as("Neper symbol is not correct.").isEqualTo("Np");
+		assertThat(SIUnits.BEL).as("Bel symbol is not correct.").isEqualTo("B");
+		assertThat(SIUnits.DECIBEL).as("Decibel symbol is not correct.").isEqualTo("dB");
 	}
 
 	/**
 	 * Tests non-SI units associated with the CGS and the CGS-Gaussian system of
 	 * units.
 	 */
+	@Test
 	public void testNonSIUnitsCGS() {
-		assertEquals("Erg symbol is not correct.", "erg", SIUnits.ERG);
-		assertEquals("Dyne symbol is not correct.", "dyn", SIUnits.DYNE);
-		assertEquals("Poise symbol is not correct.", "P", SIUnits.POISE);
-		assertEquals("Stokes symbol is not correct.", "St", SIUnits.STOKES);
-		assertEquals("Stilb symbol is not correct.", "sb", SIUnits.STILB);
-		assertEquals("Phot symbol is not correct.", "ph", SIUnits.PHOT);
-		assertEquals("Gal symbol is not correct.", "Gal", SIUnits.GAL);
-		assertEquals("Maxwell symbol is not correct.", "Mx", SIUnits.MAXWELL);
-		assertEquals("Gauss symbol is not correct.", "G", SIUnits.GAUSS);
-		assertEquals("Oersted symbol is not correct.", "Oe", SIUnits.OERSTED);
+		assertThat(SIUnits.ERG).as("Erg symbol is not correct.").isEqualTo("erg");
+		assertThat(SIUnits.DYNE).as("Dyne symbol is not correct.").isEqualTo("dyn");
+		assertThat(SIUnits.POISE).as("Poise symbol is not correct.").isEqualTo("P");
+		assertThat(SIUnits.STOKES).as("Stokes symbol is not correct.").isEqualTo("St");
+		assertThat(SIUnits.STILB).as("Stilb symbol is not correct.").isEqualTo("sb");
+		assertThat(SIUnits.PHOT).as("Phot symbol is not correct.").isEqualTo("ph");
+		assertThat(SIUnits.GAL).as("Gal symbol is not correct.").isEqualTo("Gal");
+		assertThat(SIUnits.MAXWELL).as("Maxwell symbol is not correct.").isEqualTo("Mx");
+		assertThat(SIUnits.GAUSS).as("Gauss symbol is not correct.").isEqualTo("G");
+		assertThat(SIUnits.OERSTED).as("Oersted symbol is not correct.").isEqualTo("Oe");
 	}
 }
